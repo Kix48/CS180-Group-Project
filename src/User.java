@@ -12,12 +12,12 @@ import javax.imageio.ImageIO; //import for photos
  */
 public class User {
 
-    public String username;
-    public String password;
-    public int age;
-    public ArrayList<String> friends;
-    public ArrayList<String> blockedUsers;
-    public boolean bFriendsOnly;
+    private String username;
+    private String password;
+    private int age;
+    private ArrayList<String> friends;
+    private ArrayList<String> blockedUsers;
+    private boolean friendsOnly;
     //profile pic
 
     public User(String username, String password, int age) {
@@ -35,7 +35,27 @@ public class User {
         this.age = age;
         friends = new ArrayList<>();
         blockedUsers = new ArrayList<>();
-        bFriendsOnly = false;
+        friendsOnly = false;
+
+    } //end constructor
+
+    public User(String username, String password, int age,
+                ArrayList<String> friends, ArrayList<String> blockedUsers, boolean friendsOnly) {
+
+        if (username == null) {
+            throw new NullPointerException();
+        }
+
+        if (!(age >= 18)) { //maybe change to <18?
+            throw new IllegalArgumentException();
+        }
+
+        this.username = username;
+        this.password = password;
+        this.age = age;
+        this.friends = friends;
+        this.blockedUsers = blockedUsers;
+        this.friendsOnly = friendsOnly;
 
     } //end constructor
 
@@ -117,12 +137,12 @@ public class User {
         }
     }
 
-    public boolean isbFriendsOnly() { //returns if friendsOnly T/F
-        return bFriendsOnly;
+    public boolean isFriendsOnly() { //returns if friendsOnly T/F
+        return friendsOnly;
     }
 
-    public void setbFriendsOnly(boolean bFriendsOnly) { //sets bFriendsOnly
-        this.bFriendsOnly = bFriendsOnly;
+    public void setFriendsOnly(boolean friendsOnly) { //sets bFriendsOnly
+        this.friendsOnly = friendsOnly;
     }
 
     public String toString() { //returns a toString format
@@ -145,6 +165,8 @@ public class User {
         } else {
             output += "BlockedUsers: " + blockedUsers + "\n";
         }
+
+        output += "FriendsOnly: " + this.friendsOnly + "\n";
 
         return output;
     }
