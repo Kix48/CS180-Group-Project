@@ -1,15 +1,9 @@
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
-import javax.imageio.ImageIO; //import for photos
 
-/**
- * Group Project - User Class
- * <p>
- * This contains many methods & variables for
- * creating a new User
- *
- * @author Steven Krauter, Lab 012
- * @version Mar 28, 2024
- */
+
 public class User {
 
     private String username;
@@ -18,7 +12,8 @@ public class User {
     private ArrayList<String> friends;
     private ArrayList<String> blockedUsers;
     private boolean friendsOnly;
-    //profile pic
+    private String userPFPFile;
+
 
     public User(String username, String password, int age) {
 
@@ -26,7 +21,7 @@ public class User {
             throw new NullPointerException();
         }
 
-        if (!(age >= 18)) { //maybe change to <18?
+        if (!(age >= 18)) {
             throw new IllegalArgumentException();
         }
 
@@ -46,7 +41,7 @@ public class User {
             throw new NullPointerException();
         }
 
-        if (!(age >= 18)) { //maybe change to <18?
+        if (!(age >= 18)) {
             throw new IllegalArgumentException();
         }
 
@@ -58,6 +53,18 @@ public class User {
         this.friendsOnly = friendsOnly;
 
     } //end constructor
+
+    public static BufferedImage loadImage(String fileName) {
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(new File(fileName));
+        } catch (Exception e) {
+            System.err.println("image not found: " + fileName);
+            System.exit(-1);
+        }
+        return image;
+    }
+
 
     public String getUsername() { //return username
         return username;
@@ -143,6 +150,14 @@ public class User {
 
     public void setFriendsOnly(boolean friendsOnly) { //sets bFriendsOnly
         this.friendsOnly = friendsOnly;
+    }
+
+    public String getUserPFPFile() { //returns userPFP file name
+        return userPFPFile;
+    }
+
+    public void setUserPFPFile(String userPFPFile) {
+        this.userPFPFile = userPFPFile; //TODO: check if valid file
     }
 
     public String toString() { //returns a toString format
