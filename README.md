@@ -15,14 +15,14 @@ The User Class creates and manages information regarding each User. This include
   -Age  
   -Friends (as a list)  
   -Blocked Users (as a list)  
-  -friendsOnly (Condition if the user wants to see messages from only friends, or all users)
-  -Profile_Picture_File (File containing the user's profile picture {if added})
+  -friendsOnly (Condition if the user wants to see messages from only friends, or all users)  
+  -Profile_Picture_File (File containing the user's profile picture {if added})  
 
-The User Class contains methods to...
-  -Create a new user (Constructor)
-  -Get all informaiton covered above (Method: Getter)
-  -Set all information to new values (Method: Setter)
-  -A way to display each user as a String (toString)
+The User Class contains methods to...  
+  -Create a new user (Constructor)  
+  -Get all informaiton covered above (Method: Getter)  
+  -Set all information to new values (Method: Setter)  
+  -A way to display each user as a String (toString)  
 
   
 (todo: add testing to verify it works properly, relationship to other classes)
