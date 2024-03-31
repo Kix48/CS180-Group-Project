@@ -59,8 +59,7 @@ public class User implements UserInterface {
         try {
             image = ImageIO.read(new File(fileName));
         } catch (Exception e) {
-            System.err.println("image not found: " + fileName);
-            System.exit(-1);
+            System.out.println("Image not found: " + fileName);
         }
         return image;
     }
