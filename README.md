@@ -58,7 +58,10 @@ The Message History class contains methods to... <br>
   -Get all information covered abover (Method: Getter) <br>
   -Get a formatted string representation of the history <br> <br>
 This message history class with serve a main role in messaging system for the project. It will contain all of the text data between two users (existing to represent a single chat for 2 users) and will provide a strong basis for the chat GUI and functionality.
-  -This class is most closely related to both the message and message info classes. This history class contains will be utilized to access the specific messages sent between users.     
+  -This class is most closely related to both the message and message info classes. This history class contains will be utilized to access the specific messages sent between users.  
+  
+MessageHistory was tested through RunLocalTest, in "testMessageHistoryAddAndRemove()". This tests that a message is able to be added to the list of messages, and can be removed. This allows us to test the core functionality of MessageHistory, adding and removing messages, and ensuring we are removing the correct message, checking through the users included, and the date the message was sent. 
+  
  
   MessageHistoryInterface allowed our group to communicate which methods we needed to implement within MessageHistory  
   
@@ -73,13 +76,32 @@ The message class also contains methods to...<br>
   -Get and set message (Getter/Setter Method)<br>
   -Print the message (in a chat legible string format)<br> <br>
 This message class is simple yet provides crucial functionality to the entire messaging system. Each class created represents a single message that stores all of the necessary information.
-  -The class extends the more generic messageInfo parent class providing text functionality. It also is used extensively in the messageHistoy class which stores messages in an array.  
+  -The class extends the more generic messageInfo parent class providing text functionality. It also is used extensively in the messageHistoy class which stores messages in an array. 
+
+Message was tested through RunLocalTest, within "testMessageToString()". This allowed us to test that messages being created were properly formatted, containing the correct Sender/Reciever, Message (String), and date of the message.   
   
 MessageInterface allowed our group to plan out which methods we wanted to include within the Message Class  
 
 <hr>
   
-   
+MessageInfo Class - <br><br>
+This class contains the following information for each message  
+  -The Sender (a user)
+  -Reciever (a user)
+  -The Date the message was sent  
+The messageInfo class contains:  
+  -a constructor for creating a new message, containing the sender & reciever
+  -a constructor for creating a new message, containing the sender, reciever, & date  
+  -Methods for obtaining sender, reciever, & date (Method: Getter)
+
+MessageInfo was tested through the MessageClass, as Message extends MessageInfo. Thus, Message was tested through RunLocalTest, within "testMessageToString()". This allowed us to test that messages being created were properly formatted, containing the correct Sender/Reciever, Message (String), and date of the message. 
+
+The MessageInfo class implements MessageInfoInterface, which contains methods used in MessageInfo. We used MessageInfoInterface to communicate with our team on what methods and functions were required for MessageInfo.  
+
+MessageInfo is extended in the Message class.
+
+
+
 
  
 
