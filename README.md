@@ -19,7 +19,8 @@ Note: RunLocalTest.java includes 4 tests:
         // Test adding and removing friends
   
   
-Student Submitted Report:  Steven Krauter
+Student Submitted Report:  Steven Krauter  
+
 Student Submitted Vocareum Workspace:  Steven Krauter
 
 
@@ -125,6 +126,6 @@ The DataBaseHelper class also contains methods that..<br>
 This class is the backbone of the database because it is what actually retreives and classes from a file and writes classes to a file. It needs to be thread safe because if there are multiple users, they could potentially be trying to both access a file at the same time and we do not want that because it could cause unexpected behavior.
   -There can be multiple instances of DatabaseHelper used in multpile threads. This allows for greater flecability and lives up to its name as more of a helper class.
 
-DatabaseHelper was tested through RunLocalTest, within "___". This allowed us to test that User, BufferedImage, and MessageHistory classes could be successfully saved and read from their individual files correctly.
+DatabaseHelper was tested through RunLocalTest.java with the methods testUserReadWrite, testMessageHistory, and testBufferedImage. This allowed us to test that User, BufferedImage, and MessageHistory classes could be successfully saved and read from their individual files correctly.
   
 DatabaseHelperInterface allowed our group to plan out which methods we wanted to include within the DatabaseHelper class.
