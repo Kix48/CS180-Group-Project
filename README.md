@@ -32,6 +32,7 @@ The User Class contains methods to...
   -Get all informaiton covered above (Method: Getter)  
   -Set all information to new values (Method: Setter)  
   -A way to display each user as a String (toString)  
+  -AddingImages to each user given input of a file (loadImage)  
 
 The User class servers as the basis for everything within the project. It contains each individual user, and all related data.   
 This allows other classes, such as MessageHistory, to keep track of each user's messages to one another.     
