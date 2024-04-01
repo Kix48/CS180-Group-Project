@@ -19,7 +19,8 @@ Note: RunLocalTest.java includes 4 tests:
         // Test adding and removing friends
   
   
-Student Submitted Report:  Steven Krauter
+Student Submitted Report:  Steven Krauter  
+
 Student Submitted Vocareum Workspace:  Steven Krauter
 
 
