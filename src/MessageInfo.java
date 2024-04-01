@@ -4,28 +4,32 @@ public class MessageInfo implements MessageInfoInterface {
     private String sender;
     private String receiver;
     private Date date;
-
-    public MessageInfo(String sender, String receiver){ //general constructor to create a new message (text or picture)
+    
+    //general constructor to create a new message (text or picture)
+    public MessageInfo(String sender, String receiver){ 
         this.sender = sender;
         this.receiver = receiver;
         this.date = new Date();
     }
-
-    public MessageInfo(String sender, String receiver, Date date){ //general constructor to create a new message with a known date(text or picture)
+    
+    //general constructor to create a new message with a known date(text or picture)
+    public MessageInfo(String sender, String receiver, Date date){ 
         this.sender = sender;
         this.receiver = receiver;
         this.date = date;
     }
-
-    public String getSender() { //returns the sender of the message
+    //returns the sender of the message
+    public String getSender() { 
         return sender;
     }
 
-    public String getReceiver() { //returns the receiver of the message
+    //returns the receiver of the message
+    public String getReceiver() { 
         return receiver;
     }
 
-    public Date getDate() { //returns the date of the mmessage
+    //returns the date of the message
+    public Date getDate() { 
         return date;
     }
 }
