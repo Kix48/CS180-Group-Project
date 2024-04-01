@@ -58,7 +58,8 @@ The Message History class contains methods to... <br>
   -Get all information covered abover (Method: Getter) <br>
   -Get a formatted string representation of the history <br> <br>
 This message history class with serve a main role in messaging system for the project. It will contain all of the text data between two users (existing to represent a single chat for 2 users) and will provide a strong basis for the chat GUI and functionality.
-  -This class is most closely related to both the message and message info classes. This history class contains will be utilized to access the specific messages sent between users.  
+  -This class is most closely related to both the message and message info classes. This history class contains will be utilized to access the specific messages sent between users.     
+ 
   MessageHistoryInterface allowed our group to communicate which methods we needed to implement within MessageHistory  
   
 <hr>
@@ -73,6 +74,7 @@ The message class also contains methods to...<br>
   -Print the message (in a chat legible string format)<br> <br>
 This message class is simple yet provides crucial functionality to the entire messaging system. Each class created represents a single message that stores all of the necessary information.
   -The class extends the more generic messageInfo parent class providing text functionality. It also is used extensively in the messageHistoy class which stores messages in an array.  
+  
 MessageInterface allowed our group to plan out which methods we wanted to include within the Message Class  
 
 <hr>
