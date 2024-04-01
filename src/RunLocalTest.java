@@ -1,6 +1,8 @@
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -39,7 +41,7 @@ public class RunLocalTest {
 
 
     @Test
-    public void testMessageHistoryAddAndRemove() {
+    public void testMessageHistory() {
         // Test adding and removing messages from the history
         try {
             messageHistory.addMessage("testUser", "Test message");
@@ -47,8 +49,26 @@ public class RunLocalTest {
             fail("Adding message failed");
         }
         assertEquals("Message history size incorrect", 1, messageHistory.getMessages().length);
+
+        assertEquals("Failed to write message history",
+                true, databaseHelper.writeMessageHistory(messageHistory));
+
+        MessageHistory readHistory = databaseHelper.readMessageHistory("testUser", "receiverUser");
+        assertNotEquals("Could not read the message history",
+                null, readHistory);
+
         messageHistory.removeMessage("testUser", new java.util.Date());
         assertEquals("Message was not removed", 0, messageHistory.getMessages().length);
+    }
+
+    @Test
+    public void testBufferedImage() {
+        BufferedImage image = databaseHelper.readImage("testUser - PFP.png");
+
+        assertNotEquals("Failed to read image file", null, image);
+
+        assertEquals("Failed to write image file",
+                true, databaseHelper.writeImage(image, "testUser - PFP.png"));
     }
 
     @Test
