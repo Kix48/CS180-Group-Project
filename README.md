@@ -117,11 +117,23 @@ The MessageInfo class implements MessageInfoInterface, which contains methods us
 
 MessageInfo is extended in the Message class.
 
+<hr>
 
+DatabaseHelper Class - <br><br>
+This class handles the reading and writing of the database users, images, and messages to file. It uses synchronized objects (gatekeeper fields) in order to make all of its methods thread-safe. <br>
+  -USERS_DIRECTORY (final String that holds the location where users are saved)<br>
+  -IMAGES_DIRECTORY (final String that holds the location where images are saved)<br>
+  -MESSAGES_DIRECTORY (final String that holds the location where messages are saved)<br>
+  -userGatekeeper (synchronized object to block execution when dealing with reading/writing users at the same time)<br>
+  -imageGatekeeper (synchronized object to block execution when dealing with reading/writing images at the same time)<br>
+  -messageGatekeeper (synchronized object to block execution when dealing with reading/writing messages at the same time)<br>
+The DataBaseHelper class also contains methods that..<br>
+  -Read/Write Users classes from/to a file<br>
+   -Read/Write BufferedImage classes from/to a file<br>
+  -Read/Write MessageHistory classes from/to a file<br> <br>
+This class is the backbone of the database because it is what actually retreives and classes from a file and writes classes to a file. It needs to be thread safe because if there are multiple users, they could potentially be trying to both access a file at the same time and we do not want that because it could cause unexpected behavior.
+  -There can be multiple instances of DatabaseHelper used in multpile threads. This allows for greater flecability and lives up to its name as more of a helper class.
 
-
- 
-
-
-
-
+DatabaseHelper was tested through RunLocalTest, within "___". This allowed us to test that User, BufferedImage, and MessageHistory classes could be successfully saved and read from their individual files correctly.
+  
+DatabaseHelperInterface allowed our group to plan out which methods we wanted to include within the DatabaseHelper class.
