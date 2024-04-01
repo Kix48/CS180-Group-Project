@@ -1,3 +1,9 @@
+Student Submitted Report:  Steven Krauter  
+
+Student Submitted Vocareum Workspace:  Steven Krauter  
+
+
+
 - How to run & compile project:
 - Open the file tab
 - Click Project Structure
@@ -20,10 +26,7 @@ Note: RunLocalTest.java includes 4 tests:
 - public void testBufferedImageReadWrite() {
        // Test that database can read/write files
   
-  
-Student Submitted Report:  Steven Krauter  
 
-Student Submitted Vocareum Workspace:  Steven Krauter
 
 
 
