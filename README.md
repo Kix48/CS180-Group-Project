@@ -5,14 +5,14 @@ A detailed description of each class. This should include the functionality incl
 You can format the README however you like, provided it is written as markdown file (.md). 
 
 DELETE ABOVE BEFORE FINALIZATION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
+  
+  
 How to run & compile project:
-
-
-
-Student Submitted Report:
-Student Submitted Vocareum Workspace:
+  
+  
+  
+Student Submitted Report:  
+Student Submitted Vocareum Workspace:  
 
 
 
