@@ -2,7 +2,8 @@ Student Submitted Report:  Steven Krauter
 
 Student Submitted Vocareum Workspace:  Steven Krauter  
 
-
+**IMPORTANT FOR RUNNING RUNLOCALTEST** <br>
+        -For testBufferedImageReadWrite, need to add image before testing to filepath "images/testUser - PFP.png"
 
 - How to run & compile project:
 - Open the file tab
