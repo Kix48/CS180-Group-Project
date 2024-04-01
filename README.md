@@ -8,7 +8,24 @@ DELETE ABOVE BEFORE FINALIZATION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   
   
 How to run & compile project:
-  
+- Open the file tab
+- Click Project Structure
+- Scroll down and click Libraries
+- Add a project library from Maven
+- Search for JUnit 4.10.jar and extended jar
+- Install both
+- Once Installed, go to RunLocalTest.java
+- Run the test
+
+Note: RunLocalTest.java includes 4 tests: 
+- public void testUserReadWrite() {
+        // Test writing a user to disk and reading it back
+- public void testMessageToString() { 
+        //Test the string's validity/match
+- public void testMessageHistoryAddAndRemove() {
+        // Test adding and removing messages from the history
+- public void testUserFriendsManagement() {
+        // Test adding and removing friends
   
   
 Student Submitted Report:  
