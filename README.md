@@ -134,3 +134,15 @@ This class is the backbone of the database because it is what actually retreives
 DatabaseHelper was tested through RunLocalTest.java with the methods testUserReadWrite, testMessageHistory, and testBufferedImageReadWrite. This allowed us to test that User, BufferedImage, and MessageHistory classes could be successfully saved and read from their individual files correctly.
   
 DatabaseHelperInterface allowed our group to plan out which methods we wanted to include within the DatabaseHelper class.
+
+
+<hr>
+
+
+Interfaces to be expanded upon in Phase 2 - <br><br>
+
+ClientInterface - Serves as an outline for all functions that will be completed by the client, also serves as a baseline for phase 2.
+
+ServerInterface - Can be used as the outline for all functions that will be completed by the server. These functions will be called once the client sends the request.
+
+
