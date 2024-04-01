@@ -7,6 +7,15 @@ You can format the README however you like, provided it is written as markdown f
 DELETE ABOVE BEFORE FINALIZATION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
+How to run & compile project:
+
+
+
+Student Submitted Report:
+Student Submitted Vocareum Workspace:
+
+
+
 User Class -
 
 The User Class creates and manages information regarding each User. This includes...
@@ -24,6 +33,14 @@ The User Class contains methods to...
   -Set all information to new values (Method: Setter)  
   -A way to display each user as a String (toString)  
 
-  
-(todo: add testing to verify it works properly, relationship to other classes)
+The User class servers as the basis for everything within the project. It contains each individual user, and all related data.   
+This allows other classes, such as MessageHistory, to keep track of each user's messages to one another.   
+  -For instance, MessageHistory uses each 'User' to keep track of their messages to one another.
+  -MessageHistory also keeps track of all messages, with it containing each user's messages to one another.  
+The User class is also used to read and write each user.
+
+TODO: runlocaltest connection- then USER is complete
+
+
+
 
