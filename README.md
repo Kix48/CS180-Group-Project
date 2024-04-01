@@ -34,12 +34,12 @@ The User Class contains methods to...
   -A way to display each user as a String (toString)  
 
 The User class servers as the basis for everything within the project. It contains each individual user, and all related data.   
-This allows other classes, such as MessageHistory, to keep track of each user's messages to one another.   
-  -For instance, MessageHistory uses each 'User' to keep track of their messages to one another.
-  -MessageHistory also keeps track of all messages, with it containing each user's messages to one another.  
-The User class is also used to read and write each user.
+This allows other classes, such as MessageHistory, to keep track of each user's messages to one another.     
+  -For instance, MessageHistory uses each 'User' to keep track of their messages to one another.  
+  -MessageHistory also keeps track of all messages, with it containing each user's messages to one another.    
+The User class is also used to read and write each user.  
 
-TODO: runlocaltest connection- then USER is complete
+TODO: runlocaltest connection- then USER is complete  
 
 
 
