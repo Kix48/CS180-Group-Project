@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4dcb042b-816a-4d3c-863b-70995d5cd8ad" name="Changes" comment="//Implemented loadImage, String userPFP variable, get/setters for userPFPFIle, &#10;&#10;todo: add check in setUserPFPFile for valid file, maybe dont need?&#10;&#10;Implemented RunLocalTest.java" />
+    <list default="true" id="4dcb042b-816a-4d3c-863b-70995d5cd8ad" name="Changes" comment="//Implemented loadImage, String userPFP variable, get/setters for userPFPFIle, &#10;&#10;todo: add check in setUserPFPFile for valid file, maybe dont need?&#10;&#10;Implemented RunLocalTest.java">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MessageHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MessageHistory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RunLocalTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RunLocalTest.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -33,6 +38,7 @@
   "keyToString": {
     "Downloaded.Files.Path.Enabled": "false",
     "JUnit.RunLocalTest.executor": "Run",
+    "JUnit.RunLocalTest.testMessageHistoryAddAndRemove.executor": "Run",
     "Repository.Attach.Annotations": "false",
     "Repository.Attach.JavaDocs": "false",
     "Repository.Attach.Sources": "false",
@@ -57,6 +63,23 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\steve\OneDrive\Documents\GitHub\CS180-Group-Project\src" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="RunLocalTest.testMessageHistoryAddAndRemove" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Group Project" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="RunLocalTest" />
+      <option name="METHOD_NAME" value="testMessageHistoryAddAndRemove" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.RunLocalTest.testMessageHistoryAddAndRemove" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -135,7 +158,7 @@
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/RunLocalTest.java</url>
           <line>30</line>
-          <option name="timeStamp" value="1" />
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

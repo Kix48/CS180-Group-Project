@@ -31,7 +31,11 @@ public class MessageHistory implements MessageHistoryInterface {
             boolean removed = false;
             for (int x = 0; x < allMessages.size(); x++) {
                 Message message = allMessages.get(x);
-                if (message.getSender().equals(sender) && message.getDate().equals(date)) {
+
+                String d1 = message.getDate().toString();
+                String d2 = date.toString();
+
+                if (message.getSender().equals(sender) && d1.equals(d2)) {
                     allMessages.remove(x);
                     removed = true;
                     break;
