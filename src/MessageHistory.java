@@ -1,7 +1,18 @@
 
 import java.util.ArrayList;
 import java.util.Date;
-
+/**
+ * MessageHistory.java Class
+ *
+ * Purdue University CS18000 Spring 2024
+ *
+ * @author Giancarlo Guccione
+ * @author Steven Krauter
+ * @author Justin Lin
+ * @author Wael Harith
+ * @author Chase Gamble
+ * @version 1.0 April 2024
+ */
 public class MessageHistory implements MessageHistoryInterface {
     private ArrayList<Message> allMessages;
     private String user1;

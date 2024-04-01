@@ -1,6 +1,17 @@
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+/**
+ * Message.java Class
+ *
+ * Purdue University CS18000 Spring 2024
+ *
+ * @author Giancarlo Guccione
+ * @author Steven Krauter
+ * @author Justin Lin
+ * @author Wael Harith
+ * @author Chase Gamble
+ * @version 1.0 April 2024
+ */
 public class Message extends MessageInfo implements MessageInterface {
     String message;
 

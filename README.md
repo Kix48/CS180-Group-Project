@@ -1,3 +1,9 @@
+Student Submitted Report:  Steven Krauter  
+
+Student Submitted Vocareum Workspace:  Steven Krauter  
+
+
+
 - How to run & compile project:
 - Open the file tab
 - Click Project Structure
@@ -17,10 +23,10 @@ Note: RunLocalTest.java includes 4 tests:
         // Test adding and removing messages from the history
 - public void testUserFriendsManagement() {
         // Test adding and removing friends
+- public void testBufferedImageReadWrite() {
+       // Test that database can read/write files
   
-  
-Student Submitted Report:  Steven Krauter
-Student Submitted Vocareum Workspace:  Steven Krauter
+
 
 
 
@@ -125,6 +131,18 @@ The DataBaseHelper class also contains methods that..<br>
 This class is the backbone of the database because it is what actually retrieves and classes from a file and writes classes to a file. It needs to be thread safe because if there are multiple users, they could potentially be trying to both access a file at the same time and we do not want that because it could cause unexpected behavior.
   -There can be multiple instances of DatabaseHelper used in multiple threads. This allows for greater flexibility and lives up to its name as more of a helper class.
 
-DatabaseHelper was tested through RunLocalTest, within "___". This allowed us to test that User, BufferedImage, and MessageHistory classes could be successfully saved and read from their individual files correctly.
+DatabaseHelper was tested through RunLocalTest.java with the methods testUserReadWrite, testMessageHistory, and testBufferedImageReadWrite. This allowed us to test that User, BufferedImage, and MessageHistory classes could be successfully saved and read from their individual files correctly.
   
 DatabaseHelperInterface allowed our group to plan out which methods we wanted to include within the DatabaseHelper class.
+
+
+<hr>
+
+
+Interfaces to be expanded upon in Phase 2 - <br><br>
+
+ClientInterface - Serves as an outline for all functions that will be completed by the client, also serves as a baseline for phase 2.
+
+ServerInterface - Can be used as the outline for all functions that will be completed by the server. These functions will be called once the client sends the request.
+
+
