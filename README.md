@@ -40,7 +40,8 @@ This allows other classes, such as MessageHistory, to keep track of each user's 
   -MessageHistory also keeps track of all messages, with it containing each user's messages to one another.    
 The User class is also used to read and write each user.  
 
-TODO: runlocaltest connection- then USER is complete  
+ The User class is tested for functionality through RunLocalTest, within setUp() and testUserReadWrite(). Any failures in User are presented through RunLocalTest  
+ 
 
 
 
