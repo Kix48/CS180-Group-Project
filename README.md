@@ -141,7 +141,11 @@ DatabaseHelperInterface allowed our group to plan out which methods we wanted to
 
 Interfaces to be expanded upon in Phase 2 - <br><br>
 
-ClientInterface - Serves as an outline for all functions that will be completed by the client, also serves as a baseline for phase 2.
+ClientInterface - Serves as an outline for all functions that will be completed by the client, also serves as a baseline for phase 2.<br>
+-Registers and logs in users based off the provided username and password<br>
+-The ability to add friends and blocks users<br>
+-The client can send and remove messages that they have sent previously<br>
+-The client can change whether they are open to direct essaging from all users or just friends<br>
 
 ServerInterface - Can be used as the outline for all functions that will be completed by the server. These functions will be called once the client sends the request.
 
