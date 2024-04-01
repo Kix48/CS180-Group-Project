@@ -90,7 +90,7 @@ The message class also contains methods to...<br>
   -Get and set message (Getter/Setter Method)<br>
   -Print the message (in a chat legible string format)<br> <br>
 This message class is simple yet provides crucial functionality to the entire messaging system. Each class created represents a single message that stores all of the necessary information.
-  -The class extends the more generic messageInfo parent class providing text functionality. It also is used extensively in the messageHistoy class which stores messages in an array. 
+  -The class extends the more generic messageInfo parent class providing text functionality. It also is used extensively in the messageHistory class which stores messages in an array. 
 
 Message was tested through RunLocalTest, within "testMessageToString()". This allowed us to test that messages being created were properly formatted, containing the correct Sender/Receiver, Message (String), and date of the message.   
   
@@ -147,6 +147,8 @@ ClientInterface - Serves as an outline for all functions that will be completed 
 -The client can send and remove messages that they have sent previously<br>
 -The client can change whether they are open to direct essaging from all users or just friends<br>
 
-ServerInterface - Can be used as the outline for all functions that will be completed by the server. These functions will be called once the client sends the request.
-
-
+ServerInterface - Can be used as the outline for all functions that will be completed by the server. These functions will be called once the client sends the request.  
+-Creates, modifies, and deletes users.  
+-Handles the login process for clients.  
+-Handles basic platform functionality, i.e. sending messages.  
+-Interacts with database to retrieve message history and find users.
