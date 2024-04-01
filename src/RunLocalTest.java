@@ -62,7 +62,7 @@ public class RunLocalTest {
     }
 
     @Test
-    public void testBufferedImage() {
+    public void testBufferedImageReadWrite() {
         BufferedImage image = databaseHelper.readImage("testUser - PFP.png");
 
         assertNotEquals("Failed to read image file", null, image);
