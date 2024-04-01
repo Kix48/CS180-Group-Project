@@ -41,6 +41,11 @@ This allows other classes, such as MessageHistory, to keep track of each user's 
 The User class is also used to read and write each user.  
 
  The User class is tested for functionality through RunLocalTest, within setUp() and testUserReadWrite(). Any failures in User are presented through RunLocalTest  
+
+UserInterface contains the methods used in User, and was how our group communicated which methods we needed to implement within User.  
+
+
+ 
 <hr>
 Message History Class - <br> <br>
 This class creates and manages the complete message history between two users. It contains information including... <br>
