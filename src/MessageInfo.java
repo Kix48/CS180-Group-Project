@@ -1,3 +1,4 @@
+import java.text.SimpleDateFormat;
 import java.util.Date;
 public class MessageInfo implements MessageInfoInterface {
     private String sender;

@@ -1,17 +1,18 @@
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
 public class DatabaseHelper implements DatabaseHelperInterface {
-    private final String USERS_DIRECTORY = "users/";
-    private final String IMAGES_DIRECTORY = "images/";
-    private final String MESSAGES_DIRECTORY = "messages/";
-    private static final Object userGatekeeper = new Object();
-    private static final Object imageGatekeeper = new Object();
-    private static final Object messageGatekeeper = new Object();
+    private static final String USERS_DIRECTORY = "users/";
+    private static final String IMAGES_DIRECTORY = "images/";
+    private static final String MESSAGES_DIRECTORY = "messages/";
+    private static final Object USER_GATEKEEPER = new Object();
+    private static final Object IMAGE_GATEKEEPER = new Object();
+    private static final Object MESSAGE_GATEKEEPER = new Object();
 
     /*
     User file format:
@@ -26,7 +27,7 @@ public class DatabaseHelper implements DatabaseHelperInterface {
      */
     public User readUser(String username) {
         try {
-            synchronized (userGatekeeper) {
+            synchronized (USER_GATEKEEPER) {
                 File file = new File(USERS_DIRECTORY + username + ".txt");
 
                 if (!file.getParentFile().exists()) {
@@ -77,7 +78,7 @@ public class DatabaseHelper implements DatabaseHelperInterface {
 
     public boolean writeUser(User user) {
         try {
-            synchronized (userGatekeeper) {
+            synchronized (USER_GATEKEEPER) {
                 File file = new File(USERS_DIRECTORY + user.getUsername() + ".txt");
 
                 if (!file.getParentFile().exists()) {
@@ -108,7 +109,7 @@ public class DatabaseHelper implements DatabaseHelperInterface {
 
     public BufferedImage readImage(String filename) {
         try {
-            synchronized (imageGatekeeper) {
+            synchronized (IMAGE_GATEKEEPER) {
                 return ImageIO.read(new File(IMAGES_DIRECTORY + filename));
             }
         } catch (Exception e) {
@@ -120,7 +121,7 @@ public class DatabaseHelper implements DatabaseHelperInterface {
 
     public boolean writeImage(BufferedImage image, String filename) {
         try {
-            synchronized (imageGatekeeper) {
+            synchronized (IMAGE_GATEKEEPER) {
                 return ImageIO.write(image, "png", new File(IMAGES_DIRECTORY + filename));
             }
         } catch (Exception e) {
@@ -141,7 +142,7 @@ public class DatabaseHelper implements DatabaseHelperInterface {
         }
 
         try {
-            synchronized (messageGatekeeper) {
+            synchronized (MESSAGE_GATEKEEPER) {
                 File file = new File(MESSAGES_DIRECTORY + filename + ".txt");
 
                 if (!file.getParentFile().exists()) {
@@ -164,7 +165,8 @@ public class DatabaseHelper implements DatabaseHelperInterface {
                 while (readMessage != null) {
                     // [DATE] SENDER-RECEIVER: MESSAGE
                     int rightBracketPos = readMessage.indexOf("]");
-                    Date readDate = new Date(Date.parse(readMessage.substring(1, rightBracketPos)));
+                    SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yy hh:mm:ss a z");
+                    Date readDate = dateFormatter.parse(readMessage.substring(1, rightBracketPos));
                     int dashPos = readMessage.indexOf("-", rightBracketPos);
                     int colonPos = readMessage.indexOf(":", rightBracketPos);
                     String readSender = readMessage.substring(rightBracketPos + 2, dashPos);
@@ -196,7 +198,7 @@ public class DatabaseHelper implements DatabaseHelperInterface {
         }
 
         try {
-            synchronized (messageGatekeeper) {
+            synchronized (MESSAGE_GATEKEEPER) {
                 File file = new File(MESSAGES_DIRECTORY + filename + ".txt");
 
                 if (!file.getParentFile().exists()) {
