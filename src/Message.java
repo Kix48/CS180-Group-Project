@@ -1,27 +1,35 @@
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Message extends MessageInfo implements MessageInterface {
     String message;
-    public Message(String sender, String receiver, String message) { //utilizes super class and creates a new message with the current time
+
+    //utilizes super class and creates a new message with the current time
+    public Message(String sender, String receiver, String message) { 
         super(sender, receiver);
         this.message = message;
     }
 
-    public Message(String sender, String receiver, String message, Date date) {  //utilizes super class and creates a new message with a custom time
+    //utilizes super class and creates a new message with a custom time
+    public Message(String sender, String receiver, String message, Date date) {  
         super(sender, receiver, date);
         this.message = message;
     }
 
-    public String getMessage() { //retrieve message text
+    //retrieve message text
+    public String getMessage() { 
         return this.message;
     }
 
-    public void setMessage(String message) { //edit and change the message text
+    //edit and change the message text
+    public void setMessage(String message) { 
         this.message = message;
     }
 
-    public String toString(){ //print the message in a chat legible format
-        return "[" + super.getDate().toString() + "] " +
+    //print the message in a chat legible format
+    public String toString(){ 
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yy hh:mm:ss a z");
+        return "[" + dateFormatter.format(super.getDate()) + "] " +
                 super.getSender() + "-" + this.getReceiver() + ": " + message;
     }
 }

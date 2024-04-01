@@ -7,27 +7,32 @@ public class MessageHistory implements MessageHistoryInterface {
     private String user1;
     private String user2;
 
-    public MessageHistory(String user1, String user2) { //creates new message history class between two users
+    //creates new message history class between two users 
+    public MessageHistory(String user1, String user2) { 
         this.user1 = user1;
         this.user2 = user2;
         this.allMessages = new ArrayList<Message>();
     }
-
-    public MessageHistory(String user1, String user2, ArrayList<Message> messages) { //creates message history class between two users (imports messages)
+    
+    //creates message history class between two users (imports messages)
+    public MessageHistory(String user1, String user2, ArrayList<Message> messages) { 
         this.user1 = user1;
         this.user2 = user2;
         this.allMessages = messages;
     }
 
-    public String getUser1() { //returns user1
+    //returns user1
+    public String getUser1() { 
         return this.user1;
     }
 
-    public String getUser2() {//returns user2
+    //returns user2
+    public String getUser2() {
         return this.user2;
     }
 
-    public void addMessage(String sender, String message) { //adds a message to the message history while verifying the sender/reciever
+    //adds a message to the message history while verifying the sender/reciever
+    public void addMessage(String sender, String message) { 
         try {
             String receiver;
             if (sender.equals(this.user1)) {
@@ -44,7 +49,8 @@ public class MessageHistory implements MessageHistoryInterface {
         }
     }
 
-    public void removeMessage(String sender, Date date) { //checks message history and removes the first message (whose sender and date match the values inputted)
+    //checks message history and removes the first message (whose sender and date match the values inputted)
+    public void removeMessage(String sender, Date date) { 
         try {
             boolean removed = false;
             for (int x = 0; x < allMessages.size(); x++) {
@@ -68,7 +74,8 @@ public class MessageHistory implements MessageHistoryInterface {
         }
     }
 
-    public String[] getMessages() { //returns an array representing the complete message history (in text legible format)
+    //returns an array representing the complete message history (in text legible format)
+    public String[] getMessages() { 
         String[] messages = new String[allMessages.size()];
         for (int x = 0; x < allMessages.size(); x++) {
             messages[x] = allMessages.get(x).toString();
@@ -76,7 +83,8 @@ public class MessageHistory implements MessageHistoryInterface {
         return messages;
     }
 
-    public String toString() { //returns a formatted string representing the message history
+    //returns a formatted string representing the message history
+    public String toString() { 
         String output = String.format("User1: %s\nUser2: %s\n", this.user1, this.user2);
 
         for (Message message : this.allMessages) {
