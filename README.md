@@ -72,7 +72,7 @@ The Message History class contains methods to... <br>
   -Create a new message history (constructor) <br>
   -Add new messages to the history <br>
   -remove a specific message from the history (given the sender and date) <br>
-  -Get all information covered abover (Method: Getter) <br>
+  -Get all information covered above (Method: Getter) <br>
   -Get a formatted string representation of the history <br> <br>
 This message history class with serve a main role in messaging system for the project. It will contain all of the text data between two users (existing to represent a single chat for 2 users) and will provide a strong basis for the chat GUI and functionality.
   -This class is most closely related to both the message and message info classes. This history class contains will be utilized to access the specific messages sent between users.  
@@ -95,7 +95,7 @@ The message class also contains methods to...<br>
 This message class is simple yet provides crucial functionality to the entire messaging system. Each class created represents a single message that stores all of the necessary information.
   -The class extends the more generic messageInfo parent class providing text functionality. It also is used extensively in the messageHistoy class which stores messages in an array. 
 
-Message was tested through RunLocalTest, within "testMessageToString()". This allowed us to test that messages being created were properly formatted, containing the correct Sender/Reciever, Message (String), and date of the message.   
+Message was tested through RunLocalTest, within "testMessageToString()". This allowed us to test that messages being created were properly formatted, containing the correct Sender/Receiver, Message (String), and date of the message.   
   
 MessageInterface allowed our group to plan out which methods we wanted to include within the Message Class  
 
@@ -104,12 +104,12 @@ MessageInterface allowed our group to plan out which methods we wanted to includ
 MessageInfo Class - <br><br>
 This class contains the following information for each message  
   -The Sender (a user)
-  -Reciever (a user)
+  -Receiver (a user)
   -The Date the message was sent  
 The messageInfo class contains:  
-  -a constructor for creating a new message, containing the sender & reciever
-  -a constructor for creating a new message, containing the sender, reciever, & date  
-  -Methods for obtaining sender, reciever, & date (Method: Getter)
+  -a constructor for creating a new message, containing the sender & receiver
+  -a constructor for creating a new message, containing the sender, receiver, & date  
+  -Methods for obtaining sender, receiver, & date (Method: Getter)
 
 MessageInfo was tested through the MessageClass, as Message extends MessageInfo. Thus, Message was tested through RunLocalTest, within "testMessageToString()". This allowed us to test that messages being created were properly formatted, containing the correct Sender/Reciever, Message (String), and date of the message. 
 
@@ -131,8 +131,8 @@ The DataBaseHelper class also contains methods that..<br>
   -Read/Write Users classes from/to a file<br>
    -Read/Write BufferedImage classes from/to a file<br>
   -Read/Write MessageHistory classes from/to a file<br> <br>
-This class is the backbone of the database because it is what actually retreives and classes from a file and writes classes to a file. It needs to be thread safe because if there are multiple users, they could potentially be trying to both access a file at the same time and we do not want that because it could cause unexpected behavior.
-  -There can be multiple instances of DatabaseHelper used in multpile threads. This allows for greater flecability and lives up to its name as more of a helper class.
+This class is the backbone of the database because it is what actually retrieves and classes from a file and writes classes to a file. It needs to be thread safe because if there are multiple users, they could potentially be trying to both access a file at the same time and we do not want that because it could cause unexpected behavior.
+  -There can be multiple instances of DatabaseHelper used in multiple threads. This allows for greater flexibility and lives up to its name as more of a helper class.
 
 DatabaseHelper was tested through RunLocalTest, within "___". This allowed us to test that User, BufferedImage, and MessageHistory classes could be successfully saved and read from their individual files correctly.
   
