@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4dcb042b-816a-4d3c-863b-70995d5cd8ad" name="Changes" comment="//Implemented loadImage, String userPFP variable, get/setters for userPFPFIle, &#10;&#10;todo: add check in setUserPFPFile for valid file, maybe dont need?&#10;&#10;Implemented RunLocalTest.java">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/bluecatcode_junit_4_10_extended.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/junit.xml" afterDir="false" />
-    </list>
+    <list default="true" id="4dcb042b-816a-4d3c-863b-70995d5cd8ad" name="Changes" comment="//Implemented loadImage, String userPFP variable, get/setters for userPFPFIle, &#10;&#10;todo: add check in setUserPFPFile for valid file, maybe dont need?&#10;&#10;Implemented RunLocalTest.java" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -83,7 +80,7 @@
       <workItem from="1711832242315" duration="12000" />
       <workItem from="1711840701124" duration="398000" />
       <workItem from="1711856669166" duration="199000" />
-      <workItem from="1711898766229" duration="2845000" />
+      <workItem from="1711898766229" duration="2933000" />
     </task>
     <task id="LOCAL-00001" summary="//Added UserClass (3/29/24, 12:43 PM)">
       <option name="closed" value="true" />
