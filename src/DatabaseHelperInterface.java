@@ -1,6 +1,10 @@
-public interface DatabaseHelperInterface {
-    User readUser(String username);
-    boolean writeUser(User user);
+import java.awt.image.BufferedImage;
 
-    // TODO: Add read/write messages and photos
+public interface DatabaseHelperInterface {
+    public User readUser(String username);
+    public boolean writeUser(User user);
+    public BufferedImage readImage(String filename);
+    public boolean writeImage(BufferedImage image, String filename);
+    public MessageHistory readMessageHistory(String username1, String username2);
+    public boolean writeMessageHistory(MessageHistory history);
 }

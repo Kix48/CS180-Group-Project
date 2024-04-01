@@ -28,13 +28,14 @@ public class User implements UserInterface {
         this.username = username;
         this.password = password;
         this.age = age;
+        this.userPFPFile = null;
         friends = new ArrayList<>();
         blockedUsers = new ArrayList<>();
         friendsOnly = false;
 
     } //end constructor
 
-    public User(String username, String password, int age,
+    public User(String username, String password, int age, String userPFPFile,
                 ArrayList<String> friends, ArrayList<String> blockedUsers, boolean friendsOnly) {
 
         if (username == null) {
@@ -48,22 +49,12 @@ public class User implements UserInterface {
         this.username = username;
         this.password = password;
         this.age = age;
+        this.userPFPFile = userPFPFile;
         this.friends = friends;
         this.blockedUsers = blockedUsers;
         this.friendsOnly = friendsOnly;
 
     } //end constructor
-
-    public static BufferedImage loadImage(String fileName) {
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(new File(fileName));
-        } catch (Exception e) {
-            System.out.println("Image not found: " + fileName);
-        }
-        return image;
-    }
-
 
     public String getUsername() { //return username
         return username;
@@ -166,6 +157,7 @@ public class User implements UserInterface {
         output += "Username: " + username + "\n";
         output += "Password: " + password + "\n";
         output += "Age: " + age + "\n";
+        output += "UserPFPFile: " + userPFPFile + "\n";
 
         if (getFriends().isEmpty()) {
             output += "Friends: None" + "\n";

@@ -8,19 +8,37 @@ public class MessageHistory implements MessageHistoryInterface {
     private String user2;
 
     public MessageHistory(String user1, String user2) {
-        this.allMessages = new ArrayList<Message>();
         this.user1 = user1;
         this.user2 = user2;
+        this.allMessages = new ArrayList<Message>();
     }
 
-    public void addMessage(String sender, String receiver, String message) {
+    public MessageHistory(String user1, String user2, ArrayList<Message> messages) {
+        this.user1 = user1;
+        this.user2 = user2;
+        this.allMessages = messages;
+    }
+
+    public String getUser1() {
+        return this.user1;
+    }
+
+    public String getUser2() {
+        return this.user2;
+    }
+
+    public void addMessage(String sender, String message) {
         try {
-            if ((sender.equals(user1) && receiver.equals(user2)) || (sender.equals(user2) && receiver.equals(user1))) {
-                allMessages.add(new Message(sender, receiver, message));
-            }
-            else{
+            String receiver;
+            if (sender.equals(this.user1)) {
+                receiver = this.user2;
+            } else if (sender.equals(this.user2)) {
+                receiver = this.user1;
+            } else {
                 throw new Exception("Sender/Receiver name typo");
             }
+
+            allMessages.add(new Message(sender, receiver, message));
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -49,11 +67,22 @@ public class MessageHistory implements MessageHistoryInterface {
             e.printStackTrace();
         }
     }
+
     public String[] getMessages() {
         String[] messages = new String[allMessages.size()];
         for (int x = 0; x < allMessages.size(); x++) {
             messages[x] = allMessages.get(x).toString();
         }
         return messages;
+    }
+
+    public String toString() {
+        String output = String.format("User1: %s\nUser2: %s\n", this.user1, this.user2);
+
+        for (Message message : this.allMessages) {
+            output += message.toString() + "\n";
+        }
+
+        return output;
     }
 }

@@ -10,6 +10,12 @@ public class MessageInfo implements MessageInfoInterface {
         this.date = new Date();
     }
 
+    public MessageInfo(String sender, String receiver, Date date){
+        this.sender = sender;
+        this.receiver = receiver;
+        this.date = date;
+    }
+
     public String getSender() {
         return sender;
     }

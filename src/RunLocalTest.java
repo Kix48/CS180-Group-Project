@@ -42,7 +42,7 @@ public class RunLocalTest {
     public void testMessageHistoryAddAndRemove() {
         // Test adding and removing messages from the history
         try {
-            messageHistory.addMessage("testUser", "receiverUser", "Test message");
+            messageHistory.addMessage("testUser", "Test message");
         } catch (Exception e) {
             fail("Adding message failed");
         }
