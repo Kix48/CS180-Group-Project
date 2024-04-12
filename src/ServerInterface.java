@@ -1,11 +1,11 @@
 public interface ServerInterface {
 
-    boolean createUser(User user);
-    boolean modifyUser (User user);
-    boolean deleteUser (String username);
-    boolean authenticate(String username, String password);
-    MessageHistory getMessageHistory(String username1, String username2);
-    boolean sendMessage(Message message, String username);
-    User findUser(String username);
+    public boolean createUser(User user);
+    public boolean modifyUser(User user);
+    public boolean deleteUser(String username);
+    public boolean authenticate(String username, String password);
+    public MessageHistory getMessageHistory(String username1, String username2);
+    public boolean sendMessage(Message message, String username);
+    public User findUser(String username);
 
 }
