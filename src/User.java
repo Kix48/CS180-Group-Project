@@ -26,7 +26,7 @@ public class User implements UserInterface {
     private String userPFPFile;
 
 
-    public User(String username, String password, int age) {
+    public User(String username, String password, int age, String userPFPFile) {
 
         if (username == null) {
             throw new NullPointerException();
@@ -39,7 +39,7 @@ public class User implements UserInterface {
         this.username = username;
         this.password = password;
         this.age = age;
-        this.userPFPFile = null;
+        this.userPFPFile = userPFPFile;
         friends = new ArrayList<>();
         blockedUsers = new ArrayList<>();
         friendsOnly = false;

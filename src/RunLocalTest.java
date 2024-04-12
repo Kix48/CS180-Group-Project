@@ -27,7 +27,7 @@ public class RunLocalTest {
     public void setUp() {
         // Initialize your classes here
         databaseHelper = new DatabaseHelper();
-        user = new User("testUser", "password123", 25);
+        user = new User("testUser", "password123", 25, "testUser - PFP.png");
         message = new Message("testUser", "receiverUser", "Hello, JUnit!");
         messageHistory = new MessageHistory("testUser", "receiverUser");
     }
@@ -74,12 +74,12 @@ public class RunLocalTest {
 
     @Test
     public void testBufferedImageReadWrite() {
-        BufferedImage image = databaseHelper.readImage("testUser - PFP.png");
+        BufferedImage image = databaseHelper.readImage(user.getUserPFPFile());
 
         assertNotEquals("Failed to read image file", null, image);
 
         assertEquals("Failed to write image file",
-                true, databaseHelper.writeImage(image, "testUser - PFP.png"));
+                true, databaseHelper.writeImage(image, user.getUserPFPFile()));
     }
 
     @Test

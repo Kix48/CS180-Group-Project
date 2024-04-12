@@ -2,15 +2,17 @@ import java.net.*;
 import java.io.*;
 
 public class Server implements ServerInterface, Runnable {
-    private static final int PORT = 1111;
+    private static final int PORT = 4444;
     private Socket currentSocket;
 
     public Server(Socket currentSocket) {
         this.currentSocket = currentSocket;
     }
 
-    public boolean createUser(User user) {
-        return false;
+    public void registerUser(BufferedReader reader, PrintWriter writer, DatabaseHelper databaseHelper) {
+        // Send response
+        writer.println("SUCCESS");
+        writer.flush();
     }
 
     public boolean modifyUser(User user) {
@@ -42,10 +44,44 @@ public class Server implements ServerInterface, Runnable {
         // TODO: Remove console output
         System.out.println("Client connected");
 
-        // Keep the thread alive
-        // TODO: Keep alive only when connection is still active -> reader.read() != -1
-        while (true) {
-            // Inner logic
+        DatabaseHelper databaseHelper = new DatabaseHelper();
+
+        try {
+            // Instantiate reader and writer
+            BufferedReader reader = new BufferedReader(new InputStreamReader(this.currentSocket.getInputStream()));
+            PrintWriter writer = new PrintWriter(this.currentSocket.getOutputStream());
+
+            // Keep the thread alive
+            while (reader.read() != -1) {
+                if (reader.ready()) {
+                    String requestType = reader.readLine();
+
+                    switch (requestType) {
+                        case "REGISTER":
+                            registerUser(reader, writer, databaseHelper);
+                            break;
+                        default:
+                            // TODO: Remove console output
+                            System.out.println("Unknown request received!");
+
+                            // Empty the input stream
+                            if (reader.ready()) {
+                                String line = reader.readLine();
+                                while (line != null) {
+                                    line = reader.readLine();
+                                }
+                            }
+
+                            // Send back an error
+                            writer.println("ERROR");
+                            writer.println("Unknown request received");
+                            writer.flush();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // TODO: Make error handling more in-depth
+            e.printStackTrace();
         }
     }
 
