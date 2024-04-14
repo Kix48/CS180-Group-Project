@@ -5,10 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4dcb042b-816a-4d3c-863b-70995d5cd8ad" name="Changes" comment="//Implemented loadImage, String userPFP variable, get/setters for userPFPFIle, &#10;&#10;todo: add check in setUserPFPFile for valid file, maybe dont need?&#10;&#10;Implemented RunLocalTest.java">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ClientInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ClientInterface.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ServerInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ServerInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/testUser.txt" beforeDir="false" afterPath="$PROJECT_DIR$/users/testUser.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,7 +91,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="jdk-21.0.2-openjdk-21.0.2-f644763e9732-a81d5c7c" />
+        <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-4f524021" />
       </set>
     </attachedChunks>
   </component>
@@ -108,11 +111,6 @@
       <workItem from="1711840701124" duration="398000" />
       <workItem from="1711856669166" duration="199000" />
       <workItem from="1711898766229" duration="2933000" />
-      <workItem from="1712190917705" duration="1410000" />
-      <workItem from="1713026919831" duration="299000" />
-      <workItem from="1713028623893" duration="2451000" />
-      <workItem from="1713101122086" duration="2000" />
-      <workItem from="1713101293138" duration="11129000" />
     </task>
     <task id="LOCAL-00001" summary="//Added UserClass (3/29/24, 12:43 PM)">
       <option name="closed" value="true" />
@@ -166,7 +164,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/RunLocalTest.java</url>
-          <line>42</line>
+          <line>41</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>

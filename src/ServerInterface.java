@@ -10,4 +10,6 @@ public interface ServerInterface {
     public void getMessageHistory();
     public void sendMessage();
     public void findUser();
+    public void addFriend();
+    public void blockUser();
 }

@@ -123,6 +123,99 @@ public class Server implements ServerInterface, Runnable {
         writer.flush();
     }
 
+    public void addFriend() {
+        try {
+
+            String username = this.reader.readLine();
+            String friendUsername = this.reader.readLine();
+
+            User userPerson1 = this.databaseHelper.readUser(username);
+            User userFriend = this.databaseHelper.readUser(friendUsername);
+
+            //checks for each User (existence/validity)
+            if (userPerson1 == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Invalid username for User adding another");
+                this.writer.flush();
+                return;
+            }
+
+            if (userFriend == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Invalid username friend being added");
+                this.writer.flush();
+                return;
+            }
+
+            //add friend if successfull (all works within method within User.java)
+            userPerson1.addFriends(userFriend.getUsername());
+
+            //send completion if so
+            writer.println("SUCCESS");
+            writer.flush();
+
+        } catch (Exception e) {
+            // TODO: Remove console output
+            e.printStackTrace();
+
+            // Send back an error
+            this.writer.println("ERROR");
+            this.writer.println(e.getMessage());
+            this.writer.flush();
+            return;
+        }
+
+    }
+
+    public void blockUser() {
+
+        try {
+
+            String username = this.reader.readLine();
+            String userToBlock = this.reader.readLine();
+
+            User userPerson1 = this.databaseHelper.readUser(username);
+            User userBlock = this.databaseHelper.readUser(userToBlock);
+
+            //checks for each User (existence/validity)
+            if (userPerson1 == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Invalid username for User blocking another");
+                this.writer.flush();
+                return;
+            }
+
+            if (userBlock == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Invalid username user being blocked");
+                this.writer.flush();
+                return;
+            }
+
+            //block user if successfull (all works within method within User.java)
+            userPerson1.addBlockedUsers(userBlock.getUsername());
+
+            //send completion if so
+            writer.println("SUCCESS");
+            writer.flush();
+
+        } catch (Exception e) {
+            // TODO: Remove console output
+            e.printStackTrace();
+
+            // Send back an error
+            this.writer.println("ERROR");
+            this.writer.println(e.getMessage());
+            this.writer.flush();
+            return;
+        }
+
+    }
+
     public void getMessageHistory() {
 
     }
@@ -182,6 +275,12 @@ public class Server implements ServerInterface, Runnable {
                             break;
                         case "LOGIN":
                             this.authenticate();
+                            break;
+                        case "ADDFRIEND":
+                            this.addFriend();
+                            break;
+                        case "BLOCK":
+                            this.blockUser();
                             break;
                         case "SEND_MESSAGE":
                             this.sendMessage();

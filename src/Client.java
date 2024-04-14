@@ -175,10 +175,86 @@ public class Client implements ClientInterface {
     }
 
     public boolean addFriend(String friendUsername) {
+
+        //
+        // String sanitization
+        // TODO: Add specific error messages (Phase 3)
+        //
+
+        // Check friendUsername & username (Not empty, size check, no newline or tab)
+        if (friendUsername == null || friendUsername.equals("") || (friendUsername.length() > 16)
+                || friendUsername.contains("\n") || friendUsername.contains("\t")) {
+            return false;
+        }
+
+        //remove any whitespace
+        friendUsername = friendUsername.trim();
+
+        try {
+            //send information
+            writer.println();
+            writer.println("ADDFRIEND");
+            writer.println(clientUsername);
+            writer.println(friendUsername);
+            writer.flush();
+
+            //Read Result
+            String resultOutput = reader.readLine();
+
+            if (!resultOutput.equals("SUCCESS")) {
+                String resultMessage = reader.readLine();
+                System.out.printf("%s: %s\n", resultOutput, resultMessage);
+            } else {
+                System.out.println("Friend successfully added!");
+                return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 
-    public boolean blockUser(String username) {
+    public boolean blockUser(String usernameToBlock) {
+
+        //
+        // String sanitization
+        // TODO: Add specific error messages (Phase 3)
+        //
+
+        // Check friendUsername & username (Not empty, size check, no newline or tab)
+        if (usernameToBlock == null || usernameToBlock.equals("") || (usernameToBlock.length() > 16)
+                || usernameToBlock.contains("\n") || usernameToBlock.contains("\t")) {
+            return false;
+        }
+
+        //remove any whitespace
+        usernameToBlock = usernameToBlock.trim();
+
+        try {
+            //send information
+            writer.println();
+            writer.println("BLOCK");
+            writer.println(clientUsername);
+            writer.println(usernameToBlock);
+            writer.flush();
+
+            //Read Result
+            String resultOutput = reader.readLine();
+
+            if (!resultOutput.equals("SUCCESS")) {
+                String resultMessage = reader.readLine();
+                System.out.printf("%s: %s\n", resultOutput, resultMessage);
+            } else {
+                System.out.println("User Successfully Blocked!");
+                return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 
@@ -193,7 +269,7 @@ public class Client implements ClientInterface {
             writer.flush();
 
             String requestResult = reader.readLine();
-            if (!(requestResult.equals("SUCCESS")))  {
+            if (!(requestResult.equals("SUCCESS"))) {
                 String resultMessage = reader.readLine();
                 System.out.printf("%s: %s\n", requestResult, resultMessage);
                 return false;

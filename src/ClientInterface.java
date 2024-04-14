@@ -17,7 +17,7 @@ public interface ClientInterface {
     public boolean register(String username, String password, int age, File userPFP);
     public boolean login(String username, String password);
     public boolean addFriend(String friendUsername);
-    public boolean blockUser(String username);
+    public boolean blockUser(String usernameToBlock);
     public boolean sendMessage(String receiver, String message);
     public boolean removeMessage(int messageIdx);
     public boolean setFriendsOnly(boolean friendsOnly);

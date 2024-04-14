@@ -89,10 +89,10 @@ public class User implements UserInterface {
 
     public void setAge(int age) {
 
-        if (age >= 18) {
+        if (age > 0) {
             this.age = age;
         } else {
-            System.out.println("Error: Age Must be at least 18");
+            System.out.println("Error: Age Must be at least 1");
         }
     } //sets age
 
@@ -101,6 +101,7 @@ public class User implements UserInterface {
     }
 
     public void addFriends(String username) { //adds a friend, checks if already added, removes from blocks if there
+
         if (friends.contains(username)) {
             System.out.println("Friend already added!");
         } else if (blockedUsers.contains(username)) {
