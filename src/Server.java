@@ -19,7 +19,6 @@ public class Server implements ServerInterface, Runnable {
             String username = this.reader.readLine();
             String password = this.reader.readLine();
             int age = Integer.parseInt(this.reader.readLine());
-            // Read file data
 
             // Check if the user already exists
             if (this.databaseHelper.readUser(username) != null) {
@@ -75,28 +74,65 @@ public class Server implements ServerInterface, Runnable {
         writer.flush();
     }
 
-    public boolean modifyUser(User user) {
-        return false;
+    public void modifyUser() {
+
     }
 
-    public boolean deleteUser(String username) {
-        return false;
+    public void deleteUser() {
+
     }
 
-    public boolean authenticate(String username, String password) {
-        return false;
+    public void authenticate() {
+        try {
+            String username = this.reader.readLine();
+            String password = this.reader.readLine();
+
+            // Check if the user exists
+            User user = this.databaseHelper.readUser(username);
+            if (user == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                // We know it is the username, but we cannot tell the client for security purposes
+                this.writer.println("Invalid username/password");
+                this.writer.flush();
+                return;
+            }
+
+            if (!user.getPassword().equals(password)) {
+                // Send back an error
+                this.writer.println("ERROR");
+                // We know it is the password, but we cannot tell the client for security purposes
+                this.writer.println("Invalid username/password");
+                this.writer.flush();
+                return;
+            }
+
+        } catch (Exception e) {
+            // TODO: Remove console output
+            e.printStackTrace();
+
+            // Send back an error
+            this.writer.println("ERROR");
+            this.writer.println(e.getMessage());
+            this.writer.flush();
+            return;
+        }
+
+        // Send successful response
+        writer.println("SUCCESS");
+        writer.flush();
     }
 
-    public MessageHistory getMessageHistory(String username1, String username2) {
-        return null;
+    public void getMessageHistory() {
+
     }
 
-    public boolean sendMessage(Message message, String username) {
-        return false;
+    public void sendMessage() {
+
     }
 
-    public User findUser(String username) {
-        return null;
+    public void findUser() {
+
     }
 
     // Server handler that is run by the thread
@@ -119,6 +155,9 @@ public class Server implements ServerInterface, Runnable {
                     switch (requestType) {
                         case "REGISTER":
                             this.registerUser();
+                            break;
+                        case "LOGIN":
+                            this.authenticate();
                             break;
                         default:
                             // TODO: Remove console output

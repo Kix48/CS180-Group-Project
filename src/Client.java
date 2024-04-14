@@ -47,10 +47,6 @@ public class Client implements ClientInterface {
         // TODO: Add specific error messages (Phase 3)
         //
 
-        // Remove extra whitespaces
-        username = username.trim();
-        password = password.trim();
-
         // Check username (Not empty, size check, no newline or tab)
         if (username == null || username.equals("") || (username.length() > 16)
                 || username.contains("\n") || username.contains("\t")) {
@@ -62,6 +58,10 @@ public class Client implements ClientInterface {
                 || password.contains("\n") || password.contains("\t")) {
             return false;
         }
+
+        // Remove extra whitespaces
+        username = username.trim();
+        password = password.trim();
 
         // Check age (Greater than 0)
         if (age <= 0) {
@@ -108,10 +108,10 @@ public class Client implements ClientInterface {
             }
 
             // Read result
-            String registerResult = reader.readLine();
-            if (!registerResult.equals("SUCCESS")) {
+            String requestResult = reader.readLine();
+            if (!requestResult.equals("SUCCESS")) {
                 String resultMessage = reader.readLine();
-                System.out.printf("%s: %s", registerResult, resultMessage);
+                System.out.printf("%s: %s\n", requestResult, resultMessage);
             } else {
                 System.out.println("Registration succeeded!");
                 return true;
@@ -126,6 +126,49 @@ public class Client implements ClientInterface {
     }
 
     public boolean login(String username, String password) {
+        //
+        // String sanitization
+        // TODO: Add specific error messages (Phase 3)
+        //
+
+        // Check username (Not empty, size check, no newline or tab)
+        if (username == null || username.equals("") || (username.length() > 16)
+                || username.contains("\n") || username.contains("\t")) {
+            return false;
+        }
+
+        // Check password (Not empty, size check, no newline or tab)
+        if (password == null || password.equals("") || (password.length() > 32)
+                || password.contains("\n") || password.contains("\t")) {
+            return false;
+        }
+
+        // Remove extra whitespaces
+        username = username.trim();
+        password = password.trim();
+
+        try {
+            writer.println();
+            writer.println("LOGIN");
+            writer.println(username);
+            writer.println(password);
+            writer.flush();
+
+            // Read result
+            String requestResult = reader.readLine();
+            if (!requestResult.equals("SUCCESS")) {
+                String resultMessage = reader.readLine();
+                System.out.printf("%s: %s\n", requestResult, resultMessage);
+            } else {
+                System.out.println("Login succeeded!");
+                return true;
+            }
+        } catch (Exception e) {
+            // TODO: Remove console output
+            e.printStackTrace();
+            return false;
+        }
+
         return false;
     }
 

@@ -106,6 +106,15 @@ public class RunLocalTest {
                 client.register("ChaseGamble48", "Password123!", 19,
                 new File("images/testUser - PFP.png")));
 
+        assertFalse("We should not be able to login with these credentials!",
+                client.login("ChaseGamble48", "WrongPassword"));
+
+        assertFalse("We should not be able to login with these credentials!",
+                client.login("Unknown_99", "Password123!"));
+
+        assertTrue("We should be able to login with these credentials!",
+                client.login("ChaseGamble48", "Password123!"));
+
         client.shutdown();
     }
 }
