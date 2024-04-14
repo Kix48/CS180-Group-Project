@@ -83,10 +83,9 @@ public class DatabaseHelper implements DatabaseHelperInterface {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            return null;
         }
-
-        return null;
     }
 
     public boolean writeUser(User user) {
@@ -139,9 +138,8 @@ public class DatabaseHelper implements DatabaseHelperInterface {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-
-        return false;
     }
 
     public MessageHistory readMessageHistory(String username1, String username2) {

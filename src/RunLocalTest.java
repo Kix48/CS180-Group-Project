@@ -3,6 +3,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 /**
@@ -91,4 +92,20 @@ public class RunLocalTest {
         assertFalse("Friend was not removed", user.getFriends().contains("friendUser"));
     }
 
+    @Test
+    public void testClient() {
+        Client client = new Client();
+
+        assertTrue(client.initialize());
+
+
+        /*assertTrue(client.register("ChaseGamble48", "Password123!", 19,
+                new File("images/testUser - PFP.png")));*/
+
+        assertTrue("Failed to register a user!",
+                client.register("ChaseGamble48", "Password123!", 19,
+                new File("images/testUser - PFP.png")));
+
+        client.shutdown();
+    }
 }

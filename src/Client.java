@@ -1,12 +1,127 @@
 import java.net.*;
 import java.io.*;
 import java.awt.image.BufferedImage;
+import java.util.Base64;
 
 public class Client implements ClientInterface {
     private static final String HOSTNAME = "localhost";
     private static final int PORT = 4444;
+    private Socket socket;
+    private BufferedReader reader;
+    private PrintWriter writer;
 
-    public boolean register(String username, String password, int age, BufferedImage userPFP) {
+    public boolean initialize() {
+        try {
+            // Cannot use try-with-resources with class field for some reason
+            this.socket = new Socket(HOSTNAME, PORT);
+
+            // TODO: Remove console output
+            System.out.println("Connected to server");
+
+            this.reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+            this.writer = new PrintWriter(this.socket.getOutputStream());
+
+        } catch (Exception e) {
+            // TODO: Remove console output
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    public void shutdown() {
+        try {
+            this.socket.close();
+            this.reader.close();
+            this.writer.close();
+        } catch (Exception e) {
+            // TODO: Remove console output
+            e.printStackTrace();
+        }
+    }
+
+    public boolean register(String username, String password, int age, File userPFP) {
+        //
+        // String sanitization
+        // TODO: Add specific error messages (Phase 3)
+        //
+
+        // Remove extra whitespaces
+        username = username.trim();
+        password = password.trim();
+
+        // Check username (Not empty, size check, no newline or tab)
+        if (username == null || username.equals("") || (username.length() > 16)
+                || username.contains("\n") || username.contains("\t")) {
+            return false;
+        }
+
+        // Check password (Not empty, size check, no newline or tab)
+        if (password == null || password.equals("") || (password.length() > 32)
+                || password.contains("\n") || password.contains("\t")) {
+            return false;
+        }
+
+        // Check age (Greater than 0)
+        if (age <= 0) {
+            return false;
+        }
+
+        // Check profile picture
+        if (userPFP == null || !userPFP.exists() || !userPFP.canRead()) {
+            return false;
+        }
+
+        //
+        // Data transfer
+        //
+
+        try {
+            writer.println();
+            writer.println("REGISTER");
+            writer.println(username);
+            writer.println(password);
+            writer.println(age);
+
+            // Read profile picture file to a byte array
+            int fileLength = (int) userPFP.length();
+            byte[] buffer = new byte[fileLength];
+            BufferedInputStream bufferIn = new BufferedInputStream(new FileInputStream(userPFP));
+            bufferIn.read(buffer, 0, fileLength);
+
+            // Base64 encode the file data
+            String encoded = Base64.getEncoder().encodeToString(buffer);
+            writer.println(encoded.length());
+
+            // Send encoded file data in chunks because it is too large to send in one flush
+            int offset = 0;
+            while (offset < encoded.length()) {
+                int sectionEnd = offset + 1000;
+                if (sectionEnd > encoded.length()) {
+                    sectionEnd = encoded.length();
+                }
+                String section = encoded.substring(offset, sectionEnd);
+                writer.println(section);
+                writer.flush();
+                offset += 1000;
+            }
+
+            // Read result
+            String registerResult = reader.readLine();
+            if (!registerResult.equals("SUCCESS")) {
+                String resultMessage = reader.readLine();
+                System.out.printf("%s: %s", registerResult, resultMessage);
+            } else {
+                System.out.println("Registration succeeded!");
+                return true;
+            }
+        } catch (Exception e) {
+            // TODO: Remove console output
+            e.printStackTrace();
+            return false;
+        }
+
         return false;
     }
 
@@ -32,36 +147,5 @@ public class Client implements ClientInterface {
 
     public boolean setFriendsOnly(boolean friendsOnly) {
         return false;
-    }
-
-    public static void main(String[] args) {
-        try (Socket socket = new Socket(HOSTNAME, PORT)) {
-            // TODO: Remove console output
-            System.out.println("Connected to server");
-
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                PrintWriter writer = new PrintWriter(socket.getOutputStream());
-
-                writer.println();
-                writer.println("REGISTER");
-                writer.flush();
-
-                String registerResult = reader.readLine();
-                if (!registerResult.equals("SUCCESS")) {
-                    String resultMessage = reader.readLine();
-                    System.out.printf("%s: %s", registerResult, resultMessage);
-                } else {
-                    System.out.println("Registration succeeded!");
-                }
-
-            } catch (Exception e) {
-                // TODO: Make error handling more in-depth
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            // TODO: Remove console output
-            e.printStackTrace();
-        }
     }
 }

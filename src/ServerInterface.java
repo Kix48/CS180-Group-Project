@@ -3,7 +3,7 @@ import java.io.PrintWriter;
 
 public interface ServerInterface {
 
-    public void registerUser(BufferedReader reader, PrintWriter writer, DatabaseHelper databaseHelper);
+    public void registerUser();
     public boolean modifyUser(User user);
     public boolean deleteUser(String username);
     public boolean authenticate(String username, String password);

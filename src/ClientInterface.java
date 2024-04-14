@@ -1,4 +1,4 @@
-import java.awt.image.BufferedImage;
+import java.io.File;
 /**
  * ClientInterface.java Interface
  *
@@ -12,7 +12,9 @@ import java.awt.image.BufferedImage;
  * @version 1.0 April 2024
  */
 public interface ClientInterface {
-    public boolean register(String username, String password, int age, BufferedImage userPFP);
+    public boolean initialize();
+    public void shutdown();
+    public boolean register(String username, String password, int age, File userPFP);
     public boolean login(String username, String password);
     public boolean addFriend(String friendUsername);
     public boolean blockUser(String username);
