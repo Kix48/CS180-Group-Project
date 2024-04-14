@@ -129,6 +129,30 @@ public class Server implements ServerInterface, Runnable {
 
     public void sendMessage() {
 
+        try {
+            String sender = this.reader.readLine();
+            String receiver = this.reader.readLine();
+            String messageText = this.reader.readLine();
+
+            Message message = new Message(sender, receiver, messageText);
+
+            // TODO: Send message and add to MessageHistory
+
+                // When sent successfully
+            // writer.println("SUCCESS");
+            // writer.flush();
+
+
+        } catch (Exception e) {
+            // TODO: Remove console output
+            e.printStackTrace();
+
+            // Send back an error
+            writer.println("ERROR");
+            writer.println(e.getMessage());
+            writer.flush();
+        }
+
     }
 
     public void findUser() {
@@ -158,6 +182,9 @@ public class Server implements ServerInterface, Runnable {
                             break;
                         case "LOGIN":
                             this.authenticate();
+                            break;
+                        case "SEND_MESSAGE":
+                            this.sendMessage();
                             break;
                         default:
                             // TODO: Remove console output

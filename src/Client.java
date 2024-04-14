@@ -9,6 +9,7 @@ public class Client implements ClientInterface {
     private Socket socket;
     private BufferedReader reader;
     private PrintWriter writer;
+    private String clientUsername; // Current client's name, updates when logged in successfully
 
     public boolean initialize() {
         try {
@@ -160,7 +161,8 @@ public class Client implements ClientInterface {
                 String resultMessage = reader.readLine();
                 System.out.printf("%s: %s\n", requestResult, resultMessage);
             } else {
-                System.out.println("Login succeeded!");
+                clientUsername = username;    // Assigns current user their name
+                System.out.println("Login succeeded! Welcome " + clientUsername);
                 return true;
             }
         } catch (Exception e) {
@@ -181,7 +183,29 @@ public class Client implements ClientInterface {
     }
 
     public boolean sendMessage(String receiver, String message) {
-        return false;
+        try {
+            writer.println();
+            writer.println("SEND_MESSAGE");
+
+            writer.println(clientUsername);
+            writer.println(receiver);
+            writer.println(message);
+            writer.flush();
+
+            String requestResult = reader.readLine();
+            if (!(requestResult.equals("SUCCESS")))  {
+                String resultMessage = reader.readLine();
+                System.out.printf("%s: %s\n", requestResult, resultMessage);
+                return false;
+            } else {
+                System.out.println("Message sent successfully!");
+                return true;
+            }
+        } catch (IOException e) {
+            // TODO: Remove console output
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean removeMessage(int messageIdx) {
