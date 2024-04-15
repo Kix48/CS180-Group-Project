@@ -24,7 +24,12 @@ public void testMessageHistoryAddAndRemove() { // Test adding and removing messa
 public void testUserFriendsManagement() { // Test adding and removing friends <br>
 public void testBufferedImageReadWrite() { // Test that database can read/write files <br>
 public void testClient() { // Test for initializing a client <br>
-ADD MORE HERE  <br>
+public void testRegisterInvalidUsername() { //Test for registering users (username) <br>
+public void testRegisterInvalidAge() { //Test registering users (age) <br>
+public void testRegisterInvalidProfilePicture() { //Test registering users (profile pic) <br>
+public void testFindUserNotFound() { //Test for finding users <br>
+public void testLoginInvalidCredentials() { //Test for login  <br>
+
 <hr>
 Client Class
 
@@ -37,6 +42,8 @@ shutdown() - shutdown will close the socket, reader, and writer. It will return 
 register() - register will attempt to add a new user to the database. After making sure the username and password are valid and the age is older than 0, an image is read for the profile picture. ALl of this data is then sent to the server. For the profile picture, it is Base64 encoded and sent in chunks because the data cannot all be sent in a single packet. If the server returns an error for any reason, the error message is displayed,  <br>
 
 login() - login will take in an input of a username and password. After verifying the strings are valid, the strings are trimmed to remove whitespace. The client will then print "LOGIN" to the server, as well as the username and password. The client will then read from the server. This will either be "SUCCESS", where **login** will print a welcome message. Any other output will be an error, with a message describing it. <br>
+
+findUser() - (DESCRIPTION HERE) <br>
 
 addFriend() - addFriend takes in an input of a 2nd username of a friend. Once validating that the username is a valid name, it is trimmed. The method then will write "ADD_FRIEND" to the server, along with the clientUsername, and the friend username. The client will then read an output from Server.java. If the output is "SUCCESS", a message will be displayed stating it was a success. If not, an error will be displayed, with details regarding it. <br>
 
@@ -69,7 +76,7 @@ blockUser() - blockUser will be called when the server is reading from the clien
 
 getMessageHistory() - getMessageHistory is called when the server reads "MESSAGE_HISTORY" from the client. It will then verify the users involved are valid. The message history will then be read. If there is history, the server will write the history to the client, along with "SUCCESS". If there is no message history, an error message is sent to the client describing the issue. If there is any other errors, the server will send "ERROR", along with the error presented.  <br>
 
-sendMessage() - (description here) <br>
+sendMessage() - sendMessage will be called when the server recieves "SEND_MESSAGE" from the client. It will verify the sender and reciever as valid users, and ensure there are no conflicts with friending/blocking. It will attempt to create the message, and add it to the history. If any errors arise, sendMessage will send "ERROR" along with an error message to the client. If none arise, it will send "SUCCESS". <br>
 
 removeMessage() - removeMessage will be called when the server recieves "REMOVE_MESSAGE" from the client. It will verify the sender and reciever of the message are valid, and verify the message. removeMessage will then attempt to remove the message. On success, it will write "SUCCESS" to the client. If any issues arise, it will write "ERROR" along with an error message.<br>
 
@@ -80,13 +87,9 @@ findUser() - (description here) <br>
 run() - run keeps track of requests sent from the client, to the server. Run initializes a databaseHelper, and creates new writers and readers. Server will then wait for inputs from the client, such as "REGISTER" or "ADD_FRIEND". It will stay within this loop of managing requests. Once the thread has ended, the reader and writer will be closed. <br>
 
 Server.java also implements ServerInterface. This allowed us to create and include changes to the Server class to be communicated to each other. 
-Server.java also implements **Runnable**, (Description here)
+Server.java also implements **Runnable**
 
 <hr>
-
-Other Changes (we can get rid of this, keeping in-case)
-
-
 
 <hr>
 Phase 1 ReadMe Below
