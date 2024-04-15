@@ -2,6 +2,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Base64;
 
 public class Server implements ServerInterface, Runnable {
@@ -268,20 +269,55 @@ public class Server implements ServerInterface, Runnable {
     public void sendMessage() {
 
         try {
-            String sender = this.reader.readLine();
-            String receiver = this.reader.readLine();
+            String senderUsername = this.reader.readLine();
+            String receiverUsername = this.reader.readLine();
+
+            // Check if the user exists
+            User sender = this.databaseHelper.readUser(senderUsername);
+            User receiver = this.databaseHelper.readUser(receiverUsername);
+            if (sender == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Invalid sender");
+                this.writer.flush();
+                return;
+            } else if (receiver == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Invalid receiver");
+                this.writer.flush();
+                return;
+            }
+
             String messageText = this.reader.readLine();
 
-            Message message = new Message(sender, receiver, messageText);
+            Message message = new Message(senderUsername, receiverUsername, messageText);
+            if (message == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Failed to create message");
+                this.writer.flush();
+                return;
+            }
 
-            // TODO: Send message and add to MessageHistory
+            MessageHistory messageHistory = databaseHelper.readMessageHistory(senderUsername, receiverUsername);
+            if (messageHistory == null) {
+                messageHistory = new MessageHistory(senderUsername, receiverUsername, new ArrayList<Message>());
+            }
 
+            messageHistory.addMessage(senderUsername, messageText);
+
+            if (!databaseHelper.writeMessageHistory(messageHistory)) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Failed to add message");
+                this.writer.flush();
+                return;
+            }
 
             // When sent successfully
-            // writer.println("SUCCESS");
-            // writer.flush();
-
-
+            writer.println("SUCCESS");
+            writer.flush();
         } catch (Exception e) {
             // TODO: Remove console output
             e.printStackTrace();
@@ -291,7 +327,6 @@ public class Server implements ServerInterface, Runnable {
             writer.println(e.getMessage());
             writer.flush();
         }
-
     }
 
     public void findUser() {
