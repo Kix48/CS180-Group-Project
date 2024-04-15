@@ -1,3 +1,91 @@
+Phase 2 ReadMe
+<hr>
+Student Submitted Report: NEED TO PUT WHO HERE
+
+Student Submitted Vocareum Workspace: NEED TO PUT WHO HERE
+
+IMPORTANT FOR RUNNING RUNLOCALTEST
+-For testBufferedImageReadWrite, need to add image before testing to filepath "images/testUser - PFP.png"
+
+How to run & compile project:
+Open the file tab
+Click Project Structure
+Scroll down and click Libraries
+Add a project library from Maven
+Search for JUnit 4.10.jar and extended jar
+Install both
+Once Installed, go to RunLocalTest.java
+Run the test
+Note: RunLocalTest.java includes PUT NEW AMOUNT HERE tests:
+
+public void testUserReadWrite() { // Test writing a user to disk and reading it back
+public void testMessageToString() { //Test the string's validity/match
+public void testMessageHistoryAddAndRemove() { // Test adding and removing messages from the history
+public void testUserFriendsManagement() { // Test adding and removing friends
+public void testBufferedImageReadWrite() { // Test that database can read/write files
+ADD MORE HERE 
+<hr>
+Client Class
+
+(Description of client class). This includes functions such as...
+
+initialize() - (description here) <br>
+
+shutdown() - (description here) <br>
+
+register() - (description here) <br>
+
+login() - (description here) <br>
+
+addFriend() - (description here) <br>
+
+blockUser() - (description here) <br>
+
+sendMessage() - (description here) <br>
+
+removeMessage() - (description here) <br>
+
+setFriendsOnly() - (description here) <br>
+
+Client.java also implements ClientInterface - An interface we used to communicate ideas and changes to the client class. <br>
+
+<hr>
+
+Server Class <br>
+
+(Description of Server class) This includes functions such as...
+
+registerUser() - (description here) <br>
+
+modifyUser() - (description here) <br>
+
+authenticate() - (description here) <br>
+
+addFriend() - (description here) <br>
+
+blockUser() - (description here) <br>
+
+getMessageHistory() - (description here) <br>
+
+sendMessage() - (description here) <br>
+
+findUser() - (description here) <br>
+
+run() - (LONGER description here) <br>
+
+Server.java also implements ServerInterface. This allowed us to create and include changes to the Server class to be communicated to each other. 
+Server.java also implements **Runnable**, (Description here)
+
+<hr>
+
+Other Changes (we can get rid of this, keeping incase)
+
+
+
+<hr>
+Phase 1 ReadMe Below
+<hr>
+
 Student Submitted Report:  Steven Krauter  
 
 Student Submitted Vocareum Workspace:  Steven Krauter  
