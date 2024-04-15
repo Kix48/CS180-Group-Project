@@ -45,7 +45,7 @@ sendMessage() - (description here) <br>
 
 removeMessage() - (description here) <br>
 
-setFriendsOnly() - (description here) <br>
+setFriendsOnly() - setFriendsOnly takes in an input of a boolean, indicating the condition of if a user wants to recieve all messages, or messages only from friends. The client will send the server "FRIENDSONLY", the username of the client, and the boolean of the condition inputted. It will then recieve a String from the server, if it says "SUCCESS", it will say it is completed. If not, the program will output the error presented, with information regarding it.  <br>
 
 Client.java also implements ClientInterface - An interface we used to communicate ideas and changes to the client class. <br>
 
@@ -67,7 +67,7 @@ getMessageHistory() - (description here) <br>
 
 sendMessage() - (description here) <br>
 
-changeVisibility() - (description here) <br>
+changeVisibility() - changeVisibility will be called when the server reads "FRIENDSONLY" from the client. The server will then validate that user is a real one, and then will change the condition of friendsOnly for seeing types of users. If it is a success, the server will send "SUCCESS" to the client, and if an error arises, it will send "ERROR" and extra information to the client.  <br>
 
 findUser() - (description here) <br>
 
