@@ -33,7 +33,7 @@ public void testLoginInvalidCredentials() { //Test for login  <br>
 <hr>
 Client Class
 
-(Description of client class). This includes functions such as...
+The client class handles outgoing requests to communicate with the server. Allows the user to authenticate in to an account and request functions such as...
 
 initialize() - initialize will make a new socket, using HOSTNAME: "localhost", and PORT: "4444". It will initialize a reader using the socket's input stream, and a writer from the sockets output stream. It will catch any exceptions that arise, and return any errors. <br>
 
@@ -64,7 +64,7 @@ Client.java also implements ClientInterface - An interface we used to communicat
 
 Server Class <br>
 
-(Description of Server class) This includes functions such as...
+The server class manages incoming requests from multiple clients (from Client.java). Contains methods that process authentication, user interaction, and database retrieval. This includes functions such as...
 
 registerUser() - registerUser is called when the server receives a "REGISTER" request from the client. The server first checks if a user with the given username already exists. If not, it continues to read in the password and age. In regard to the profile picture, the Base64 encoded data is read in from chunks and then Base64 decoded into its byte array and turned into a BufferedImage. Finally, a call to DatabaseHelper saves the new user data to a file and success is sent back to the client. <br>
 
