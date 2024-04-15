@@ -228,6 +228,7 @@ public class Server implements ServerInterface, Runnable {
 
             // TODO: Send message and add to MessageHistory
 
+
             // When sent successfully
             // writer.println("SUCCESS");
             // writer.flush();

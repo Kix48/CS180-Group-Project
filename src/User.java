@@ -123,24 +123,24 @@ public class User implements UserInterface {
         return friends;
     }
 
-    public boolean addFriends(String username) { //adds a friend, checks if already added, removes from blocks if there
+    public boolean addFriends(String name) { //adds a friend, checks if already added, removes from blocks if there
 
-        if (friends.contains(username)) {
+        if (friends.contains(name)) {
             System.out.println("Friend already added!");
             return false;
-        } else if (blockedUsers.contains(username)) {
-            removeBlockedUsers(username);
-            friends.add(username);
+        } else if (blockedUsers.contains(name)) {
+            removeBlockedUsers(name);
+            friends.add(name);
         } else {
-            friends.add(username);
+            friends.add(name);
         }
 
         return true;
     }
 
-    public boolean removeFriends(String username) { //removes a friend, checks if already in list
-        if (friends.contains(username)) {
-            friends.remove(username);
+    public boolean removeFriends(String name) { //removes a friend, checks if already in list
+        if (friends.contains(name)) {
+            friends.remove(name);
         } else {
             System.out.println("User not in friends list!");
             return false;
@@ -153,25 +153,25 @@ public class User implements UserInterface {
         return blockedUsers;
     }
 
-    public boolean addBlockedUsers(String username) { //adds blocked user, removes from friends if needed
-        if (blockedUsers.contains(username)) {
+    public boolean addBlockedUsers(String name) { //adds blocked user, removes from friends if needed
+        if (blockedUsers.contains(name)) {
             System.out.println("Already added to blocked users!");
             return false;
         } else {
-            if (friends.contains(username)) {
-                removeFriends(username);
-                blockedUsers.add(username);
+            if (friends.contains(name)) {
+                removeFriends(name);
+                blockedUsers.add(name);
             } else {
-                blockedUsers.add(username);
+                blockedUsers.add(name);
             }
         }
 
         return false;
     }
 
-    public boolean removeBlockedUsers(String username) { //removes user from blocked
-        if (blockedUsers.contains(username)) {
-            blockedUsers.remove(username);
+    public boolean removeBlockedUsers(String name) { //removes user from blocked
+        if (blockedUsers.contains(name)) {
+            blockedUsers.remove(name);
         } else {
             System.out.println("User not in blocked list!");
             return false;
