@@ -46,6 +46,8 @@ sendMessage() - sendMessage will send the server "SEND_MESSAGE", the clientUsern
 
 removeMessage() - (description here) <br>
 
+getMessageHistory() - getMessageHistory takes in parameters of a username. After checking its validity, the username is trimmed of whitespace, then the client sends "MESSAGE_HISTORY", the client's username, and the second username. The client will then wait for a response from the server. If it is success, it will display a completion message. If "Error" it will display information regarding it.  <br>
+
 setFriendsOnly() - setFriendsOnly takes in an input of a boolean, indicating the condition of if a user wants to recieve all messages, or messages only from friends. The client will send the server "FRIENDSONLY", the username of the client, and the boolean of the condition inputted. It will then recieve a String from the server, if it says "SUCCESS", it will say it is completed. If not, the program will output the error presented, with information regarding it.  <br>
 
 Client.java also implements ClientInterface - An interface we used to communicate ideas and changes to the client class. <br>
@@ -64,7 +66,7 @@ addFriend() - addFriend will be called when the server is reading from the clien
 
 blockUser() - blockUser will be called when the server is reading from the client. Upon seeing "BLOCK", the blockUser method within Server.java will be called. blockUser will read the two usernames sent from client, then verify they are actual users. It will attemp to add the 2nd user to the first ones blocked list. If successfull, the server will send "SUCCESS" to the client. If any errors or failure appears, it will send "ERROR, along with any erorr information back to the client.  <br>
 
-getMessageHistory() - (description here) <br>
+getMessageHistory() - getmessageHistory is called when the server reads "MESSAGE_HISTORY" from the client. It will then verify the users involved are valid. The message history will then be read. If there is history, the server will write the history to the client, along with "SUCCESS". If there is no message history, an error message is sent to the client describing the issue. If there is any other errors, the server will send "ERROR", along with the error presented.  <br>
 
 sendMessage() - (description here) <br>
 
