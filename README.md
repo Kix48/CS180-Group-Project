@@ -1,8 +1,8 @@
 Phase 2 ReadMe
 <hr>
-Student Submitted Report: NEED TO PUT WHO HERE <br>
+Student Submitted Report:  Chase Gamble <br>
 
-Student Submitted Vocareum Workspace: NEED TO PUT WHO HERE <br>
+Student Submitted Vocareum Workspace:  Chase Gamble <br>
 
 IMPORTANT FOR RUNNING RUNLOCALTEST <br>
 -For testBufferedImageReadWrite, need to add image before testing to filepath "images/testUser - PFP.png" <br>
@@ -23,7 +23,6 @@ public void testMessageToString() { //Test the string's validity/match <br>
 public void testMessageHistoryAddAndRemove() { // Test adding and removing messages from the history <br>
 public void testUserFriendsManagement() { // Test adding and removing friends <br>
 public void testBufferedImageReadWrite() { // Test that database can read/write files <br>
-public void testClient() { // Test for initializing a client <br>
 public void testRegisterInvalidUsername() { //Test for registering users (username) <br>
 public void testRegisterInvalidAge() { //Test registering users (age) <br>
 public void testRegisterInvalidProfilePicture() { //Test registering users (profile pic) <br>
@@ -233,9 +232,7 @@ DatabaseHelper was tested through RunLocalTest.java with the methods testUserRea
   
 DatabaseHelperInterface allowed our group to plan out which methods we wanted to include within the DatabaseHelper class.
 
-
 <hr>
-
 
 Interfaces to be expanded upon in Phase 2 - <br><br>
 
