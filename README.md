@@ -34,7 +34,7 @@ initialize() - initialize will make a new socket, using HOSTNAME: "localhost", a
 
 shutdown() - shutdown will close the socket, reader, and writer. It will return any errors if presented. <br>
 
-register() - (description here) <br>
+register() - (description here) <br> NEED TO DO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 login() - login will take in an input of a username and password. After verifying the strings are valid, the strings are trimmed to remove whitespace. The client will then print "LOGIN" to the server, as well as the username and password. The client will then read from the server. This will either be "SUCCESS", where **login** will print a welcome message. Any other output will be an error, with a message describing it. <br>
 
@@ -44,7 +44,7 @@ blockUser() - blockUser takes in an input of a 2nd username of a user needing to
 
 sendMessage() - sendMessage will send the server "SEND_MESSAGE", the clientUsername, the reciever of the message, and the message itself. It will then read an output from the server. If "SUCCESS", it will return a confirmation that it has completed. It may also read "ERROR", as well as a message describing the issue. <br>
 
-removeMessage() - (description here) <br>
+removeMessage() - removeMessage takes in an input of a reciever, and the message index. After verifying the inputs are valid, the client will write "REMOVE_MESSAGE" to the server, along with the clientUsername, reciever, and message index. The client will then wait for an output from the server. If it is "SUCCESS", the method will display a completion message. If it recieves "ERORR", it will recieve an error message and display it. <br>
 
 getMessageHistory() - getMessageHistory takes in parameters of a username. After checking its validity, the username is trimmed of whitespace, then the client sends "MESSAGE_HISTORY", the client's username, and the second username. The client will then wait for a response from the server. If it is success, it will display a completion message. If "Error" it will display information regarding it.  <br>
 
@@ -67,6 +67,8 @@ addFriend() - addFriend will be called when the server is reading from the clien
 blockUser() - blockUser will be called when the server is reading from the client. Upon seeing "BLOCK", the blockUser method within Server.java will be called. blockUser will read the two usernames sent from client, then verify they are actual users. It will attemp to add the 2nd user to the first ones blocked list. If successfull, the server will send "SUCCESS" to the client. If any errors or failure appears, it will send "ERROR, along with any erorr information back to the client.  <br>
 
 getMessageHistory() - getmessageHistory is called when the server reads "MESSAGE_HISTORY" from the client. It will then verify the users involved are valid. The message history will then be read. If there is history, the server will write the history to the client, along with "SUCCESS". If there is no message history, an error message is sent to the client describing the issue. If there is any other errors, the server will send "ERROR", along with the error presented.  <br>
+
+removeMessage() - removeMessage will be called when the server recieves "REMOVE_MESSAGE" from the client. It will verify the sender and reciever of the message are valid, and verify the message. removeMessage will then attempt to remove the message. On success, it will write "SUCCESS" to the client. If any issues arise, it will write "ERROR" along with an error message.<br>
 
 sendMessage() - (description here) <br>
 
