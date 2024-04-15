@@ -18,12 +18,12 @@ Once Installed, go to RunLocalTest.java
 Run the test
 Note: RunLocalTest.java includes PUT NEW AMOUNT HERE tests:
 
-public void testUserReadWrite() { // Test writing a user to disk and reading it back
-public void testMessageToString() { //Test the string's validity/match
-public void testMessageHistoryAddAndRemove() { // Test adding and removing messages from the history
-public void testUserFriendsManagement() { // Test adding and removing friends
-public void testBufferedImageReadWrite() { // Test that database can read/write files
-ADD MORE HERE 
+public void testUserReadWrite() { // Test writing a user to disk and reading it back <br>
+public void testMessageToString() { //Test the string's validity/match <br>
+public void testMessageHistoryAddAndRemove() { // Test adding and removing messages from the history <br>
+public void testUserFriendsManagement() { // Test adding and removing friends <br>
+public void testBufferedImageReadWrite() { // Test that database can read/write files <br>
+ADD MORE HERE  <br>
 <hr>
 Client Class
 
