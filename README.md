@@ -70,7 +70,7 @@ getMessageHistory() - getmessageHistory is called when the server reads "MESSAGE
 
 removeMessage() - removeMessage will be called when the server recieves "REMOVE_MESSAGE" from the client. It will verify the sender and reciever of the message are valid, and verify the message. removeMessage will then attempt to remove the message. On success, it will write "SUCCESS" to the client. If any issues arise, it will write "ERROR" along with an error message.<br>
 
-sendMessage() - (description here) <br>
+sendMessage() - sendMessage will be called when the server reads "SEND_MESSAGE" from the client. It will verify the users involved, ensuring they are valid. sendMessage will create the message, and attempt to add it to the messageHistory. If any errors occur, the server will send "ERROR" to the client, along with an error message. If none arise, it will send "SUCCESS" to the client. <br>
 
 changeVisibility() - changeVisibility will be called when the server reads "FRIENDSONLY" from the client. The server will then validate that user is a real one, and then will change the condition of friendsOnly for seeing types of users. If it is a success, the server will send "SUCCESS" to the client, and if an error arises, it will send "ERROR" and extra information to the client.  <br>
 
