@@ -290,6 +290,36 @@ public class Server implements ServerInterface, Runnable {
 
             String messageText = this.reader.readLine();
 
+            // Check if blocked
+            for (String blockedUsername : receiver.getBlockedUsers()) {
+                if (blockedUsername.equals(senderUsername)) {
+                    // Send back an error
+                    this.writer.println("ERROR");
+                    this.writer.println("Sender is blocked");
+                    this.writer.flush();
+                    return;
+                }
+            }
+
+            // Check if friend when friendOnly is on
+            if (receiver.isFriendsOnly()) {
+                boolean isFriend = false;
+                for (String friendsUsername : receiver.getFriends()) {
+                    if (friendsUsername.equals(senderUsername)) {
+                        isFriend = true;
+                        break;
+                    }
+                }
+
+                if (!isFriend) {
+                    // Send back an error
+                    this.writer.println("ERROR");
+                    this.writer.println("Sender is not a friend");
+                    this.writer.flush();
+                    return;
+                }
+            }
+
             Message message = new Message(senderUsername, receiverUsername, messageText);
             if (message == null) {
                 // Send back an error
