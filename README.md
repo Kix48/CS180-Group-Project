@@ -72,7 +72,7 @@ changeVisibility() - changeVisibility will be called when the server reads "FRIE
 
 findUser() - (description here) <br>
 
-run() - (LONGER description here) <br>
+run() - run keeps track of requests sent from the client, to the server. Run initializes a databaseHelper, and and creates new writers and readers. Server will then wait for inputs from the client, such as "REGISTER" or "ADD_FRIEND". It will stay within this loop of managing requests. Once the thread has ended, the reader and writer will be closed. <br>
 
 Server.java also implements ServerInterface. This allowed us to create and include changes to the Server class to be communicated to each other. 
 Server.java also implements **Runnable**, (Description here)
