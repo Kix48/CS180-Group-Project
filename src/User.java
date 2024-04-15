@@ -100,33 +100,40 @@ public class User implements UserInterface {
         return friends;
     }
 
-    public void addFriends(String username) { //adds a friend, checks if already added, removes from blocks if there
+    public boolean addFriends(String username) { //adds a friend, checks if already added, removes from blocks if there
 
         if (friends.contains(username)) {
             System.out.println("Friend already added!");
+            return false;
         } else if (blockedUsers.contains(username)) {
             removeBlockedUsers(username);
             friends.add(username);
         } else {
             friends.add(username);
         }
+
+        return true;
     }
 
-    public void removeFriends(String username) { //removes a friend, checks if already in list
+    public boolean removeFriends(String username) { //removes a friend, checks if already in list
         if (friends.contains(username)) {
             friends.remove(username);
         } else {
             System.out.println("User not in friends list!");
+            return false;
         }
+
+        return true;
     }
 
     public ArrayList<String> getBlockedUsers() { //returns blockedUser ArrayList
         return blockedUsers;
     }
 
-    public void addBlockedUsers(String username) { //adds blocked user, removes from friends if needed
+    public boolean addBlockedUsers(String username) { //adds blocked user, removes from friends if needed
         if (blockedUsers.contains(username)) {
             System.out.println("Already added to blocked users!");
+            return false;
         } else {
             if (friends.contains(username)) {
                 removeFriends(username);
@@ -134,16 +141,20 @@ public class User implements UserInterface {
             } else {
                 blockedUsers.add(username);
             }
-
         }
+
+        return false;
     }
 
-    public void removeBlockedUsers(String username) { //removes user from blocked
+    public boolean removeBlockedUsers(String username) { //removes user from blocked
         if (blockedUsers.contains(username)) {
             blockedUsers.remove(username);
         } else {
             System.out.println("User not in blocked list!");
+            return false;
         }
+
+        return true;
     }
 
     public boolean isFriendsOnly() { //returns if friendsOnly T/F

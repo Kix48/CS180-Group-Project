@@ -193,7 +193,7 @@ public class Client implements ClientInterface {
         try {
             //send information
             writer.println();
-            writer.println("ADDFRIEND");
+            writer.println("ADD_FRIEND");
             writer.println(clientUsername);
             writer.println(friendUsername);
             writer.flush();

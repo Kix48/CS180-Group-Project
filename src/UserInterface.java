@@ -33,15 +33,15 @@ public interface UserInterface {
 
     ArrayList<String> getFriends();
 
-    void addFriends(String username);
+    boolean addFriends(String username);
 
-    void removeFriends(String username);
+    boolean removeFriends(String username);
 
     ArrayList<String> getBlockedUsers();
 
-    void addBlockedUsers(String username);
+    boolean addBlockedUsers(String username);
 
-    void removeBlockedUsers(String username);
+    boolean removeBlockedUsers(String username);
 
     boolean isFriendsOnly();
 

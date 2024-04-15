@@ -149,8 +149,10 @@ public class Server implements ServerInterface, Runnable {
                 return;
             }
 
-            //add friend if successfull (all works within method within User.java)
-            userPerson1.addFriends(userFriend.getUsername());
+            //add friend if successful (all works within method within User.java)
+            if (userPerson1.addFriends(userFriend.getUsername())) {
+                this.databaseHelper.writeUser(userPerson1);
+            }
 
             //send completion if so
             writer.println("SUCCESS");
@@ -196,8 +198,10 @@ public class Server implements ServerInterface, Runnable {
                 return;
             }
 
-            //block user if successfull (all works within method within User.java)
-            userPerson1.addBlockedUsers(userBlock.getUsername());
+            //block user if successful (all works within method within User.java)
+            if (userPerson1.addBlockedUsers(userBlock.getUsername())) {
+                this.databaseHelper.writeUser(userPerson1);
+            }
 
             //send completion if so
             writer.println("SUCCESS");
@@ -231,7 +235,7 @@ public class Server implements ServerInterface, Runnable {
 
             // TODO: Send message and add to MessageHistory
 
-                // When sent successfully
+            // When sent successfully
             // writer.println("SUCCESS");
             // writer.flush();
 
@@ -276,7 +280,7 @@ public class Server implements ServerInterface, Runnable {
                         case "LOGIN":
                             this.authenticate();
                             break;
-                        case "ADDFRIEND":
+                        case "ADD_FRIEND":
                             this.addFriend();
                             break;
                         case "BLOCK":
