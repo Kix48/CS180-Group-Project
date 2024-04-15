@@ -55,7 +55,7 @@ public class MessageHistory implements MessageHistoryInterface {
             }
 
             allMessages.add(new Message(sender, receiver, message));
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
