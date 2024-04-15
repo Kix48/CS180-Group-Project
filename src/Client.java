@@ -6,6 +6,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+/**
+ * Client.java Class
+ *
+ * Purdue University CS18000 Spring 2024
+ *
+ * @author Giancarlo Guccione
+ * @author Steven Krauter
+ * @author Justin Lin
+ * @author Wael Harith
+ * @author Chase Gamble
+ * @version 1.0 April 2024
+ */
 
 public class Client implements ClientInterface {
     private static final String HOSTNAME = "localhost";
