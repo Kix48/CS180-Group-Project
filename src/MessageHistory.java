@@ -43,7 +43,7 @@ public class MessageHistory implements MessageHistoryInterface {
     }
 
     //adds a message to the message history while verifying the sender/receiver
-    public void addMessage(String sender, String message) { 
+    public boolean addMessage(String sender, String message) {
         try {
             String receiver;
             if (sender.equals(this.user1)) {
@@ -57,32 +57,31 @@ public class MessageHistory implements MessageHistoryInterface {
             allMessages.add(new Message(sender, receiver, message));
         } catch (Exception e){
             e.printStackTrace();
+            return false;
         }
+
+        return true;
     }
 
     //checks message history and removes the first message (whose sender and date match the values inputted)
-    public void removeMessage(String sender, Date date) { 
+    public boolean removeMessage(String sender, int index) {
         try {
-            boolean removed = false;
-            for (int x = 0; x < allMessages.size(); x++) {
-                Message message = allMessages.get(x);
-
-                String d1 = message.getDate().toString();
-                String d2 = date.toString();
-
-                if (message.getSender().equals(sender) && d1.equals(d2)) {
-                    allMessages.remove(x);
-                    removed = true;
-                    break;
-                }
+            if (index >= allMessages.size()) {
+                throw new IndexOutOfBoundsException("Message index out of bounds");
             }
 
-            if (!removed){
-                throw new Exception("Failed to remove message! Check sender/date for typos");
+            Message message = allMessages.get(index);
+            if (!message.getSender().equals(sender)) {
+                throw new Exception("Cannot remove message that was not sent by the client");
             }
+
+            allMessages.remove(index);
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+
+        return true;
     }
 
     //returns an array representing the complete message history (in text legible format)

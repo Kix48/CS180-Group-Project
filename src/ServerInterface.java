@@ -7,6 +7,7 @@ public interface ServerInterface {
     public void authenticate();
     public void getMessageHistory();
     public void sendMessage();
+    public void removeMessage();
     public void findUser();
     public void addFriend();
     public void blockUser();

@@ -69,7 +69,7 @@ public class RunLocalTest {
         assertNotEquals("Could not read the message history",
                 null, readHistory);
 
-        messageHistory.removeMessage("testUser", new java.util.Date());
+        messageHistory.removeMessage("testUser", 0);
         assertEquals("Message was not removed", 0, messageHistory.getMessages().length);
     }
 
@@ -118,7 +118,9 @@ public class RunLocalTest {
             System.out.println(message);
         }*/
 
-        client.sendMessage("testUser", "Hello");
+        //client.sendMessage("testUser", "Hello");
+
+        client.removeMessage("testUser", 0);
 
         client.shutdown();
     }

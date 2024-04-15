@@ -30,11 +30,11 @@ Client Class
 
 (Description of client class). This includes functions such as...
 
-initialize() - initialize will make a new socket, using HOSTNAME: "localhost", and PORT: "4444". It will intialize a reader using the socket's input stream, and a writer from the sockets output stream. It will catch any exceptions that arise, and return any errors. <br>
+initialize() - initialize will make a new socket, using HOSTNAME: "localhost", and PORT: "4444". It will initialize a reader using the socket's input stream, and a writer from the sockets output stream. It will catch any exceptions that arise, and return any errors. <br>
 
 shutdown() - shutdown will close the socket, reader, and writer. It will return any errors if presented. <br>
 
-register() - (description here) <br>
+register() - register will attempt to add a new user to the database. After making sure the username and password are valid and the age is older than 0, an image is read for the profile picture. ALl of this data is then sent to the server. For the profile picture, it is Base64 encoded and sent in chunks because the data cannot all be sent in a single packet. If the server returns an error for any reason, the error message is displayed,  <br>
 
 login() - login will take in an input of a username and password. After verifying the strings are valid, the strings are trimmed to remove whitespace. The client will then print "LOGIN" to the server, as well as the username and password. The client will then read from the server. This will either be "SUCCESS", where **login** will print a welcome message. Any other output will be an error, with a message describing it. <br>
 
@@ -42,11 +42,14 @@ addFriend() - addFriend takes in an input of a 2nd username of a friend. Once va
 
 blockUser() - blockUser takes in an input of a 2nd username of a user needing to be blocked. Once validating that the username is a valid name, it is trimmed. The method will then write "BLOCK" to the server, along with the name of the clientUser, and the user to be blocked. The client will read an output from Server.java. If the output is "SUCCESS", a message will be displayed stating it was a success. If not, an error will be displayed, with details regarding it. <br>
 
-sendMessage() - sendMessage will send the server "SEND_MESSAGE", the clientUsername, the reciever of the message, and the message itself. It will then read an output from the server. If "SUCCESS", it will return a confirmation that it has completed. It may also read "ERROR", as well as a message describing the issue. <br>
+sendMessage() - sendMessage will send the server "SEND_MESSAGE", the clientUsername, the receiver of the message, and the message itself. It will then read an output from the server. If "SUCCESS", it will return a confirmation that it has completed. It may also read "ERROR", as well as a message describing the issue. <br>
 
-removeMessage() - (description here) <br>
+removeMessage() - removeMessage takes in an input of a reciever, and the message index. After verifying the inputs are valid, the client will write "REMOVE_MESSAGE" to the server, along with the clientUsername, reciever, and message index. The client will then wait for an output from the server. If it is "SUCCESS", the method will display a completion message. If it recieves "ERORR", it will recieve an error message and display it. <br>
 
-setFriendsOnly() - setFriendsOnly takes in an input of a boolean, indicating the condition of if a user wants to recieve all messages, or messages only from friends. The client will send the server "FRIENDSONLY", the username of the client, and the boolean of the condition inputted. It will then recieve a String from the server, if it says "SUCCESS", it will say it is completed. If not, the program will output the error presented, with information regarding it.  <br>
+
+getMessageHistory() - getMessageHistory takes in parameters of a username. After checking its validity, the username is trimmed of whitespace, then the client sends "MESSAGE_HISTORY", the client's username, and the second username. The client will then wait for a response from the server. If it is success, it will display a completion message. If "Error" it will display information regarding it.  <br>
+
+setFriendsOnly() - setFriendsOnly takes in an input of a boolean, indicating the condition of if a user wants to receive all messages, or messages only from friends. The client will send the server "FRIENDS_ONLY", the username of the client, and the boolean of the condition inputted. It will then receive a String from the server, if it says "SUCCESS", it will say it is completed. If not, the program will output the error presented, with information regarding it.  <br>
 
 Client.java also implements ClientInterface - An interface we used to communicate ideas and changes to the client class. <br>
 
@@ -56,30 +59,32 @@ Server Class <br>
 
 (Description of Server class) This includes functions such as...
 
-registerUser() - (description here) <br>
+registerUser() - registerUser is called when the server receives a "REGISTER" request from the client. The server first checks if a user with the given username already exists. If not, it continues to read in the password and age. In regard to the profile picture, the Base64 encoded data is read in from chunks and then Base64 decoded into its byte array and turned into a BufferedImage. Finally, a call to DatabaseHelper saves the new user data to a file and success is sent back to the client. <br>
 
 authenticate() - authenticate will be called when the server reads "LOGIN" from the client. authenticate will then check that the username of the user logging in is valid. It will then check that the password inputted matches the password of the client. If the password is correct, the server will send the client "SUCCESS". If not, it will send "ERROR", with a message describing it. <br>
 
-addFriend() - addFriend will be called when the server is reading from the client. Upon seeing "ADD_FRIEND", the addFriend method within Server.java will be called. addFriend Will read the two usernames sent from the client, then verify they are actual users. It will then attemp to add the friend to the user, and upon success, will send "SUCCESS" to the client. If failure or any other error is presented, an error message will be sent back to the client. <br>
+addFriend() - addFriend will be called when the server is reading from the client. Upon seeing "ADD_FRIEND", the addFriend method within Server.java will be called. addFriend Will read the two usernames sent from the client, then verify they are actual users. It will then attempt to add the friend to the user, and upon success, will send "SUCCESS" to the client. If failure or any other error is presented, an error message will be sent back to the client. <br>
 
-blockUser() - blockUser will be called when the server is reading from the client. Upon seeing "BLOCK", the blockUser method within Server.java will be called. blockUser will read the two usernames sent from client, then verify they are actual users. It will attemp to add the 2nd user to the first ones blocked list. If successfull, the server will send "SUCCESS" to the client. If any errors or failure appears, it will send "ERROR, along with any erorr information back to the client.  <br>
+blockUser() - blockUser will be called when the server is reading from the client. Upon seeing "BLOCK", the blockUser method within Server.java will be called. blockUser will read the two usernames sent from client, then verify they are actual users. It will attempt to add the 2nd user to the first ones blocked list. If successful, the server will send "SUCCESS" to the client. If any errors or failure appears, it will send "ERROR, along with any error information back to the client.  <br>
 
-getMessageHistory() - (description here) <br>
+getMessageHistory() - getMessageHistory is called when the server reads "MESSAGE_HISTORY" from the client. It will then verify the users involved are valid. The message history will then be read. If there is history, the server will write the history to the client, along with "SUCCESS". If there is no message history, an error message is sent to the client describing the issue. If there is any other errors, the server will send "ERROR", along with the error presented.  <br>
 
 sendMessage() - (description here) <br>
 
-changeVisibility() - changeVisibility will be called when the server reads "FRIENDSONLY" from the client. The server will then validate that user is a real one, and then will change the condition of friendsOnly for seeing types of users. If it is a success, the server will send "SUCCESS" to the client, and if an error arises, it will send "ERROR" and extra information to the client.  <br>
+removeMessage() - removeMessage will be called when the server recieves "REMOVE_MESSAGE" from the client. It will verify the sender and reciever of the message are valid, and verify the message. removeMessage will then attempt to remove the message. On success, it will write "SUCCESS" to the client. If any issues arise, it will write "ERROR" along with an error message.<br>
+
+changeVisibility() - changeVisibility will be called when the server reads "FRIENDS_ONLY" from the client. The server will then validate that user is a real one, and then will change the condition of friendsOnly for seeing types of users. If it is a success, the server will send "SUCCESS" to the client, and if an error arises, it will send "ERROR" and extra information to the client.  <br>
 
 findUser() - (description here) <br>
 
-run() - run keeps track of requests sent from the client, to the server. Run initializes a databaseHelper, and and creates new writers and readers. Server will then wait for inputs from the client, such as "REGISTER" or "ADD_FRIEND". It will stay within this loop of managing requests. Once the thread has ended, the reader and writer will be closed. <br>
+run() - run keeps track of requests sent from the client, to the server. Run initializes a databaseHelper, and creates new writers and readers. Server will then wait for inputs from the client, such as "REGISTER" or "ADD_FRIEND". It will stay within this loop of managing requests. Once the thread has ended, the reader and writer will be closed. <br>
 
 Server.java also implements ServerInterface. This allowed us to create and include changes to the Server class to be communicated to each other. 
 Server.java also implements **Runnable**, (Description here)
 
 <hr>
 
-Other Changes (we can get rid of this, keeping incase)
+Other Changes (we can get rid of this, keeping in-case)
 
 
 
@@ -198,7 +203,7 @@ The messageInfo class contains:
   -a constructor for creating a new message, containing the sender, receiver, & date  
   -Methods for obtaining sender, receiver, & date (Method: Getter)
 
-MessageInfo was tested through the MessageClass, as Message extends MessageInfo. Thus, Message was tested through RunLocalTest, within "testMessageToString()". This allowed us to test that messages being created were properly formatted, containing the correct Sender/Reciever, Message (String), and date of the message. 
+MessageInfo was tested through the MessageClass, as Message extends MessageInfo. Thus, Message was tested through RunLocalTest, within "testMessageToString()". This allowed us to test that messages being created were properly formatted, containing the correct Sender/Receiver, Message (String), and date of the message. 
 
 The MessageInfo class implements MessageInfoInterface, which contains methods used in MessageInfo. We used MessageInfoInterface to communicate with our team on what methods and functions were required for MessageInfo.  
 
@@ -214,7 +219,7 @@ This class handles the reading and writing of the database users, images, and me
   -userGatekeeper (synchronized object to block execution when dealing with reading/writing users at the same time)<br>
   -imageGatekeeper (synchronized object to block execution when dealing with reading/writing images at the same time)<br>
   -messageGatekeeper (synchronized object to block execution when dealing with reading/writing messages at the same time)<br>
-The DataBaseHelper class also contains methods that..<br>
+The DataBaseHelper class also contains methods that...<br>
   -Read/Write Users classes from/to a file<br>
    -Read/Write BufferedImage classes from/to a file<br>
   -Read/Write MessageHistory classes from/to a file<br> <br>
@@ -235,7 +240,7 @@ ClientInterface - Serves as an outline for all functions that will be completed 
 -Registers and logs in users based off the provided username and password<br>
 -The ability to add friends and blocks users<br>
 -The client can send and remove messages that they have sent previously<br>
--The client can change whether they are open to direct essaging from all users or just friends<br>
+-The client can change whether they are open to direct messaging from all users or just friends<br>
 
 ServerInterface - Can be used as the outline for all functions that will be completed by the server. These functions will be called once the client sends the request.  
 -Creates, modifies, and deletes users.  
