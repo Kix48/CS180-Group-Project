@@ -1,22 +1,22 @@
 Phase 2 ReadMe
 <hr>
-Student Submitted Report: NEED TO PUT WHO HERE
+Student Submitted Report: NEED TO PUT WHO HERE <br>
 
-Student Submitted Vocareum Workspace: NEED TO PUT WHO HERE
+Student Submitted Vocareum Workspace: NEED TO PUT WHO HERE <br>
 
-IMPORTANT FOR RUNNING RUNLOCALTEST
--For testBufferedImageReadWrite, need to add image before testing to filepath "images/testUser - PFP.png"
+IMPORTANT FOR RUNNING RUNLOCALTEST <br>
+-For testBufferedImageReadWrite, need to add image before testing to filepath "images/testUser - PFP.png" <br>
 
-How to run & compile project:
-Open the file tab
-Click Project Structure
-Scroll down and click Libraries
-Add a project library from Maven
-Search for JUnit 4.10.jar and extended jar
-Install both
-Once Installed, go to RunLocalTest.java
-Run the test
-Note: RunLocalTest.java includes PUT NEW AMOUNT HERE tests:
+How to run & compile project: <br>
+Open the file tab <br>
+Click Project Structure <br>
+Scroll down and click Libraries <br>
+Add a project library from Maven <br>
+Search for JUnit 4.10.jar and extended jar <br>
+Install both <br>
+Once Installed, go to RunLocalTest.java <br>
+Run the test <br>
+Note: RunLocalTest.java includes the following tests: <br>
 
 public void testUserReadWrite() { // Test writing a user to disk and reading it back <br>
 public void testMessageToString() { //Test the string's validity/match <br>
