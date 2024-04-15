@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.net.*;
 import java.io.*;
 import java.util.Base64;
@@ -72,10 +73,6 @@ public class Server implements ServerInterface, Runnable {
         // Send successful response
         writer.println("SUCCESS");
         writer.flush();
-    }
-
-    public void deleteUser() {
-
     }
 
     public void authenticate() {
@@ -249,7 +246,66 @@ public class Server implements ServerInterface, Runnable {
     }
 
     public void findUser() {
+        try {
+            String username = reader.readLine();
 
+            User foundUser = this.databaseHelper.readUser(username);
+
+            if (foundUser == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("User not found");
+                this.writer.flush();
+                return;
+            }
+
+            File userPFP = new File("images/" + foundUser.getUserPFPFile());
+
+            // Check profile picture
+            if (userPFP == null || !userPFP.exists() || !userPFP.canRead()) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("User profile picture could not be read");
+                this.writer.flush();
+                return;
+            }
+
+            // Send back user data
+            writer.println("SUCCESS");
+            writer.println(foundUser.getUsername());
+            writer.println(foundUser.getAge());
+
+            // Read profile picture file to a byte array
+            int fileLength = (int) userPFP.length();
+            byte[] buffer = new byte[fileLength];
+            BufferedInputStream bufferIn = new BufferedInputStream(new FileInputStream(userPFP));
+            bufferIn.read(buffer, 0, fileLength);
+
+            // Base64 encode the file data
+            String encoded = Base64.getEncoder().encodeToString(buffer);
+            writer.println(encoded.length());
+
+            // Send encoded file data in chunks because it is too large to send in one flush
+            int offset = 0;
+            while (offset < encoded.length()) {
+                int sectionEnd = offset + 1000;
+                if (sectionEnd > encoded.length()) {
+                    sectionEnd = encoded.length();
+                }
+                String section = encoded.substring(offset, sectionEnd);
+                writer.println(section);
+                writer.flush();
+                offset += 1000;
+            }
+        } catch (Exception e) {
+            // TODO: Remove console output
+            e.printStackTrace();
+
+            // Send back an error
+            this.writer.println("ERROR");
+            this.writer.println(e.getMessage());
+            this.writer.flush();
+        }
     }
 
     public void changeVisibility() {
@@ -314,6 +370,9 @@ public class Server implements ServerInterface, Runnable {
                         case "LOGIN":
                             this.authenticate();
                             break;
+                        case "FIND_USER":
+                            this.findUser();
+                            break;
                         case "ADD_FRIEND":
                             this.addFriend();
                             break;
@@ -323,7 +382,7 @@ public class Server implements ServerInterface, Runnable {
                         case "SEND_MESSAGE":
                             this.sendMessage();
                             break;
-                        case "FRIENDSONLY":
+                        case "FRIENDS_ONLY":
                             this.changeVisibility();
                             break;
                         default:

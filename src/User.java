@@ -23,8 +23,29 @@ public class User implements UserInterface {
     private ArrayList<String> friends;
     private ArrayList<String> blockedUsers;
     private boolean friendsOnly;
-    private String userPFPFile;
+    private String userPFPFile; // Only used in the server
+    private BufferedImage userPFPImage; // Only used in the client
 
+    public User(String username, int age, BufferedImage userPFPImage) {
+
+        if (username == null) {
+            throw new NullPointerException();
+        }
+
+        if (!(age > 0)) {
+            throw new IllegalArgumentException();
+        }
+
+        this.username = username;
+        this.password = "";
+        this.age = age;
+        this.userPFPFile = "";
+        this.userPFPImage = userPFPImage;
+        friends = new ArrayList<>();
+        blockedUsers = new ArrayList<>();
+        friendsOnly = false;
+
+    } //end constructor
 
     public User(String username, String password, int age, String userPFPFile) {
 
@@ -32,7 +53,7 @@ public class User implements UserInterface {
             throw new NullPointerException();
         }
 
-        if (!(age >= 18)) {
+        if (!(age > 0)) {
             throw new IllegalArgumentException();
         }
 
@@ -40,6 +61,7 @@ public class User implements UserInterface {
         this.password = password;
         this.age = age;
         this.userPFPFile = userPFPFile;
+        this.userPFPImage = null;
         friends = new ArrayList<>();
         blockedUsers = new ArrayList<>();
         friendsOnly = false;
@@ -53,7 +75,7 @@ public class User implements UserInterface {
             throw new NullPointerException();
         }
 
-        if (!(age >= 18)) {
+        if (!(age > 0)) {
             throw new IllegalArgumentException();
         }
 
@@ -61,6 +83,7 @@ public class User implements UserInterface {
         this.password = password;
         this.age = age;
         this.userPFPFile = userPFPFile;
+        this.userPFPImage = null;
         this.friends = friends;
         this.blockedUsers = blockedUsers;
         this.friendsOnly = friendsOnly;

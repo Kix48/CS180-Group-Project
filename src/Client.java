@@ -1,3 +1,4 @@
+import javax.imageio.ImageIO;
 import java.net.*;
 import java.io.*;
 import java.awt.image.BufferedImage;
@@ -173,6 +174,61 @@ public class Client implements ClientInterface {
 
         return false;
     }
+    public User findUser(String username) {
+        //
+        // String sanitization
+        // TODO: Add specific error messages (Phase 3)
+        //
+
+        // Check username (Not empty, size check, no newline or tab)
+        if (username == null || username.equals("") || (username.length() > 16)
+                || username.contains("\n") || username.contains("\t")) {
+            return null;
+        }
+
+        //remove any whitespace
+        username = username.trim();
+
+        try {
+            //send information
+            writer.println();
+            writer.println("FIND_USER");
+            writer.println(username);
+            writer.flush();
+
+            //Read Result
+            String resultOutput = reader.readLine();
+
+            if (!resultOutput.equals("SUCCESS")) {
+                String resultMessage = reader.readLine();
+                System.out.printf("%s: %s\n", resultOutput, resultMessage);
+            } else {
+                String readUsername = reader.readLine();
+                int readAge = Integer.parseInt(reader.readLine());
+
+                int fileLength = Integer.parseInt(reader.readLine());
+
+                // Read in the Base64 encoded chunks of the file
+                String encoded = "";
+                do {
+                    encoded += reader.readLine();
+                } while (encoded.length() < fileLength);
+
+                // Decode the file data
+                byte[] decoded = Base64.getDecoder().decode(encoded);
+
+                BufferedImage readPFP = ImageIO.read(new ByteArrayInputStream(decoded));
+
+                System.out.println("User successfully found!");
+                return new User(readUsername, readAge, readPFP);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 
     public boolean addFriend(String friendUsername) {
 
@@ -181,7 +237,7 @@ public class Client implements ClientInterface {
         // TODO: Add specific error messages (Phase 3)
         //
 
-        // Check friendUsername & username (Not empty, size check, no newline or tab)
+        // Check friendUsername (Not empty, size check, no newline or tab)
         if (friendUsername == null || friendUsername.equals("") || (friendUsername.length() > 16)
                 || friendUsername.contains("\n") || friendUsername.contains("\t")) {
             return false;
@@ -223,7 +279,7 @@ public class Client implements ClientInterface {
         // TODO: Add specific error messages (Phase 3)
         //
 
-        // Check friendUsername & username (Not empty, size check, no newline or tab)
+        // Check usernameToBlock (Not empty, size check, no newline or tab)
         if (usernameToBlock == null || usernameToBlock.equals("") || (usernameToBlock.length() > 16)
                 || usernameToBlock.contains("\n") || usernameToBlock.contains("\t")) {
             return false;
@@ -292,7 +348,7 @@ public class Client implements ClientInterface {
 
         try {
             writer.println();
-            writer.println("FRIENDSONLY");
+            writer.println("FRIENDS_ONLY");
             writer.println(clientUsername);
             writer.println(friendsOnly);
             writer.flush();

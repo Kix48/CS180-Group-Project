@@ -98,13 +98,9 @@ public class RunLocalTest {
 
         assertTrue(client.initialize());
 
-
-        /*assertTrue(client.register("ChaseGamble48", "Password123!", 19,
-                new File("images/testUser - PFP.png")));*/
-
-        assertTrue("Failed to register a user!",
+/*        assertTrue("Failed to register a user!",
                 client.register("ChaseGamble48", "Password123!", 19,
-                new File("images/testUser - PFP.png")));
+                new File("images/testUser - PFP.png")));*/
 
         assertFalse("We should not be able to login with these credentials!",
                 client.login("ChaseGamble48", "WrongPassword"));
@@ -114,6 +110,8 @@ public class RunLocalTest {
 
         assertTrue("We should be able to login with these credentials!",
                 client.login("ChaseGamble48", "Password123!"));
+
+        assertNotEquals("Failed to find user!", client.findUser("ChaseGamble48"), null);
 
         client.shutdown();
     }

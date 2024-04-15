@@ -16,6 +16,7 @@ public interface ClientInterface {
     public void shutdown();
     public boolean register(String username, String password, int age, File userPFP);
     public boolean login(String username, String password);
+    public User findUser(String username);
     public boolean addFriend(String friendUsername);
     public boolean blockUser(String usernameToBlock);
     public boolean sendMessage(String receiver, String message);
