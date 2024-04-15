@@ -74,7 +74,7 @@ public class Server implements ServerInterface, Runnable {
                 return;
             }
         } catch (Exception e) {
-            // TODO: Remove console output
+            // REMINDER: Remove console output
             e.printStackTrace();
 
             // Send back an error
@@ -115,7 +115,7 @@ public class Server implements ServerInterface, Runnable {
             }
 
         } catch (Exception e) {
-            // TODO: Remove console output
+            // REMINDER: Remove console output
             e.printStackTrace();
 
             // Send back an error
@@ -166,7 +166,7 @@ public class Server implements ServerInterface, Runnable {
             writer.flush();
 
         } catch (Exception e) {
-            // TODO: Remove console output
+            // REMINDER: Remove console output
             e.printStackTrace();
 
             // Send back an error
@@ -215,7 +215,7 @@ public class Server implements ServerInterface, Runnable {
             writer.flush();
 
         } catch (Exception e) {
-            // TODO: Remove console output
+            // REMINDER: Remove console output
             e.printStackTrace();
 
             // Send back an error
@@ -269,7 +269,7 @@ public class Server implements ServerInterface, Runnable {
             }
             this.writer.flush();
         } catch (Exception e) {
-            // TODO: Remove console output
+            // REMINDER: Remove console output
             e.printStackTrace();
 
             // Send back an error
@@ -367,7 +367,7 @@ public class Server implements ServerInterface, Runnable {
             writer.println("SUCCESS");
             writer.flush();
         } catch (Exception e) {
-            // TODO: Remove console output
+            // REMINDER: Remove console output
             e.printStackTrace();
 
             // Send back an error
@@ -430,7 +430,7 @@ public class Server implements ServerInterface, Runnable {
             writer.println("SUCCESS");
             writer.flush();
         } catch (Exception e) {
-            // TODO: Remove console output
+            // REMINDER: Remove console output
             e.printStackTrace();
 
             // Send back an error
@@ -493,7 +493,7 @@ public class Server implements ServerInterface, Runnable {
                 offset += 1000;
             }
         } catch (Exception e) {
-            // TODO: Remove console output
+            // REMINDER: Remove console output
             e.printStackTrace();
 
             // Send back an error
@@ -530,7 +530,7 @@ public class Server implements ServerInterface, Runnable {
             writer.flush();
 
         } catch (Exception e) {
-            // TODO: Remove console output
+            // REMINDER: Remove console output
             e.printStackTrace();
 
             // Send back an error
@@ -543,7 +543,7 @@ public class Server implements ServerInterface, Runnable {
 
     // Server handler that is run by the thread
     public void run() {
-        // TODO: Remove console output
+        // REMINDER: Remove console output
         System.out.println("Client connected");
 
         this.databaseHelper = new DatabaseHelper();
@@ -587,7 +587,7 @@ public class Server implements ServerInterface, Runnable {
                             this.changeVisibility();
                             break;
                         default:
-                            // TODO: Remove console output
+                            // REMINDER: Remove console output
                             System.out.println("Unknown request received!");
 
                             // Empty the input stream
@@ -610,14 +610,14 @@ public class Server implements ServerInterface, Runnable {
             reader.close();
             writer.close();
         } catch (Exception e) {
-            // TODO: Make error handling more in-depth
+            // REMINDER: Make error handling more in-depth
             e.printStackTrace();
         }
     }
 
     public static void main(String[] args) {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-            // TODO: Remove console output
+            // REMINDER: Remove console output
             System.out.println("Server started");
 
             while (true) {
@@ -628,7 +628,7 @@ public class Server implements ServerInterface, Runnable {
                 serverThread.start();
             }
         } catch (Exception e) {
-            // TODO: Remove console output
+            // REMINDER: Remove console output
             e.printStackTrace();
         }
     }

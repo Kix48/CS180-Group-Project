@@ -32,14 +32,14 @@ public class Client implements ClientInterface {
             // Cannot use try-with-resources with class field for some reason
             this.socket = new Socket(HOSTNAME, PORT);
 
-            // TODO: Remove console output
+            // REMINDER: Remove console output
             System.out.println("Connected to server");
 
             this.reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
             this.writer = new PrintWriter(this.socket.getOutputStream());
 
         } catch (Exception e) {
-            // TODO: Remove console output
+            // REMINDER: Remove console output
             e.printStackTrace();
             return false;
         }
@@ -53,7 +53,7 @@ public class Client implements ClientInterface {
             this.reader.close();
             this.writer.close();
         } catch (Exception e) {
-            // TODO: Remove console output
+            // REMINDER: Remove console output
             e.printStackTrace();
         }
     }
@@ -61,7 +61,7 @@ public class Client implements ClientInterface {
     public boolean register(String username, String password, int age, File userPFP) {
         //
         // String sanitization
-        // TODO: Add specific error messages (Phase 3)
+        // REMINDER: Add specific error messages (Phase 3)
         //
 
         // Check username (Not empty, size check, no newline or tab)
@@ -134,7 +134,7 @@ public class Client implements ClientInterface {
                 return true;
             }
         } catch (Exception e) {
-            // TODO: Remove console output
+            // REMINDER: Remove console output
             e.printStackTrace();
             return false;
         }
@@ -145,7 +145,7 @@ public class Client implements ClientInterface {
     public boolean login(String username, String password) {
         //
         // String sanitization
-        // TODO: Add specific error messages (Phase 3)
+        // REMINDER: Add specific error messages (Phase 3)
         //
 
         // Check username (Not empty, size check, no newline or tab)
@@ -182,7 +182,7 @@ public class Client implements ClientInterface {
                 return true;
             }
         } catch (Exception e) {
-            // TODO: Remove console output
+            // REMINDER: Remove console output
             e.printStackTrace();
             return false;
         }
@@ -192,7 +192,7 @@ public class Client implements ClientInterface {
     public User findUser(String username) {
         //
         // String sanitization
-        // TODO: Add specific error messages (Phase 3)
+        // REMINDER: Add specific error messages (Phase 3)
         //
 
         // Check username (Not empty, size check, no newline or tab)
@@ -249,7 +249,7 @@ public class Client implements ClientInterface {
 
         //
         // String sanitization
-        // TODO: Add specific error messages (Phase 3)
+        // REMINDER: Add specific error messages (Phase 3)
         //
 
         // Check friendUsername (Not empty, size check, no newline or tab)
@@ -291,7 +291,7 @@ public class Client implements ClientInterface {
 
         //
         // String sanitization
-        // TODO: Add specific error messages (Phase 3)
+        // REMINDER: Add specific error messages (Phase 3)
         //
 
         // Check usernameToBlock (Not empty, size check, no newline or tab)
@@ -332,7 +332,7 @@ public class Client implements ClientInterface {
     public MessageHistory getMessageHistory(String username) {
         //
         // String sanitization
-        // TODO: Add specific error messages (Phase 3)
+        // REMINDER: Add specific error messages (Phase 3)
         //
 
         // Check username (Not empty, size check, no newline or tab)
@@ -382,7 +382,7 @@ public class Client implements ClientInterface {
                 return new MessageHistory(readUser1, readUser2, readMessages);
             }
         } catch (Exception e) {
-            // TODO: Remove console output
+            // REMINDER: Remove console output
             e.printStackTrace();
             return null;
         }
@@ -393,7 +393,7 @@ public class Client implements ClientInterface {
     public boolean sendMessage(String receiver, String message) {
         //
         // String sanitization
-        // TODO: Add specific error messages (Phase 3)
+        // REMINDER: Add specific error messages (Phase 3)
         //
 
         // Check receiver username (Not empty, size check, no newline or tab)
@@ -429,7 +429,7 @@ public class Client implements ClientInterface {
                 return true;
             }
         } catch (IOException e) {
-            // TODO: Remove console output
+            // REMINDER: Remove console output
             e.printStackTrace();
             return false;
         }
@@ -438,7 +438,7 @@ public class Client implements ClientInterface {
     public boolean removeMessage(String receiver, int messageIdx) {
         //
         // String sanitization
-        // TODO: Add specific error messages (Phase 3)
+        // REMINDER: Add specific error messages (Phase 3)
         //
 
         // Check receiver username (Not empty, size check, no newline or tab)
@@ -471,7 +471,7 @@ public class Client implements ClientInterface {
                 return true;
             }
         } catch (IOException e) {
-            // TODO: Remove console output
+            // REMINDER: Remove console output
             e.printStackTrace();
             return false;
         }
