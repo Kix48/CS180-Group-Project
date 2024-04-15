@@ -57,8 +57,6 @@ Server Class <br>
 
 registerUser() - (description here) <br>
 
-modifyUser() - (description here) <br>
-
 authenticate() - (description here) <br>
 
 addFriend() - (description here) <br>
@@ -68,6 +66,8 @@ blockUser() - (description here) <br>
 getMessageHistory() - (description here) <br>
 
 sendMessage() - (description here) <br>
+
+changeVisibility() - (description here) <br>
 
 findUser() - (description here) <br>
 
