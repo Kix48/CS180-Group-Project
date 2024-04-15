@@ -289,6 +289,29 @@ public class Client implements ClientInterface {
     }
 
     public boolean setFriendsOnly(boolean friendsOnly) {
+
+        try {
+            writer.println();
+            writer.println("FRIENDSONLY");
+            writer.println(clientUsername);
+            writer.println(friendsOnly);
+            writer.flush();
+
+            //Read Results
+            String resultOutput = reader.readLine();
+
+            if (!resultOutput.equals("SUCCESS")) {
+                String resultMessage = reader.readLine();
+                System.out.printf("%s: %s\n", resultOutput, resultMessage);
+            } else {
+                System.out.println("Option successfully changed!");
+                return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 }

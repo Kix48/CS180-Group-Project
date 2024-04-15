@@ -4,14 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4dcb042b-816a-4d3c-863b-70995d5cd8ad" name="Changes" comment="//Implemented loadImage, String userPFP variable, get/setters for userPFPFIle, &#10;&#10;todo: add check in setUserPFPFile for valid file, maybe dont need?&#10;&#10;Implemented RunLocalTest.java">
+    <list default="true" id="4dcb042b-816a-4d3c-863b-70995d5cd8ad" name="Changes" comment="//Implemented addFriend * blockUser for Client.java, and its associated work within Server.java&#10;&#10;//Implemented new method in Server.java - addFriend() and blockUser() to help with it - added within interface too&#10;&#10;//Implemented change within User.java -&gt; setAge -&gt; condition changed from - must be at least 18, to 0">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ClientInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ClientInterface.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Server.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ServerInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ServerInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/testUser.txt" beforeDir="false" afterPath="$PROJECT_DIR$/users/testUser.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -136,7 +133,15 @@
       <option name="project" value="LOCAL" />
       <updated>1711902271137</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="//Implemented addFriend * blockUser for Client.java, and its associated work within Server.java&#10;&#10;//Implemented new method in Server.java - addFriend() and blockUser() to help with it - added within interface too&#10;&#10;//Implemented change within User.java -&gt; setAge -&gt; condition changed from - must be at least 18, to 0">
+      <option name="closed" value="true" />
+      <created>1713126240186</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1713126240186</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -157,7 +162,9 @@
     <MESSAGE value="//Added UserClass (3/29/24, 12:43 PM)" />
     <MESSAGE value="//Implemented loadImage, String userPFP variable, get/setters for userPFPFIle, &#10;&#10;todo: add check in setUserPFPFile for valid file, maybe dont need?" />
     <MESSAGE value="//Implemented loadImage, String userPFP variable, get/setters for userPFPFIle, &#10;&#10;todo: add check in setUserPFPFile for valid file, maybe dont need?&#10;&#10;Implemented RunLocalTest.java" />
-    <option name="LAST_COMMIT_MESSAGE" value="//Implemented loadImage, String userPFP variable, get/setters for userPFPFIle, &#10;&#10;todo: add check in setUserPFPFile for valid file, maybe dont need?&#10;&#10;Implemented RunLocalTest.java" />
+    <MESSAGE value="//Implemented addFriend * blockUser for Client.java, and its associated work within Server.java&#10;//Implemented new method in Server.java - addFriend() and blockUser() to help with it - added within interface too" />
+    <MESSAGE value="//Implemented addFriend * blockUser for Client.java, and its associated work within Server.java&#10;&#10;//Implemented new method in Server.java - addFriend() and blockUser() to help with it - added within interface too&#10;&#10;//Implemented change within User.java -&gt; setAge -&gt; condition changed from - must be at least 18, to 0" />
+    <option name="LAST_COMMIT_MESSAGE" value="//Implemented addFriend * blockUser for Client.java, and its associated work within Server.java&#10;&#10;//Implemented new method in Server.java - addFriend() and blockUser() to help with it - added within interface too&#10;&#10;//Implemented change within User.java -&gt; setAge -&gt; condition changed from - must be at least 18, to 0" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

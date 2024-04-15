@@ -74,10 +74,6 @@ public class Server implements ServerInterface, Runnable {
         writer.flush();
     }
 
-    public void modifyUser() {
-
-    }
-
     public void deleteUser() {
 
     }
@@ -256,6 +252,41 @@ public class Server implements ServerInterface, Runnable {
 
     }
 
+    public void changeVisibility() {
+
+        try {
+            String username = this.reader.readLine();
+            boolean condition = Boolean.parseBoolean(this.reader.readLine());
+
+            User user = this.databaseHelper.readUser(username);
+
+            if (user == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Error with user changing condition");
+                this.writer.flush();
+                return;
+            }
+
+            //Sets condition
+            user.setFriendsOnly(condition);
+
+            //Writes back if completion
+            writer.println("SUCCESS");
+            writer.flush();
+
+        } catch (Exception e) {
+            // TODO: Remove console output
+            e.printStackTrace();
+
+            // Send back an error
+            this.writer.println("ERROR");
+            this.writer.println(e.getMessage());
+            this.writer.flush();
+            return;
+        }
+    }
+
     // Server handler that is run by the thread
     public void run() {
         // TODO: Remove console output
@@ -288,6 +319,9 @@ public class Server implements ServerInterface, Runnable {
                             break;
                         case "SEND_MESSAGE":
                             this.sendMessage();
+                            break;
+                        case "FRIENDSONLY":
+                            this.changeVisibility();
                             break;
                         default:
                             // TODO: Remove console output
