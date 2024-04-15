@@ -37,7 +37,7 @@ register() - (description here) <br>
 
 login() - (description here) <br>
 
-addFriend() - (description here) <br>
+addFriend() - addFriend takes in an input of a 2nd username of a friend. Once validating that the username is a valid name, it is trimmed. The method then will write "ADD_FRIEND" to the server, along with the clientUsername, and the friend username. The client will then read an output from Server.java. If the output is "SUCCESS", a message will be displayed stating it was a success. If not, an error will be displayed, with details regarding it. <br>
 
 blockUser() - (description here) <br>
 
@@ -59,7 +59,7 @@ registerUser() - (description here) <br>
 
 authenticate() - (description here) <br>
 
-addFriend() - (description here) <br>
+addFriend() - addFriend will be called when the server is reading from the client. Upon seeing "ADD_FRIEND", the addFriend method within Server.java will be called. addFriend Will read the two usernames sent from the client, then verify they are actual users. It will then attemp to add the friend to the user, and upon success, will send "SUCCESS" to the server. If failure or any other error is presented, an error message will be sent back to the client. <br>
 
 blockUser() - (description here) <br>
 
