@@ -23,6 +23,7 @@ public void testMessageToString() { //Test the string's validity/match <br>
 public void testMessageHistoryAddAndRemove() { // Test adding and removing messages from the history <br>
 public void testUserFriendsManagement() { // Test adding and removing friends <br>
 public void testBufferedImageReadWrite() { // Test that database can read/write files <br>
+public void testClient() { // Test for initializing a client <br>
 ADD MORE HERE  <br>
 <hr>
 Client Class
