@@ -267,7 +267,6 @@ public class Server implements ServerInterface, Runnable {
     }
 
     public void sendMessage() {
-
         try {
             String senderUsername = this.reader.readLine();
             String receiverUsername = this.reader.readLine();
@@ -305,12 +304,81 @@ public class Server implements ServerInterface, Runnable {
                 messageHistory = new MessageHistory(senderUsername, receiverUsername, new ArrayList<Message>());
             }
 
-            messageHistory.addMessage(senderUsername, messageText);
+            if (!messageHistory.addMessage(senderUsername, messageText)) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Failed to add message");
+                this.writer.flush();
+                return;
+            }
 
             if (!databaseHelper.writeMessageHistory(messageHistory)) {
                 // Send back an error
                 this.writer.println("ERROR");
-                this.writer.println("Failed to add message");
+                this.writer.println("Failed to write new message history");
+                this.writer.flush();
+                return;
+            }
+
+            // When sent successfully
+            writer.println("SUCCESS");
+            writer.flush();
+        } catch (Exception e) {
+            // TODO: Remove console output
+            e.printStackTrace();
+
+            // Send back an error
+            writer.println("ERROR");
+            writer.println(e.getMessage());
+            writer.flush();
+        }
+    }
+
+    public void removeMessage() {
+        try {
+            String senderUsername = this.reader.readLine();
+            String receiverUsername = this.reader.readLine();
+
+            // Check if the user exists
+            User sender = this.databaseHelper.readUser(senderUsername);
+            User receiver = this.databaseHelper.readUser(receiverUsername);
+            if (sender == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Invalid sender");
+                this.writer.flush();
+                return;
+            } else if (receiver == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Invalid receiver");
+                this.writer.flush();
+                return;
+            }
+
+            int messageIndex = Integer.parseInt(this.reader.readLine());
+
+            MessageHistory messageHistory = databaseHelper.readMessageHistory(senderUsername, receiverUsername);
+            if (messageHistory == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("No message history");
+                this.writer.flush();
+                return;
+            }
+
+            if (!messageHistory.removeMessage(senderUsername, messageIndex)) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Failed to remove message");
+                this.writer.flush();
+                return;
+            }
+
+            if (!databaseHelper.writeMessageHistory(messageHistory)) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Failed to write new message history");
                 this.writer.flush();
                 return;
             }
@@ -468,6 +536,9 @@ public class Server implements ServerInterface, Runnable {
                             break;
                         case "SEND_MESSAGE":
                             this.sendMessage();
+                            break;
+                        case "REMOVE_MESSAGE":
+                            this.removeMessage();
                             break;
                         case "FRIENDS_ONLY":
                             this.changeVisibility();

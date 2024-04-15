@@ -379,6 +379,25 @@ public class Client implements ClientInterface {
     }
 
     public boolean sendMessage(String receiver, String message) {
+        //
+        // String sanitization
+        // TODO: Add specific error messages (Phase 3)
+        //
+
+        // Check receiver username (Not empty, size check, no newline or tab)
+        if (receiver == null || receiver.equals("") || (receiver.length() > 16)
+                || receiver.contains("\n") || receiver.contains("\t")) {
+            return false;
+        }
+
+        // Remove extra whitespaces
+        receiver = receiver.trim();
+
+        // Message can only be 256 characters
+        if (message.length() > 256) {
+            return false;
+        }
+
         try {
             writer.println();
             writer.println("SEND_MESSAGE");
@@ -404,8 +423,46 @@ public class Client implements ClientInterface {
         }
     }
 
-    public boolean removeMessage(int messageIdx) {
-        return false;
+    public boolean removeMessage(String receiver, int messageIdx) {
+        //
+        // String sanitization
+        // TODO: Add specific error messages (Phase 3)
+        //
+
+        // Check receiver username (Not empty, size check, no newline or tab)
+        if (receiver == null || receiver.equals("") || (receiver.length() > 16)
+                || receiver.contains("\n") || receiver.contains("\t")) {
+            return false;
+        }
+
+        // Index must be positive
+        if (messageIdx < 0) {
+            return false;
+        }
+
+        try {
+            writer.println();
+            writer.println("REMOVE_MESSAGE");
+
+            writer.println(clientUsername);
+            writer.println(receiver);
+            writer.println(messageIdx);
+            writer.flush();
+
+            String requestResult = reader.readLine();
+            if (!(requestResult.equals("SUCCESS"))) {
+                String resultMessage = reader.readLine();
+                System.out.printf("%s: %s\n", requestResult, resultMessage);
+                return false;
+            } else {
+                System.out.println("Message removed successfully!");
+                return true;
+            }
+        } catch (IOException e) {
+            // TODO: Remove console output
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean setFriendsOnly(boolean friendsOnly) {
