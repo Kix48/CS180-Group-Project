@@ -39,7 +39,7 @@ login() - (description here) <br>
 
 addFriend() - addFriend takes in an input of a 2nd username of a friend. Once validating that the username is a valid name, it is trimmed. The method then will write "ADD_FRIEND" to the server, along with the clientUsername, and the friend username. The client will then read an output from Server.java. If the output is "SUCCESS", a message will be displayed stating it was a success. If not, an error will be displayed, with details regarding it. <br>
 
-blockUser() - (description here) <br>
+blockUser() - blockUser takes in an input of a 2nd username of a user needing to be blocked. Once validating that the username is a valid name, it is trimmed. The method will then write "BLOCK" to the server, along with the name of the clientUser, and the user to be blocked. The client will read an output from Server.java. If the output is "SUCCESS", a message will be displayed stating it was a success. If not, an error will be displayed, with details regarding it. <br>
 
 sendMessage() - (description here) <br>
 
@@ -59,9 +59,9 @@ registerUser() - (description here) <br>
 
 authenticate() - (description here) <br>
 
-addFriend() - addFriend will be called when the server is reading from the client. Upon seeing "ADD_FRIEND", the addFriend method within Server.java will be called. addFriend Will read the two usernames sent from the client, then verify they are actual users. It will then attemp to add the friend to the user, and upon success, will send "SUCCESS" to the server. If failure or any other error is presented, an error message will be sent back to the client. <br>
+addFriend() - addFriend will be called when the server is reading from the client. Upon seeing "ADD_FRIEND", the addFriend method within Server.java will be called. addFriend Will read the two usernames sent from the client, then verify they are actual users. It will then attemp to add the friend to the user, and upon success, will send "SUCCESS" to the client. If failure or any other error is presented, an error message will be sent back to the client. <br>
 
-blockUser() - (description here) <br>
+blockUser() - blockUser will be called when the server is reading from the client. Upon seeing "BLOCK", the blockUser method within Server.java will be called. blockUser will read the two usernames sent from client, then verify they are actual users. It will attemp to add the 2nd user to the first ones blocked list. If successfull, the server will send "SUCCESS" to the client. If any errors or failure appears, it will send "ERROR, along with any erorr information back to the client.  <br>
 
 getMessageHistory() - (description here) <br>
 
