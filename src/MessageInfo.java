@@ -18,14 +18,14 @@ public class MessageInfo implements MessageInfoInterface {
     private Date date;
     
     //general constructor to create a new message (text or picture)
-    public MessageInfo(String sender, String receiver){ 
+    public MessageInfo(String sender, String receiver) { 
         this.sender = sender;
         this.receiver = receiver;
         this.date = new Date();
     }
     
     //general constructor to create a new message with a known date(text or picture)
-    public MessageInfo(String sender, String receiver, Date date){ 
+    public MessageInfo(String sender, String receiver, Date date) { 
         this.sender = sender;
         this.receiver = receiver;
         this.date = date;
