@@ -69,7 +69,7 @@ blockUser() - blockUser will be called when the server is reading from the clien
 
 getMessageHistory() - getMessageHistory is called when the server reads "MESSAGE_HISTORY" from the client. It will then verify the users involved are valid. The message history will then be read. If there is history, the server will write the history to the client, along with "SUCCESS". If there is no message history, an error message is sent to the client describing the issue. If there is any other errors, the server will send "ERROR", along with the error presented.  <br>
 
-sendMessage() - (description here) <br>
+sendMessage() - sendMessage will be called when the server recieves "SEND_MESSAGE" from the client. It will verify the sender and reciever as valid users, and ensure there are no conflicts with friending/blocking. It will attempt to create the message, and add it to the history. If any errors arise, sendMessage will send "ERROR" along with an error message to the client. If none arise, it will send "SUCCESS". <br>
 
 removeMessage() - removeMessage will be called when the server recieves "REMOVE_MESSAGE" from the client. It will verify the sender and reciever of the message are valid, and verify the message. removeMessage will then attempt to remove the message. On success, it will write "SUCCESS" to the client. If any issues arise, it will write "ERROR" along with an error message.<br>
 
@@ -80,13 +80,9 @@ findUser() - (description here) <br>
 run() - run keeps track of requests sent from the client, to the server. Run initializes a databaseHelper, and creates new writers and readers. Server will then wait for inputs from the client, such as "REGISTER" or "ADD_FRIEND". It will stay within this loop of managing requests. Once the thread has ended, the reader and writer will be closed. <br>
 
 Server.java also implements ServerInterface. This allowed us to create and include changes to the Server class to be communicated to each other. 
-Server.java also implements **Runnable**, (Description here)
+Server.java also implements **Runnable**
 
 <hr>
-
-Other Changes (we can get rid of this, keeping in-case)
-
-
 
 <hr>
 Phase 1 ReadMe Below
