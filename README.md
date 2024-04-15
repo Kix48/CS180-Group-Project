@@ -29,9 +29,9 @@ Client Class
 
 (Description of client class). This includes functions such as...
 
-initialize() - (description here) <br>
+initialize() - initialize will make a new socket, using HOSTNAME: "localhost", and PORT: "4444". It will intialize a reader using the socket's input stream, and a writer from the sockets output stream. It will catch any exceptions that arise, and return any errors. <br>
 
-shutdown() - (description here) <br>
+shutdown() - shutdown will close the socket, reader, and writer. It will return any errors if presented. <br>
 
 register() - (description here) <br>
 
