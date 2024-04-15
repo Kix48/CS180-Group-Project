@@ -42,7 +42,7 @@ addFriend() - addFriend takes in an input of a 2nd username of a friend. Once va
 
 blockUser() - blockUser takes in an input of a 2nd username of a user needing to be blocked. Once validating that the username is a valid name, it is trimmed. The method will then write "BLOCK" to the server, along with the name of the clientUser, and the user to be blocked. The client will read an output from Server.java. If the output is "SUCCESS", a message will be displayed stating it was a success. If not, an error will be displayed, with details regarding it. <br>
 
-sendMessage() - (description here) <br>
+sendMessage() - sendMessage will send the server "SEND_MESSAGE", the clientUsername, the reciever of the message, and the message itself. It will then read an output from the server. If "SUCCESS", it will return a confirmation that it has completed. It may also read "ERROR", as well as a message describing the issue. <br>
 
 removeMessage() - (description here) <br>
 
