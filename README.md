@@ -35,7 +35,7 @@ shutdown() - (description here) <br>
 
 register() - (description here) <br>
 
-login() - (description here) <br>
+login() - login will take in an input of a username and password. After verifying the strings are valid, the strings are trimmed to remove whitespace. The client will then print "LOGIN" to the server, as well as the username and password. The client will then read from the server. This will either be "SUCCESS", where **login** will print a welcome message. Any other output will be an error, with a message describing it. <br>
 
 addFriend() - addFriend takes in an input of a 2nd username of a friend. Once validating that the username is a valid name, it is trimmed. The method then will write "ADD_FRIEND" to the server, along with the clientUsername, and the friend username. The client will then read an output from Server.java. If the output is "SUCCESS", a message will be displayed stating it was a success. If not, an error will be displayed, with details regarding it. <br>
 
@@ -57,7 +57,7 @@ Server Class <br>
 
 registerUser() - (description here) <br>
 
-authenticate() - (description here) <br>
+authenticate() - authenticate will be called when the server reads "LOGIN" from the client. authenticate will then check that the username of the user logging in is valid. It will then check that the password inputted matches the password of the client. If the password is correct, the server will send the client "SUCCESS". If not, it will send "ERROR", with a message describing it. <br>
 
 addFriend() - addFriend will be called when the server is reading from the client. Upon seeing "ADD_FRIEND", the addFriend method within Server.java will be called. addFriend Will read the two usernames sent from the client, then verify they are actual users. It will then attemp to add the friend to the user, and upon success, will send "SUCCESS" to the client. If failure or any other error is presented, an error message will be sent back to the client. <br>
 
