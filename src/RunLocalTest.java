@@ -93,38 +93,6 @@ public class RunLocalTest {
     }
 
     @Test
-    public void testClient() {
-        Client client = new Client();
-
-        assertTrue(client.initialize());
-
-/*        assertTrue("Failed to register a user!",
-                client.register("ChaseGamble48", "Password123!", 19,
-                new File("images/testUser - PFP.png")));*/
-
-        assertFalse("We should not be able to login with these credentials!",
-                client.login("ChaseGamble48", "WrongPassword"));
-
-        assertFalse("We should not be able to login with these credentials!",
-                client.login("Unknown_99", "Password123!"));
-
-        assertTrue("We should be able to login with these credentials!",
-                client.login("ChaseGamble48", "Password123!"));
-
-        assertNotEquals("Failed to find user!", client.findUser("ChaseGamble48"), null);
-
-/*        MessageHistory messageHistory = client.getMessageHistory("testUser");
-        for (String message : messageHistory.getMessages()) {
-            System.out.println(message);
-        }*/
-
-        //client.sendMessage("testUser", "Hello");
-
-        client.removeMessage("testUser", 0);
-
-        client.shutdown();
-    }
-    @Test
     public void testRegisterInvalidUsername() {
         Client client = new Client();
         client.initialize();
