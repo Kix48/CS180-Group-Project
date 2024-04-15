@@ -4,89 +4,33 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-<<<<<<< Updated upstream
-    <list default="true" id="4dcb042b-816a-4d3c-863b-70995d5cd8ad" name="Changes" comment="//Implemented setFriendsOnly &#10;&#10;//Implemented changeVisibility - a method helping setFriendsOnly in Server.java (also added in interface)&#10;&#10;//Removed modifyUser">
+    <list default="true" id="3e5a05a9-3e12-48c8-a1d2-6ea6028bd5ec" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Server.java" afterDir="false" />
     </list>
-=======
-    <list default="true" id="4dcb042b-816a-4d3c-863b-70995d5cd8ad" name="Changes" comment="//Implemented loadImage, String userPFP variable, get/setters for userPFPFIle, &#10;&#10;todo: add check in setUserPFPFile for valid file, maybe dont need?&#10;&#10;Implemented RunLocalTest.java" />
->>>>>>> Stashed changes
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Class" />
-      </list>
-    </option>
-  </component>
-  <component name="Git.Settings">
-    <option name="PUSH_AUTO_UPDATE" value="true" />
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
-  </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 6
-}</component>
-  <component name="ProjectId" id="2eLAQxyXw8K4XWzT1PTaQ56OoCt" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;JUnit.RunLocalTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.RunLocalTest.testMessageHistoryAddAndRemove.executor&quot;: &quot;Run&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JUnit.RunLocalTest.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\steve\OneDrive\Documents\GitHub\CS180-Group-Project\src" />
-    </key>
-  </component>
-  <component name="RunManager">
-    <configuration name="RunLocalTest.testMessageHistoryAddAndRemove" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Group Project" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="RunLocalTest" />
-      <option name="METHOD_NAME" value="testMessageHistoryAddAndRemove" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="JUnit.RunLocalTest.testMessageHistoryAddAndRemove" />
-      </list>
-    </recent_temporary>
-  </component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -97,85 +41,16 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="4dcb042b-816a-4d3c-863b-70995d5cd8ad" name="Changes" comment="" />
-      <created>1711673472167</created>
+      <changelist id="3e5a05a9-3e12-48c8-a1d2-6ea6028bd5ec" name="Changes" comment="" />
+      <created>1713205806929</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1711673472167</updated>
-      <workItem from="1711675990482" duration="648000" />
-      <workItem from="1711726144867" duration="3000" />
-      <workItem from="1711730531760" duration="486000" />
-      <workItem from="1711818493430" duration="41000" />
-      <workItem from="1711832242315" duration="12000" />
-      <workItem from="1711840701124" duration="398000" />
-      <workItem from="1711856669166" duration="199000" />
-      <workItem from="1711898766229" duration="2933000" />
-      <workItem from="1713067220093" duration="678000" />
+      <updated>1713205806929</updated>
+      <workItem from="1713205810223" duration="2212000" />
     </task>
-    <task id="LOCAL-00001" summary="//Added UserClass (3/29/24, 12:43 PM)">
-      <option name="closed" value="true" />
-      <created>1711730650355</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1711730650355</updated>
-    </task>
-    <task id="LOCAL-00002" summary="//Implemented loadImage, String userPFP variable, get/setters for userPFPFIle, &#10;&#10;todo: add check in setUserPFPFile for valid file, maybe dont need?">
-      <option name="closed" value="true" />
-      <created>1711841021237</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1711841021237</updated>
-    </task>
-    <task id="LOCAL-00003" summary="//Implemented loadImage, String userPFP variable, get/setters for userPFPFIle, &#10;&#10;todo: add check in setUserPFPFile for valid file, maybe dont need?&#10;&#10;Implemented RunLocalTest.java">
-      <option name="closed" value="true" />
-      <created>1711902271137</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1711902271137</updated>
-    </task>
-    <task id="LOCAL-00004" summary="//Implemented addFriend * blockUser for Client.java, and its associated work within Server.java&#10;&#10;//Implemented new method in Server.java - addFriend() and blockUser() to help with it - added within interface too&#10;&#10;//Implemented change within User.java -&gt; setAge -&gt; condition changed from - must be at least 18, to 0">
-      <option name="closed" value="true" />
-      <created>1713126240186</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1713126240186</updated>
-    </task>
-    <task id="LOCAL-00005" summary="//Implemented setFriendsOnly &#10;&#10;//Implemented changeVisibility - a method helping setFriendsOnly in Server.java (also added in interface)&#10;&#10;//Removed modifyUser">
-      <option name="closed" value="true" />
-      <created>1713146399563</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1713146399563</updated>
-    </task>
-    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="//Added UserClass (3/29/24, 12:43 PM)" />
-    <MESSAGE value="//Implemented loadImage, String userPFP variable, get/setters for userPFPFIle, &#10;&#10;todo: add check in setUserPFPFile for valid file, maybe dont need?" />
-    <MESSAGE value="//Implemented loadImage, String userPFP variable, get/setters for userPFPFIle, &#10;&#10;todo: add check in setUserPFPFile for valid file, maybe dont need?&#10;&#10;Implemented RunLocalTest.java" />
-    <MESSAGE value="//Implemented addFriend * blockUser for Client.java, and its associated work within Server.java&#10;//Implemented new method in Server.java - addFriend() and blockUser() to help with it - added within interface too" />
-    <MESSAGE value="//Implemented addFriend * blockUser for Client.java, and its associated work within Server.java&#10;&#10;//Implemented new method in Server.java - addFriend() and blockUser() to help with it - added within interface too&#10;&#10;//Implemented change within User.java -&gt; setAge -&gt; condition changed from - must be at least 18, to 0" />
-    <MESSAGE value="//Implemented setFriendsOnly &#10;&#10;//Implemented changeVisibility - a method helping setFriendsOnly in Server.java (also added in interface)&#10;&#10;//Removed modifyUser" />
-    <option name="LAST_COMMIT_MESSAGE" value="//Implemented setFriendsOnly &#10;&#10;//Implemented changeVisibility - a method helping setFriendsOnly in Server.java (also added in interface)&#10;&#10;//Removed modifyUser" />
   </component>
 </project>
