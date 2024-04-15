@@ -170,7 +170,7 @@ public class User implements UserInterface {
     }
 
     public void setUserPFPFile(String userPFPFile) {
-        this.userPFPFile = userPFPFile; //TODO: check if valid file
+        this.userPFPFile = userPFPFile;
     }
 
     public String toString() { //returns a toString format

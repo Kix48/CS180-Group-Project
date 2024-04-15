@@ -268,8 +268,11 @@ public class Server implements ServerInterface, Runnable {
                 return;
             }
 
-            //Sets condition
-            user.setFriendsOnly(condition);
+            if (user.isFriendsOnly() != condition) {
+                //Sets condition
+                user.setFriendsOnly(condition);
+                this.databaseHelper.writeUser(user);
+            }
 
             //Writes back if completion
             writer.println("SUCCESS");
