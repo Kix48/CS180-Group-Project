@@ -24,7 +24,12 @@ public void testMessageHistoryAddAndRemove() { // Test adding and removing messa
 public void testUserFriendsManagement() { // Test adding and removing friends <br>
 public void testBufferedImageReadWrite() { // Test that database can read/write files <br>
 public void testClient() { // Test for initializing a client <br>
-ADD MORE HERE  <br>
+public void testRegisterInvalidUsername() { //Test for registering users (username) <br>
+public void testRegisterInvalidAge() { //Test registering users (age) <br>
+public void testRegisterInvalidProfilePicture() { //Test registering users (profile pic) <br>
+public void testFindUserNotFound() { //Test for finding users <br>
+public void testLoginInvalidCredentials() { //Test for login  <br>
+
 <hr>
 Client Class
 
