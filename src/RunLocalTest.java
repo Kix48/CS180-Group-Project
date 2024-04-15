@@ -122,4 +122,41 @@ public class RunLocalTest {
 
         client.shutdown();
     }
+    @Test
+    public void testRegisterInvalidUsername() {
+        Client client = new Client();
+        client.initialize();
+        assertFalse("Username validation failed", client.register("", "ValidPass123!", 21, new File("validPFP.png")));
+        assertFalse("Username validation failed", client.register("TooLongUsernameIsInvalidBecauseItIsTooLong", "ValidPass123!", 21, new File("validPFP.png")));
+        assertFalse("Username validation failed", client.register("Invalid\nUsername", "ValidPass123!", 21, new File("validPFP.png")));
+    }
+
+    @Test
+    public void testRegisterInvalidAge() {
+        Client client = new Client();
+        client.initialize();
+        assertFalse("Age validation failed", client.register("ValidUser", "ValidPass123!", -1, new File("validPFP.png")));
+        assertFalse("Age validation failed", client.register("ValidUser", "ValidPass123!", 0, new File("validPFP.png")));
+    }
+
+    @Test
+    public void testRegisterInvalidProfilePicture() {
+        Client client = new Client();
+        client.initialize();
+        assertFalse("Profile picture validation failed", client.register("ValidUser", "ValidPass123!", 21, new File("nonexistent.png")));
+    }
+
+    @Test
+    public void testFindUserNotFound() {
+        Client client = new Client();
+        client.initialize();
+        assertNull("Find user should return null for non-existent user", client.findUser("NonExistentUser"));
+    }
+
+    @Test
+    public void testLoginInvalidCredentials() {
+        Client client = new Client();
+        client.initialize();
+        assertFalse("Login should fail for wrong credentials", client.login("ValidUser", "WrongPassword"));
+    }
 }
