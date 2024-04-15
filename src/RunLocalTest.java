@@ -113,6 +113,11 @@ public class RunLocalTest {
 
         assertNotEquals("Failed to find user!", client.findUser("ChaseGamble48"), null);
 
+        MessageHistory messageHistory = client.getMessageHistory("testUser");
+        for (String message : messageHistory.getMessages()) {
+            System.out.println(message);
+        }
+
         client.shutdown();
     }
 }

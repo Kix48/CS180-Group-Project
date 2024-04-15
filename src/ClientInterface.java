@@ -19,6 +19,7 @@ public interface ClientInterface {
     public User findUser(String username);
     public boolean addFriend(String friendUsername);
     public boolean blockUser(String usernameToBlock);
+    public MessageHistory getMessageHistory(String username);
     public boolean sendMessage(String receiver, String message);
     public boolean removeMessage(int messageIdx);
     public boolean setFriendsOnly(boolean friendsOnly);

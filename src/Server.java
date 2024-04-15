@@ -214,7 +214,55 @@ public class Server implements ServerInterface, Runnable {
     }
 
     public void getMessageHistory() {
+        try {
+            String clientUsername = this.reader.readLine();
+            String otherUsername = this.reader.readLine();
 
+            // Check if the user exists
+            User clientUser = this.databaseHelper.readUser(clientUsername);
+            User otherUser = this.databaseHelper.readUser(otherUsername);
+            if (clientUser == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Invalid client user");
+                this.writer.flush();
+                return;
+            } else if (otherUser == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Invalid other user");
+                this.writer.flush();
+                return;
+            }
+
+            // Get message history
+            MessageHistory history = this.databaseHelper.readMessageHistory(clientUsername, otherUsername);
+            if (history == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("No message history found!");
+                this.writer.flush();
+                return;
+            }
+
+            // Send back message history contents
+            this.writer.println("SUCCESS");
+            this.writer.println(history.getUser1());
+            this.writer.println(history.getUser2());
+            this.writer.println(history.getMessages().length);
+            for (String message : history.getMessages()) {
+                this.writer.println(message);
+            }
+            this.writer.flush();
+        } catch (Exception e) {
+            // TODO: Remove console output
+            e.printStackTrace();
+
+            // Send back an error
+            this.writer.println("ERROR");
+            this.writer.println(e.getMessage());
+            this.writer.flush();
+        }
     }
 
     public void sendMessage() {
@@ -379,6 +427,9 @@ public class Server implements ServerInterface, Runnable {
                             break;
                         case "BLOCK":
                             this.blockUser();
+                            break;
+                        case "MESSAGE_HISTORY":
+                            this.getMessageHistory();
                             break;
                         case "SEND_MESSAGE":
                             this.sendMessage();

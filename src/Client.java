@@ -2,7 +2,10 @@ import javax.imageio.ImageIO;
 import java.net.*;
 import java.io.*;
 import java.awt.image.BufferedImage;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 
 public class Client implements ClientInterface {
     private static final String HOSTNAME = "localhost";
@@ -163,7 +166,7 @@ public class Client implements ClientInterface {
                 System.out.printf("%s: %s\n", requestResult, resultMessage);
             } else {
                 clientUsername = username;    // Assigns current user their name
-                System.out.println("Login succeeded! Welcome " + clientUsername);
+                System.out.println("Login succeeded, welcome " + clientUsername + "!");
                 return true;
             }
         } catch (Exception e) {
@@ -312,6 +315,67 @@ public class Client implements ClientInterface {
         }
 
         return false;
+    }
+
+    public MessageHistory getMessageHistory(String username) {
+        //
+        // String sanitization
+        // TODO: Add specific error messages (Phase 3)
+        //
+
+        // Check username (Not empty, size check, no newline or tab)
+        if (username == null || username.equals("") || (username.length() > 16)
+                || username.contains("\n") || username.contains("\t")) {
+            return null;
+        }
+
+        // Remove extra whitespaces
+        username = username.trim();
+
+        try {
+            writer.println();
+            writer.println("MESSAGE_HISTORY");
+            writer.println(clientUsername);
+            writer.println(username);
+            writer.flush();
+
+            // Read result
+            String requestResult = reader.readLine();
+            if (!requestResult.equals("SUCCESS")) {
+                String resultMessage = reader.readLine();
+                System.out.printf("%s: %s\n", requestResult, resultMessage);
+            } else {
+                String readUser1 = reader.readLine();
+                String readUser2 = reader.readLine();
+                int readMessagesLength = Integer.parseInt(reader.readLine());
+
+                ArrayList<Message> readMessages = new ArrayList<Message>();
+                for (int i = 0; i < readMessagesLength; i++) {
+                    // [DATE] SENDER-RECEIVER: MESSAGE
+
+                    String readMessage = reader.readLine();
+                    int rightBracketPos = readMessage.indexOf("]");
+                    SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yy hh:mm:ss a z");
+                    Date readDate = dateFormatter.parse(readMessage.substring(1, rightBracketPos));
+                    int dashPos = readMessage.indexOf("-", rightBracketPos);
+                    int colonPos = readMessage.indexOf(":", rightBracketPos);
+                    String readSender = readMessage.substring(rightBracketPos + 2, dashPos);
+                    String readReceiver = readMessage.substring(dashPos + 1, colonPos);
+                    String readMessageStr = readMessage.substring(colonPos + 2);
+
+                    readMessages.add(new Message(readSender, readReceiver, readMessageStr, readDate));
+                }
+
+                System.out.println("Received message history successfully!");
+                return new MessageHistory(readUser1, readUser2, readMessages);
+            }
+        } catch (Exception e) {
+            // TODO: Remove console output
+            e.printStackTrace();
+            return null;
+        }
+
+        return null;
     }
 
     public boolean sendMessage(String receiver, String message) {

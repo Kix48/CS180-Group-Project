@@ -42,7 +42,7 @@ public class MessageHistory implements MessageHistoryInterface {
         return this.user2;
     }
 
-    //adds a message to the message history while verifying the sender/reciever
+    //adds a message to the message history while verifying the sender/receiver
     public void addMessage(String sender, String message) { 
         try {
             String receiver;
