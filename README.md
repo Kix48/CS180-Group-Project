@@ -38,6 +38,8 @@ register() - register will attempt to add a new user to the database. After maki
 
 login() - login will take in an input of a username and password. After verifying the strings are valid, the strings are trimmed to remove whitespace. The client will then print "LOGIN" to the server, as well as the username and password. The client will then read from the server. This will either be "SUCCESS", where **login** will print a welcome message. Any other output will be an error, with a message describing it. <br>
 
+findUser() - (DESCRIPTION HERE) <br>
+
 addFriend() - addFriend takes in an input of a 2nd username of a friend. Once validating that the username is a valid name, it is trimmed. The method then will write "ADD_FRIEND" to the server, along with the clientUsername, and the friend username. The client will then read an output from Server.java. If the output is "SUCCESS", a message will be displayed stating it was a success. If not, an error will be displayed, with details regarding it. <br>
 
 blockUser() - blockUser takes in an input of a 2nd username of a user needing to be blocked. Once validating that the username is a valid name, it is trimmed. The method will then write "BLOCK" to the server, along with the name of the clientUser, and the user to be blocked. The client will read an output from Server.java. If the output is "SUCCESS", a message will be displayed stating it was a success. If not, an error will be displayed, with details regarding it. <br>
