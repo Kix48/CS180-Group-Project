@@ -38,7 +38,7 @@ public class Message extends MessageInfo implements MessageInterface {
     }
 
     //print the message in a chat legible format
-    public String toString(){ 
+    public String toString() { 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yy hh:mm:ss a z");
         return "[" + dateFormatter.format(super.getDate()) + "] " +
                 super.getSender() + "-" + this.getReceiver() + ": " + message;
