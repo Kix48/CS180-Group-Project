@@ -43,7 +43,7 @@ register() - register will attempt to add a new user to the database. After maki
 
 login() - login will take in an input of a username and password. After verifying the strings are valid, the strings are trimmed to remove whitespace. The client will then print "LOGIN" to the server, as well as the username and password. The client will then read from the server. This will either be "SUCCESS", where **login** will print a welcome message. Any other output will be an error, with a message describing it. <br>
 
-findUser() - (DESCRIPTION HERE) <br>
+findUser() - findUser takes in an input of a user. It will ensure the username is valid, then send "FIND_USER" to the Server, along with the username. The client will read the result from the server. If the output is not "SUCCESS", it will print the error message. If it is "SUCCESS", the client will then decode the output, then return it with a verification message. If any errors occur, it ill print the stack trace.  <br>
 
 addFriend() - addFriend takes in an input of a 2nd username of a friend. Once validating that the username is a valid name, it is trimmed. The method then will write "ADD_FRIEND" to the server, along with the clientUsername, and the friend username. The client will then read an output from Server.java. If the output is "SUCCESS", a message will be displayed stating it was a success. If not, an error will be displayed, with details regarding it. <br>
 
@@ -82,7 +82,7 @@ removeMessage() - removeMessage will be called when the server recieves "REMOVE_
 
 changeVisibility() - changeVisibility will be called when the server reads "FRIENDS_ONLY" from the client. The server will then validate that user is a real one, and then will change the condition of friendsOnly for seeing types of users. If it is a success, the server will send "SUCCESS" to the client, and if an error arises, it will send "ERROR" and extra information to the client.  <br>
 
-findUser() - (description here) <br>
+findUser() - findUser will be called when the server reads "FIND_USER" from the client. findUser will validate that every part of the user (username, password, age, profile picture), and return an error if any arise. If it succeeds, it will write "SUCCESS", the username, and age of the user. To send the profile picture, it will be sent as a byte[]. If any errors occur, it will return those.<br>
 
 run() - run keeps track of requests sent from the client, to the server. Run initializes a databaseHelper, and creates new writers and readers. Server will then wait for inputs from the client, such as "REGISTER" or "ADD_FRIEND". It will stay within this loop of managing requests. Once the thread has ended, the reader and writer will be closed. <br>
 
