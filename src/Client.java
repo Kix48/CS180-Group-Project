@@ -32,15 +32,10 @@ public class Client implements ClientInterface {
             // Cannot use try-with-resources with class field for some reason
             this.socket = new Socket(HOSTNAME, PORT);
 
-            // REMINDER: Remove console output
-            System.out.println("Connected to server");
-
             this.reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
             this.writer = new PrintWriter(this.socket.getOutputStream());
 
         } catch (Exception e) {
-            // REMINDER: Remove console output
-            e.printStackTrace();
             return false;
         }
 
@@ -53,8 +48,7 @@ public class Client implements ClientInterface {
             this.reader.close();
             this.writer.close();
         } catch (Exception e) {
-            // REMINDER: Remove console output
-            e.printStackTrace();
+            e.getMessage();
         }
     }
 
@@ -67,6 +61,7 @@ public class Client implements ClientInterface {
         // Check username (Not empty, size check, no newline or tab)
         if (username == null || username.equals("") || (username.length() > 16)
                 || username.contains("\n") || username.contains("\t")) {
+            //throw new Exception("Invalid username (Must be less than 16 characters");
             return false;
         }
 

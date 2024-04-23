@@ -1,0 +1,266 @@
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.JTextComponent;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+
+public class ClientGUI extends JComponent implements Runnable {
+    private final String APP_NAME = "Chirp";
+    private final int INITIAL_WIDTH = 600;
+    private final int INITIAL_HEIGHT = 400;
+    private Client client;
+    private boolean isConnected;
+    private JFrame frame;
+    private Font largeFont;
+    private Font mediumFont;
+    private Font smallFont;
+    private JButton loginButton;
+    private JButton registerPageButton;
+    private JButton registerButton;
+    private JButton fileSelectButton;
+    private File selectedFile;
+
+    ActionListener buttonActionListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == loginButton) {
+                if (login()) {
+                    // Main page
+                }
+            } else if (e.getSource() == registerPageButton) {
+                frame.setContentPane(registrationPage());
+
+            } else if (e.getSource() == registerButton) {
+                if (register()) {
+                    frame.setContentPane(loginPage());
+                }
+            } else if (e.getSource() == fileSelectButton) {
+                selectedFile = null;
+                JFileChooser fileChooser = new JFileChooser();
+                FileNameExtensionFilter filter =
+                        new FileNameExtensionFilter("PNG Images", "png");
+
+                fileChooser.setFileFilter(filter);
+
+                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    selectedFile = fileChooser.getSelectedFile();
+
+                    if (selectedFile == null) {
+                        showPopup("Invalid file selected", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+
+            // Needs to be called to change container content at runtime
+            frame.getContentPane().revalidate();
+        }
+    };
+
+    public ClientGUI() {
+        client = new Client();
+
+        if (client.initialize()) {
+            isConnected = true;
+            this.smallFont = new Font("TimesRoman", Font.PLAIN, 16);
+            this.mediumFont = new Font("TimesRoman", Font.PLAIN, 28);
+            this.largeFont = new Font("TimesRoman", Font.PLAIN, 40);
+        } else {
+            isConnected = false;
+            showPopup("Failed to connect to server", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new ClientGUI());
+    }
+
+    private void showPopup(String message, int type) {
+        String title = "";
+        switch (type) {
+            case JOptionPane.ERROR_MESSAGE:
+                title = "Error";
+                break;
+            case JOptionPane.INFORMATION_MESSAGE:
+                title = "Info";
+                break;
+            case JOptionPane.WARNING_MESSAGE:
+                title = "Warning";
+                break;
+            case JOptionPane.QUESTION_MESSAGE:
+                title = "Question";
+                break;
+            default:
+                title = APP_NAME;
+                type = JOptionPane.PLAIN_MESSAGE;
+        }
+        JOptionPane.showMessageDialog(null, message, title, type);
+    }
+
+    private boolean login() {
+        System.out.println("Logging in!");
+        return true;
+    }
+
+    private boolean register() {
+        System.out.println("Registering!");
+        return true;
+    }
+
+    Container loginPage() {
+        Container content = new Container();
+        content.setLayout(new BorderLayout());
+
+        JLabel titleLabel = new JLabel("LOGIN");
+        titleLabel.setFont(largeFont);
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        content.add(titleLabel, BorderLayout.NORTH);
+
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridBagLayout());
+        GridBagConstraints constraint = new GridBagConstraints();
+
+        JLabel usernameLabel = new JLabel("Username:");
+        usernameLabel.setFont(mediumFont);
+        constraint.anchor = GridBagConstraints.EAST;
+        constraint.gridx = 0;
+        constraint.gridy = 0;
+        mainPanel.add(usernameLabel, constraint);
+
+        JTextField usernameField = new JTextField(12);
+        constraint.anchor = GridBagConstraints.WEST;
+        constraint.gridx = 1;
+        constraint.gridy = 0;
+        mainPanel.add(usernameField, constraint);
+
+        JLabel passwordLabel = new JLabel("Password:");
+        constraint.anchor = GridBagConstraints.EAST;
+        passwordLabel.setFont(mediumFont);
+        constraint.gridx = 0;
+        constraint.gridy = 1;
+        mainPanel.add(passwordLabel, constraint);
+
+        JTextField passwordField = new JTextField(12);
+        constraint.anchor = GridBagConstraints.WEST;
+        constraint.gridx = 1;
+        constraint.gridy = 1;
+        mainPanel.add(passwordField, constraint);
+
+        loginButton = new JButton("Login");
+        loginButton.setFont(mediumFont);
+        loginButton.addActionListener(buttonActionListener);
+        constraint.anchor = GridBagConstraints.CENTER;
+        constraint.gridx = 0;
+        constraint.gridy = 2;
+        constraint.gridwidth = 2;
+        constraint.fill = GridBagConstraints.BOTH;
+        mainPanel.add(loginButton, constraint);
+
+        registerPageButton = new JButton("Create Account");
+        registerPageButton.setFont(mediumFont);
+        registerPageButton.addActionListener(buttonActionListener);
+        constraint.anchor = GridBagConstraints.CENTER;
+        constraint.gridx = 0;
+        constraint.gridy = 3;
+        constraint.gridwidth = 2;
+        constraint.fill = GridBagConstraints.BOTH;
+        mainPanel.add(registerPageButton, constraint);
+
+        content.add(mainPanel, BorderLayout.CENTER);
+
+        return content;
+    }
+
+    Container registrationPage() {
+        Container content = new Container();
+        content.setLayout(new BorderLayout());
+
+        JLabel titleLabel = new JLabel("REGISTRATION");
+        titleLabel.setFont(largeFont);
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        content.add(titleLabel, BorderLayout.NORTH);
+
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridBagLayout());
+        GridBagConstraints constraint = new GridBagConstraints();
+
+        JLabel usernameLabel = new JLabel("Username:");
+        usernameLabel.setFont(mediumFont);
+        constraint.anchor = GridBagConstraints.EAST;
+        constraint.gridx = 0;
+        constraint.gridy = 0;
+        mainPanel.add(usernameLabel, constraint);
+
+        JTextField usernameField = new JTextField(12);
+        constraint.anchor = GridBagConstraints.WEST;
+        constraint.gridx = 1;
+        constraint.gridy = 0;
+        mainPanel.add(usernameField, constraint);
+
+        JLabel passwordLabel = new JLabel("Password:");
+        passwordLabel.setFont(mediumFont);
+        constraint.anchor = GridBagConstraints.EAST;
+        constraint.gridx = 0;
+        constraint.gridy = 1;
+        mainPanel.add(passwordLabel, constraint);
+
+        JTextField passwordField = new JTextField(12);
+        constraint.anchor = GridBagConstraints.WEST;
+        constraint.gridx = 1;
+        constraint.gridy = 1;
+        mainPanel.add(passwordField, constraint);
+
+        JLabel ageLabel = new JLabel("Age:");
+        ageLabel.setFont(mediumFont);
+        constraint.anchor = GridBagConstraints.EAST;
+        constraint.gridx = 0;
+        constraint.gridy = 2;
+        mainPanel.add(ageLabel, constraint);
+
+        JTextField ageField = new JTextField(4);
+        constraint.anchor = GridBagConstraints.WEST;
+        constraint.gridx = 1;
+        constraint.gridy = 2;
+        mainPanel.add(ageField, constraint);
+
+        JLabel fileLabel = new JLabel("Profile Picture:");
+        fileLabel.setFont(mediumFont);
+        constraint.anchor = GridBagConstraints.EAST;
+        constraint.gridx = 0;
+        constraint.gridy = 3;
+        mainPanel.add(fileLabel, constraint);
+
+        fileSelectButton = new JButton("Select file");
+        fileSelectButton.setFont(smallFont);
+        fileSelectButton.addActionListener(buttonActionListener);
+        constraint.anchor = GridBagConstraints.WEST;
+        constraint.gridx = 1;
+        constraint.gridy = 3;
+        mainPanel.add(fileSelectButton, constraint);
+
+        registerButton = new JButton("Register");
+        registerButton.setFont(mediumFont);
+        registerButton.addActionListener(buttonActionListener);
+        constraint.anchor = GridBagConstraints.CENTER;
+        constraint.gridx = 0;
+        constraint.gridy = 4;
+        constraint.gridwidth = 2;
+        constraint.fill = GridBagConstraints.BOTH;
+        mainPanel.add(registerButton, constraint);
+
+        content.add(mainPanel, BorderLayout.CENTER);
+
+        return content;
+    }
+
+    public void run() {
+        if (isConnected) {
+            frame = new JFrame(APP_NAME);
+            frame.setContentPane(loginPage());
+            frame.setSize(INITIAL_WIDTH, INITIAL_HEIGHT);
+            frame.setLocationRelativeTo(null);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setVisible(true);
+        }
+    }
+}
