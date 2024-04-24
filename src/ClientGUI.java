@@ -11,6 +11,7 @@ public class ClientGUI extends JComponent implements Runnable {
     private final int INITIAL_HEIGHT = 400;
     private Client client;
     private boolean isConnected;
+    private User clientUser;
     private JFrame frame;
     private Font largeFont;
     private Font mediumFont;
@@ -66,6 +67,8 @@ public class ClientGUI extends JComponent implements Runnable {
             } else if (e.getSource() == friendsButton) {
                 frame.setContentPane(friendsPage());
             } else if (e.getSource() == mainMenuButton) {
+                //temp user for getting name
+                clientUser = new User("Test User", "Password123!", 21, null);
                 frame.setContentPane(mainPage());
             } else if (e.getSource() == returnButton) {
                 frame.setContentPane(mainPage());
@@ -118,16 +121,19 @@ public class ClientGUI extends JComponent implements Runnable {
 
     private boolean login() {
         try {
-            if (!client.login(usernameField.getText(), passwordField.getText())) {
-                showPopup("Failed to login.", JOptionPane.ERROR_MESSAGE);
-                return false;
+            if (client.login(usernameField.getText(), passwordField.getText())) {
+                clientUser = client.findUser(usernameField.getText());
+                if (clientUser != null) {
+                    return true;
+                }
             }
         } catch (Exception e) {
             showPopup(e.getMessage(), JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
-        return true;
+        showPopup("Failed to login.", JOptionPane.ERROR_MESSAGE);
+        return false;
     }
 
     private boolean register() {
@@ -403,10 +409,6 @@ public class ClientGUI extends JComponent implements Runnable {
     }
 
     Container mainPage() {
-
-        //temp user for getting name
-        User tempUser = new User("Jacob", "passWord", 21, null);
-
         Container content = new Container();
         content.setLayout(new BorderLayout());
 
@@ -416,14 +418,18 @@ public class ClientGUI extends JComponent implements Runnable {
 
 
         //top parts (PFP, username, button for condition)
-        JLabel tempPFP = new JLabel("PFP");
-        tempPFP.setFont(mediumFont);
-        tempPFP.setHorizontalAlignment(JLabel.CENTER);
-
         JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.add(tempPFP, BorderLayout.WEST);
 
-        JLabel usernameTop = new JLabel(tempUser.getUsername());
+        if (clientUser.getUserPFPImage() != null) {
+            JLabel profilePicture = new JLabel(new ImageIcon(
+                    clientUser.getUserPFPImage().getScaledInstance(100, 100, Image.SCALE_FAST)));
+            profilePicture.setHorizontalAlignment(JLabel.CENTER);
+            profilePicture.setSize(20, 20);
+
+            topPanel.add(profilePicture, BorderLayout.WEST);
+        }
+
+        JLabel usernameTop = new JLabel(clientUser.getUsername());
         usernameTop.setFont(mediumFont);
         usernameTop.setHorizontalAlignment(JLabel.CENTER);
         topPanel.add(usernameTop, BorderLayout.CENTER);

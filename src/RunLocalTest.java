@@ -153,7 +153,16 @@ public class RunLocalTest {
     public void testFindUserNotFound() {
         Client client = new Client();
         client.initialize();
-        assertNull("Find user should return null for non-existent user", client.findUser("NonExistentUser"));
+
+        User foundUser = null;
+
+        try {
+            foundUser = client.findUser("NonExistentUser");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertNull("Find user should return null for non-existent user", foundUser);
     }
 
     @Test

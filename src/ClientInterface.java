@@ -16,7 +16,7 @@ public interface ClientInterface {
     public void shutdown();
     public boolean register(String username, String password, int age, File userPFP) throws Exception;
     public boolean login(String username, String password) throws Exception;
-    public User findUser(String username);
+    public User findUser(String username) throws Exception;
     public boolean addFriend(String friendUsername);
     public boolean blockUser(String usernameToBlock);
     public MessageHistory getMessageHistory(String username);

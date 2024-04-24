@@ -197,7 +197,7 @@ public class Client implements ClientInterface {
 
         //return false;
     }
-    public User findUser(String username) {
+    public User findUser(String username) throws Exception {
         //
         // String sanitization
         // REMINDER: Add specific error messages (Phase 3)
@@ -206,7 +206,8 @@ public class Client implements ClientInterface {
         // Check username (Not empty, size check, no newline or tab)
         if (username == null || username.equals("") || (username.length() > 16)
                 || username.contains("\n") || username.contains("\t")) {
-            return null;
+            throw new Exception("Invalid username (Must be 16 characters or less).");
+            //return null;
         }
 
         //remove any whitespace
@@ -224,7 +225,8 @@ public class Client implements ClientInterface {
 
             if (!resultOutput.equals("SUCCESS")) {
                 String resultMessage = reader.readLine();
-                System.out.printf("%s: %s\n", resultOutput, resultMessage);
+                //System.out.printf("%s: %s\n", requestResult, resultMessage);
+                throw new Exception(String.format("%s: %s.", resultOutput, resultMessage));
             } else {
                 String readUsername = reader.readLine();
                 int readAge = Integer.parseInt(reader.readLine());
@@ -242,15 +244,19 @@ public class Client implements ClientInterface {
 
                 BufferedImage readPFP = ImageIO.read(new ByteArrayInputStream(decoded));
 
-                System.out.println("User successfully found!");
                 return new User(readUsername, readAge, readPFP);
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            if (e.getMessage().contains("ERROR:")) {
+                throw new Exception(e.getMessage().substring(e.getMessage().indexOf(':') + 2));
+            } else {
+                throw new Exception("Exception while finding user.");
+            }
+            //return false;
         }
 
-        return null;
+        //return null;
     }
 
     public boolean addFriend(String friendUsername) {

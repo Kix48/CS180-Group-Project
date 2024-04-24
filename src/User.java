@@ -196,6 +196,14 @@ public class User implements UserInterface {
         this.userPFPFile = userPFPFile;
     }
 
+    public BufferedImage getUserPFPImage() { //returns userPFP file name
+        return userPFPImage;
+    }
+
+    public void setUserPFPImage(BufferedImage userPFPImage) {
+        this.userPFPImage = userPFPImage;
+    }
+
     public String toString() { //returns a toString format
 
         String output = "";
