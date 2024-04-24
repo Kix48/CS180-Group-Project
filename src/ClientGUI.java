@@ -27,7 +27,6 @@ public class ClientGUI extends JComponent implements Runnable {
     private JButton mainMenuButton;
     private JButton friendsOnlyButton;
     private JButton searchGo;
-    private JButton seeFriendsButton;
     private JButton seeConvoButton;
     private JButton logoutButton;
 
@@ -66,11 +65,7 @@ public class ClientGUI extends JComponent implements Runnable {
             } else if (e.getSource() == mainMenuButton) {
                 frame.setContentPane(mainPage());
             } else if (e.getSource() == returnButton) {
-                //set pane to main menu
-            } else if (e.getSource() == blockButton) {
-
-            } else if (e.getSource() == removeButton) {
-
+                frame.setContentPane(mainPage());
             }
 
             // Needs to be called to change container content at runtime
@@ -189,29 +184,19 @@ public class ClientGUI extends JComponent implements Runnable {
 
 
 
-        /* //remove this /* with the bottom one to add the menu -> test
-        //TEMP CODE TO ADD FRIENDS LIST FUNCTIONALITY (FROM LOGIN PAGE)  ---> AND MAIN MENU
-        friendsButton = new JButton("Friends List");
-        friendsButton.setFont(mediumFont);
-        friendsButton.addActionListener(buttonActionListener);
-        constraint.anchor = GridBagConstraints.CENTER;
-        constraint.gridx = 0;
-        constraint.gridy = 4;
-        constraint.gridwidth = 2;
-        constraint.fill = GridBagConstraints.BOTH;
-        mainPanel.add(friendsButton, constraint);
 
+        //TEMP CODE TO ADD MAIN MENU FUNCTIONALITY (from login page)
         mainMenuButton = new JButton("Main menu");
         mainMenuButton.setFont(mediumFont);
         mainMenuButton.addActionListener(buttonActionListener);
         constraint.anchor = GridBagConstraints.CENTER;
         constraint.gridx = 0;
-        constraint.gridy = 6;
+        constraint.gridy = 4;
         constraint.gridwidth = 2;
         constraint.fill = GridBagConstraints.BOTH;
         mainPanel.add(mainMenuButton, constraint);
 
-            */   //remove this */ for the button to appear
+
 
         //END TEMP CODE
 
@@ -259,19 +244,33 @@ public class ClientGUI extends JComponent implements Runnable {
             friendName.setFont(mediumFont);
             friendPanel.add(friendName, BorderLayout.WEST);
 
-            // Create a panel for buttons with GridLayout
-            JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
+            // Create a panel for user functionality with GridLayout
+            JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
+
+            //send message
+
+            /*
+            JLabel searchUserLabel = new JLabel("Send message:");
+            searchUserLabel.setFont(mediumFont);
+            buttonPanel.add(searchUserLabel);
+
+            JTextField searchTextField = new JTextField(12);
+            buttonPanel.add(searchTextField);
+            */
+
+            //block
             blockButton = new JButton("Block");
             blockButton.setFont(smallFont);
             blockButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
 
-                    //remove blocks user friend.getUsername() from friends list
+                    //blocks user friend.getUsername() from friends list
                 }
             });
             blockButton.setPreferredSize(new Dimension(100, 25));
             buttonPanel.add(blockButton);
 
+            //remove
             removeButton = new JButton("Remove");
             removeButton.setFont(smallFont);
             removeButton.addActionListener(new ActionListener() {
@@ -436,15 +435,15 @@ public class ClientGUI extends JComponent implements Runnable {
 
 
         //Bottom buttons (seeFriends, seeConvo, Logout)
-        seeFriendsButton = new JButton("See Friends");
-        seeFriendsButton.setFont(mediumFont);
-        seeFriendsButton.addActionListener(buttonActionListener);
+        friendsButton = new JButton("See Friends");
+        friendsButton.setFont(mediumFont);
+        friendsButton.addActionListener(buttonActionListener);
         constraint.anchor = GridBagConstraints.CENTER;
         constraint.gridx = 0;
         constraint.gridy = 1;
         constraint.gridwidth = 2;
         constraint.fill = GridBagConstraints.BOTH;
-        mainPanel.add(seeFriendsButton, constraint);
+        mainPanel.add(friendsButton, constraint);
 
         seeConvoButton = new JButton("See Conversations");
         seeConvoButton.setFont(mediumFont);
