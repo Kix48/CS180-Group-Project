@@ -18,11 +18,15 @@ public class ClientGUI extends JComponent implements Runnable {
     private JButton loginButton;
     private JButton registerPageButton;
     private JButton registerButton;
+    private JButton friendsButton;
+    private JButton returnButton;
+    private JButton removeButton;
+    private JButton blockButton;
     private JButton fileSelectButton;
     private File selectedFile;
-
     ActionListener buttonActionListener = new ActionListener() {
         @Override
+
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == loginButton) {
                 if (login()) {
@@ -38,8 +42,7 @@ public class ClientGUI extends JComponent implements Runnable {
             } else if (e.getSource() == fileSelectButton) {
                 selectedFile = null;
                 JFileChooser fileChooser = new JFileChooser();
-                FileNameExtensionFilter filter =
-                        new FileNameExtensionFilter("PNG Images", "png");
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("PNG Images", "png");
 
                 fileChooser.setFileFilter(filter);
 
@@ -50,6 +53,14 @@ public class ClientGUI extends JComponent implements Runnable {
                         showPopup("Invalid file selected", JOptionPane.ERROR_MESSAGE);
                     }
                 }
+            } else if (e.getSource() == friendsButton) {
+                frame.setContentPane(friendsPage());
+            } else if (e.getSource() == returnButton) {
+                //set pane to main menu
+            } else if (e.getSource() == blockButton) {
+
+            } else if (e.getSource() == removeButton) {
+
             }
 
             // Needs to be called to change container content at runtime
@@ -166,8 +177,88 @@ public class ClientGUI extends JComponent implements Runnable {
         constraint.fill = GridBagConstraints.BOTH;
         mainPanel.add(registerPageButton, constraint);
 
+        /*TEMP CODE TO ADD FRIENDS LIST FUNCTIONALITY (FROM LOGIN PAGE)
+        friendsButton = new JButton("Friends List");
+        friendsButton.setFont(mediumFont);
+        friendsButton.addActionListener(buttonActionListener);
+        constraint.anchor = GridBagConstraints.CENTER;
+        constraint.gridx = 0;
+        constraint.gridy = 4;
+        constraint.gridwidth = 2;
+        constraint.fill = GridBagConstraints.BOTH;
+        mainPanel.add(friendsButton, constraint);
+        */
+
         content.add(mainPanel, BorderLayout.CENTER);
 
+        return content;
+    }
+
+    Container friendsPage() {
+        //temp test friends list
+        User[] friends = new User[4];
+        friends[0] = new User("Bobby", "123", 5, "yo.jpg");
+        friends[1] = new User("Robby", "123", 5, "yo.jpg");
+        friends[2] = new User("Billy", "123", 5, "yo.jpg");
+        friends[3] = new User("Billy", "123", 5, "yo.jpg");
+
+        Container content = new Container();
+        content.setLayout(new BorderLayout());
+
+        JLabel titleLabel = new JLabel("FRIENDS LIST");
+        titleLabel.setFont(largeFont);
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
+
+        returnButton = new JButton("Back");
+        returnButton.setFont(smallFont);
+        returnButton.addActionListener(buttonActionListener);
+        titlePanel.add(returnButton, BorderLayout.EAST);
+
+        content.add(titlePanel, BorderLayout.NORTH);
+
+        JPanel friendListPanel = new JPanel();
+        friendListPanel.setLayout(new BoxLayout(friendListPanel, BoxLayout.Y_AXIS));
+
+        for (int x = 0; x < friends.length; x++) {
+            User friend = friends[x];
+            JPanel friendPanel = new JPanel(new BorderLayout());
+
+            // User profile name
+            JLabel friendName = new JLabel(friends[x].getUsername());
+            friendName.setFont(mediumFont);
+            friendPanel.add(friendName, BorderLayout.WEST);
+
+            // Create a panel for buttons with GridLayout
+            JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
+            blockButton = new JButton("Block");
+            blockButton.setFont(smallFont);
+            blockButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+
+                    //remove blocks user friend.getUsername() from friends list
+                }
+            });
+            blockButton.setPreferredSize(new Dimension(100, 25));
+            buttonPanel.add(blockButton);
+
+            removeButton = new JButton("Remove");
+            removeButton.setFont(smallFont);
+            removeButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    //remove USER friend.getUsername() from friends list
+                }
+            });
+            removeButton.setPreferredSize(new Dimension(100, 25));
+            buttonPanel.add(removeButton);
+
+            friendPanel.add(buttonPanel, BorderLayout.EAST);
+
+            friendListPanel.add(friendPanel);
+        }
+        content.add(new JScrollPane(friendListPanel), BorderLayout.CENTER);
         return content;
     }
 

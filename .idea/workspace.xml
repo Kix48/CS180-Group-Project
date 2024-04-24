@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3e5a05a9-3e12-48c8-a1d2-6ea6028bd5ec" name="Changes" comment="Implemented sendMessage method in Client, and laid down framework for sendMessage method in Server">
-      <change afterPath="$PROJECT_DIR$/src/ClientGUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/receiverUser-testUser.txt" beforeDir="false" afterPath="$PROJECT_DIR$/messages/receiverUser-testUser.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ClientGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ClientGUI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,5 +78,16 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Implemented sendMessage method in Client, and laid down framework for sendMessage method in Server" />
     <option name="LAST_COMMIT_MESSAGE" value="Implemented sendMessage method in Client, and laid down framework for sendMessage method in Server" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/ClientGUI.java</url>
+          <line>219</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
