@@ -127,13 +127,17 @@ public class Client implements ClientInterface {
             if (!requestResult.equals("SUCCESS")) {
                 String resultMessage = reader.readLine();
                 //System.out.printf("%s: %s\n", requestResult, resultMessage);
-                throw new Exception(resultMessage);
+                throw new Exception(String.format("%s: %s.", requestResult, resultMessage));
             } else {
                 //System.out.println("Registration succeeded!");
                 return true;
             }
         } catch (Exception e) {
-            throw new Exception("Exception while registering user.");
+            if (e.getMessage().contains("ERROR:")) {
+                throw new Exception(e.getMessage().substring(e.getMessage().indexOf(':') + 2));
+            } else {
+                throw new Exception("Exception while registering user.");
+            }
             //return false;
         }
 

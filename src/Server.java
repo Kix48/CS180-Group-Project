@@ -35,15 +35,6 @@ public class Server implements ServerInterface, Runnable {
             String password = this.reader.readLine();
             int age = Integer.parseInt(this.reader.readLine());
 
-            // Check if the user already exists
-            if (this.databaseHelper.readUser(username) != null) {
-                // Send back an error
-                this.writer.println("ERROR");
-                this.writer.println("Username is taken");
-                this.writer.flush();
-                return;
-            }
-
             // Write profile picture to file
             String pictureName = username + " - PFP.png";
             int fileLength = Integer.parseInt(this.reader.readLine());
@@ -56,6 +47,15 @@ public class Server implements ServerInterface, Runnable {
 
             // Decode the file data
             byte[] decoded = Base64.getDecoder().decode(encoded);
+
+            // Check if the user already exists
+            if (this.databaseHelper.readUser(username) != null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Username is taken");
+                this.writer.flush();
+                return;
+            }
 
             if (!this.databaseHelper.writeImage(ImageIO.read(new ByteArrayInputStream(decoded)), pictureName)) {
                 // Send back an error
@@ -543,9 +543,6 @@ public class Server implements ServerInterface, Runnable {
 
     // Server handler that is run by the thread
     public void run() {
-        // REMINDER: Remove console output
-        System.out.println("Client connected");
-
         this.databaseHelper = new DatabaseHelper();
 
         try {
@@ -610,16 +607,12 @@ public class Server implements ServerInterface, Runnable {
             reader.close();
             writer.close();
         } catch (Exception e) {
-            // REMINDER: Make error handling more in-depth
             e.printStackTrace();
         }
     }
 
     public static void main(String[] args) {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-            // REMINDER: Remove console output
-            System.out.println("Server started");
-
             while (true) {
                 Socket socket = serverSocket.accept();
 
@@ -628,7 +621,6 @@ public class Server implements ServerInterface, Runnable {
                 serverThread.start();
             }
         } catch (Exception e) {
-            // REMINDER: Remove console output
             e.printStackTrace();
         }
     }

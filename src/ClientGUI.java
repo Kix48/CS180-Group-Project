@@ -131,7 +131,26 @@ public class ClientGUI extends JComponent implements Runnable {
     }
 
     private boolean register() {
-        System.out.println("Registering!");
+        int age = 0;
+        try {
+            age = Integer.parseInt(ageField.getText());
+        } catch (NumberFormatException e) {
+            showPopup("Age field must have a number.", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        try {
+            if (!client.register(usernameField.getText(), passwordField.getText(), age, selectedFile)) {
+                showPopup("Failed to register user.", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        } catch (Exception e) {
+            showPopup(e.getMessage(), JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        showPopup("User successfully registered.", JOptionPane.INFORMATION_MESSAGE);
+
         return true;
     }
 
@@ -340,24 +359,11 @@ public class ClientGUI extends JComponent implements Runnable {
         constraint.gridy = 1;
         mainPanel.add(passwordField, constraint);
 
-        JLabel ageLabel = new JLabel("Age:");
-        ageLabel.setFont(mediumFont);
-        constraint.anchor = GridBagConstraints.EAST;
-        constraint.gridx = 0;
-        constraint.gridy = 2;
-        mainPanel.add(ageLabel, constraint);
-
-        ageField = new JTextField(4);
-        constraint.anchor = GridBagConstraints.WEST;
-        constraint.gridx = 1;
-        constraint.gridy = 2;
-        mainPanel.add(ageField, constraint);
-
         JLabel fileLabel = new JLabel("Profile Picture:");
         fileLabel.setFont(mediumFont);
         constraint.anchor = GridBagConstraints.EAST;
         constraint.gridx = 0;
-        constraint.gridy = 3;
+        constraint.gridy = 2;
         mainPanel.add(fileLabel, constraint);
 
         fileSelectButton = new JButton("Select file");
@@ -365,8 +371,21 @@ public class ClientGUI extends JComponent implements Runnable {
         fileSelectButton.addActionListener(buttonActionListener);
         constraint.anchor = GridBagConstraints.WEST;
         constraint.gridx = 1;
-        constraint.gridy = 3;
+        constraint.gridy = 2;
         mainPanel.add(fileSelectButton, constraint);
+
+        JLabel ageLabel = new JLabel("Age:");
+        ageLabel.setFont(mediumFont);
+        constraint.anchor = GridBagConstraints.EAST;
+        constraint.gridx = 0;
+        constraint.gridy = 3;
+        mainPanel.add(ageLabel, constraint);
+
+        ageField = new JTextField(4);
+        constraint.anchor = GridBagConstraints.WEST;
+        constraint.gridx = 1;
+        constraint.gridy = 3;
+        mainPanel.add(ageField, constraint);
 
         registerButton = new JButton("Register");
         registerButton.setFont(mediumFont);
