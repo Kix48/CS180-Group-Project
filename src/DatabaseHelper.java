@@ -49,7 +49,7 @@ public class DatabaseHelper implements DatabaseHelperInterface {
                     }
                 }
 
-                if (!file.exists()) {
+                if (!file.exists() || !file.getCanonicalFile().getName().equals(file.getName())) {
                     throw new IOException("User file does not exist!");
                 }
 

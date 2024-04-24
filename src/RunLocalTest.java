@@ -96,24 +96,57 @@ public class RunLocalTest {
     public void testRegisterInvalidUsername() {
         Client client = new Client();
         client.initialize();
-        assertFalse("Username validation failed", client.register("", "ValidPass123!", 21, new File("validPFP.png")));
-        assertFalse("Username validation failed", client.register("TooLongUsernameIsInvalidBecauseItIsTooLong", "ValidPass123!", 21, new File("validPFP.png")));
-        assertFalse("Username validation failed", client.register("Invalid\nUsername", "ValidPass123!", 21, new File("validPFP.png")));
+
+        boolean succeeded1 = false;
+        boolean succeeded2 = false;
+        boolean succeeded3 = false;
+
+        try {
+            succeeded1 = client.register("", "ValidPass123!", 21, new File("validPFP.png"));
+            succeeded2 = client.register("TooLongUsernameIsInvalidBecauseItIsTooLong", "ValidPass123!", 21, new File("validPFP.png"));
+            succeeded3 = client.register("Invalid\nUsername", "ValidPass123!", 21, new File("validPFP.png"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertFalse("Username validation failed", succeeded1);
+        assertFalse("Username validation failed", succeeded2);
+        assertFalse("Username validation failed", succeeded3);
     }
 
     @Test
     public void testRegisterInvalidAge() {
         Client client = new Client();
         client.initialize();
-        assertFalse("Age validation failed", client.register("ValidUser", "ValidPass123!", -1, new File("validPFP.png")));
-        assertFalse("Age validation failed", client.register("ValidUser", "ValidPass123!", 0, new File("validPFP.png")));
+
+        boolean succeeded1 = false;
+        boolean succeeded2 = false;
+
+        try {
+            succeeded1 = client.register("ValidUser", "ValidPass123!", -1, new File("validPFP.png"));
+            succeeded2 = client.register("ValidUser", "ValidPass123!", 0, new File("validPFP.png"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertFalse("Age validation failed", succeeded1);
+        assertFalse("Age validation failed", succeeded2);
     }
 
     @Test
     public void testRegisterInvalidProfilePicture() {
         Client client = new Client();
         client.initialize();
-        assertFalse("Profile picture validation failed", client.register("ValidUser", "ValidPass123!", 21, new File("nonexistent.png")));
+
+        boolean succeeded = false;
+
+        try {
+            succeeded = client.register("ValidUser", "ValidPass123!", 21, new File("nonexistent.png"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertFalse("Profile picture validation failed", succeeded);
     }
 
     @Test
@@ -127,6 +160,15 @@ public class RunLocalTest {
     public void testLoginInvalidCredentials() {
         Client client = new Client();
         client.initialize();
-        assertFalse("Login should fail for wrong credentials", client.login("ValidUser", "WrongPassword"));
+
+        boolean succeeded = false;
+
+        try {
+            succeeded = client.login("ValidUser", "WrongPassword");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertFalse("Login should fail for wrong credentials", succeeded);
     }
 }

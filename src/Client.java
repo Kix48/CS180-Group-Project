@@ -52,7 +52,7 @@ public class Client implements ClientInterface {
         }
     }
 
-    public boolean register(String username, String password, int age, File userPFP) {
+    public boolean register(String username, String password, int age, File userPFP) throws Exception {
         //
         // String sanitization
         // REMINDER: Add specific error messages (Phase 3)
@@ -61,14 +61,15 @@ public class Client implements ClientInterface {
         // Check username (Not empty, size check, no newline or tab)
         if (username == null || username.equals("") || (username.length() > 16)
                 || username.contains("\n") || username.contains("\t")) {
-            //throw new Exception("Invalid username (Must be less than 16 characters");
-            return false;
+            throw new Exception("Invalid username (Must be 16 characters or less).");
+            //return false;
         }
 
         // Check password (Not empty, size check, no newline or tab)
         if (password == null || password.equals("") || (password.length() > 32)
                 || password.contains("\n") || password.contains("\t")) {
-            return false;
+            throw new Exception("Invalid password (Must be 32 characters or less).");
+            //return false;
         }
 
         // Remove extra whitespaces
@@ -77,12 +78,14 @@ public class Client implements ClientInterface {
 
         // Check age (Greater than 0)
         if (age <= 0) {
-            return false;
+            throw new Exception("Age must be greater than 0.");
+            //return false;
         }
 
         // Check profile picture
         if (userPFP == null || !userPFP.exists() || !userPFP.canRead()) {
-            return false;
+            throw new Exception("Invalid profile picture.");
+            //return false;
         }
 
         //
@@ -123,21 +126,21 @@ public class Client implements ClientInterface {
             String requestResult = reader.readLine();
             if (!requestResult.equals("SUCCESS")) {
                 String resultMessage = reader.readLine();
-                System.out.printf("%s: %s\n", requestResult, resultMessage);
+                //System.out.printf("%s: %s\n", requestResult, resultMessage);
+                throw new Exception(resultMessage);
             } else {
-                System.out.println("Registration succeeded!");
+                //System.out.println("Registration succeeded!");
                 return true;
             }
         } catch (Exception e) {
-            // REMINDER: Remove console output
-            e.printStackTrace();
-            return false;
+            throw new Exception("Exception while registering user.");
+            //return false;
         }
 
-        return false;
+        //return false;
     }
 
-    public boolean login(String username, String password) {
+    public boolean login(String username, String password) throws Exception {
         //
         // String sanitization
         // REMINDER: Add specific error messages (Phase 3)
@@ -146,13 +149,15 @@ public class Client implements ClientInterface {
         // Check username (Not empty, size check, no newline or tab)
         if (username == null || username.equals("") || (username.length() > 16)
                 || username.contains("\n") || username.contains("\t")) {
-            return false;
+            throw new Exception("Invalid username (Must be 16 characters or less).");
+            //return false;
         }
 
         // Check password (Not empty, size check, no newline or tab)
         if (password == null || password.equals("") || (password.length() > 32)
                 || password.contains("\n") || password.contains("\t")) {
-            return false;
+            throw new Exception("Invalid password (Must be 32 characters or less).");
+            //return false;
         }
 
         // Remove extra whitespaces
@@ -170,19 +175,23 @@ public class Client implements ClientInterface {
             String requestResult = reader.readLine();
             if (!requestResult.equals("SUCCESS")) {
                 String resultMessage = reader.readLine();
-                System.out.printf("%s: %s\n", requestResult, resultMessage);
+                //System.out.printf("%s: %s\n", requestResult, resultMessage);
+                throw new Exception(String.format("%s: %s.", requestResult, resultMessage));
             } else {
                 clientUsername = username;    // Assigns current user their name
-                System.out.println("Login succeeded, welcome " + clientUsername + "!");
+                //System.out.println("Login succeeded, welcome " + clientUsername + "!");
                 return true;
             }
         } catch (Exception e) {
-            // REMINDER: Remove console output
-            e.printStackTrace();
-            return false;
+            if (e.getMessage().contains("ERROR:")) {
+                throw new Exception(e.getMessage().substring(e.getMessage().indexOf(':') + 2));
+            } else {
+                throw new Exception("Exception while logging in.");
+            }
+            //return false;
         }
 
-        return false;
+        //return false;
     }
     public User findUser(String username) {
         //

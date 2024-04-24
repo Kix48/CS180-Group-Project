@@ -15,6 +15,9 @@ public class ClientGUI extends JComponent implements Runnable {
     private Font largeFont;
     private Font mediumFont;
     private Font smallFont;
+    private JTextField usernameField;
+    private JTextField passwordField;
+    private JTextField ageField;
     private JButton loginButton;
     private JButton registerPageButton;
     private JButton registerButton;
@@ -37,7 +40,7 @@ public class ClientGUI extends JComponent implements Runnable {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == loginButton) {
                 if (login()) {
-                    // Main page
+                    frame.setContentPane(mainPage());
                 }
             } else if (e.getSource() == registerPageButton) {
                 frame.setContentPane(registrationPage());
@@ -114,7 +117,16 @@ public class ClientGUI extends JComponent implements Runnable {
     }
 
     private boolean login() {
-        System.out.println("Logging in!");
+        try {
+            if (!client.login(usernameField.getText(), passwordField.getText())) {
+                showPopup("Failed to login.", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        } catch (Exception e) {
+            showPopup(e.getMessage(), JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
         return true;
     }
 
@@ -143,7 +155,7 @@ public class ClientGUI extends JComponent implements Runnable {
         constraint.gridy = 0;
         mainPanel.add(usernameLabel, constraint);
 
-        JTextField usernameField = new JTextField(12);
+        usernameField = new JTextField(12);
         constraint.anchor = GridBagConstraints.WEST;
         constraint.gridx = 1;
         constraint.gridy = 0;
@@ -156,7 +168,7 @@ public class ClientGUI extends JComponent implements Runnable {
         constraint.gridy = 1;
         mainPanel.add(passwordLabel, constraint);
 
-        JTextField passwordField = new JTextField(12);
+        passwordField = new JTextField(12);
         constraint.anchor = GridBagConstraints.WEST;
         constraint.gridx = 1;
         constraint.gridy = 1;
@@ -309,7 +321,7 @@ public class ClientGUI extends JComponent implements Runnable {
         constraint.gridy = 0;
         mainPanel.add(usernameLabel, constraint);
 
-        JTextField usernameField = new JTextField(12);
+        usernameField = new JTextField(12);
         constraint.anchor = GridBagConstraints.WEST;
         constraint.gridx = 1;
         constraint.gridy = 0;
@@ -322,7 +334,7 @@ public class ClientGUI extends JComponent implements Runnable {
         constraint.gridy = 1;
         mainPanel.add(passwordLabel, constraint);
 
-        JTextField passwordField = new JTextField(12);
+        passwordField = new JTextField(12);
         constraint.anchor = GridBagConstraints.WEST;
         constraint.gridx = 1;
         constraint.gridy = 1;
@@ -335,7 +347,7 @@ public class ClientGUI extends JComponent implements Runnable {
         constraint.gridy = 2;
         mainPanel.add(ageLabel, constraint);
 
-        JTextField ageField = new JTextField(4);
+        ageField = new JTextField(4);
         constraint.anchor = GridBagConstraints.WEST;
         constraint.gridx = 1;
         constraint.gridy = 2;

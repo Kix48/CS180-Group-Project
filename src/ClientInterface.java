@@ -14,8 +14,8 @@ import java.io.File;
 public interface ClientInterface {
     public boolean initialize();
     public void shutdown();
-    public boolean register(String username, String password, int age, File userPFP);
-    public boolean login(String username, String password);
+    public boolean register(String username, String password, int age, File userPFP) throws Exception;
+    public boolean login(String username, String password) throws Exception;
     public User findUser(String username);
     public boolean addFriend(String friendUsername);
     public boolean blockUser(String usernameToBlock);
