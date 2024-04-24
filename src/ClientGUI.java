@@ -24,6 +24,14 @@ public class ClientGUI extends JComponent implements Runnable {
     private JButton blockButton;
     private JButton fileSelectButton;
     private File selectedFile;
+    private JButton mainMenuButton;
+    private JButton friendsOnlyButton;
+    private JButton searchGo;
+    private JButton seeFriendsButton;
+    private JButton seeConvoButton;
+    private JButton logoutButton;
+
+
     ActionListener buttonActionListener = new ActionListener() {
         @Override
 
@@ -55,6 +63,8 @@ public class ClientGUI extends JComponent implements Runnable {
                 }
             } else if (e.getSource() == friendsButton) {
                 frame.setContentPane(friendsPage());
+            } else if (e.getSource() == mainMenuButton) {
+                frame.setContentPane(mainPage());
             } else if (e.getSource() == returnButton) {
                 //set pane to main menu
             } else if (e.getSource() == blockButton) {
@@ -177,7 +187,10 @@ public class ClientGUI extends JComponent implements Runnable {
         constraint.fill = GridBagConstraints.BOTH;
         mainPanel.add(registerPageButton, constraint);
 
-        /*TEMP CODE TO ADD FRIENDS LIST FUNCTIONALITY (FROM LOGIN PAGE)
+
+
+        /* //remove this /* with the bottom one to add the menu -> test
+        //TEMP CODE TO ADD FRIENDS LIST FUNCTIONALITY (FROM LOGIN PAGE)  ---> AND MAIN MENU
         friendsButton = new JButton("Friends List");
         friendsButton.setFont(mediumFont);
         friendsButton.addActionListener(buttonActionListener);
@@ -187,7 +200,22 @@ public class ClientGUI extends JComponent implements Runnable {
         constraint.gridwidth = 2;
         constraint.fill = GridBagConstraints.BOTH;
         mainPanel.add(friendsButton, constraint);
-        */
+
+        mainMenuButton = new JButton("Main menu");
+        mainMenuButton.setFont(mediumFont);
+        mainMenuButton.addActionListener(buttonActionListener);
+        constraint.anchor = GridBagConstraints.CENTER;
+        constraint.gridx = 0;
+        constraint.gridy = 6;
+        constraint.gridwidth = 2;
+        constraint.fill = GridBagConstraints.BOTH;
+        mainPanel.add(mainMenuButton, constraint);
+
+            */   //remove this */ for the button to appear
+
+        //END TEMP CODE
+
+
 
         content.add(mainPanel, BorderLayout.CENTER);
 
@@ -343,6 +371,105 @@ public class ClientGUI extends JComponent implements Runnable {
 
         return content;
     }
+
+    Container mainPage() {
+
+        //temp user for getting name
+        User tempUser = new User("Jacob", "passWord", 21, null);
+
+        Container content = new Container();
+        content.setLayout(new BorderLayout());
+
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridBagLayout());
+        GridBagConstraints constraint = new GridBagConstraints();
+
+
+        //top parts (PFP, username, button for condition)
+        JLabel tempPFP = new JLabel("PFP");
+        tempPFP.setFont(mediumFont);
+        tempPFP.setHorizontalAlignment(JLabel.CENTER);
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(tempPFP, BorderLayout.WEST);
+
+        JLabel usernameTop = new JLabel(tempUser.getUsername());
+        usernameTop.setFont(mediumFont);
+        usernameTop.setHorizontalAlignment(JLabel.CENTER);
+        topPanel.add(usernameTop, BorderLayout.CENTER);
+
+
+        friendsOnlyButton = new JButton("Friends Only?");
+        friendsOnlyButton.setFont(smallFont);
+        friendsOnlyButton.addActionListener(buttonActionListener);
+        topPanel.add(friendsOnlyButton, BorderLayout.EAST);
+
+        content.add(topPanel, BorderLayout.NORTH);
+
+
+
+        JPanel searchPanel = new JPanel();
+        searchPanel.setLayout(new GridBagLayout());
+
+        JLabel searchUserLabel = new JLabel("Search User:");
+        searchUserLabel.setFont(mediumFont);
+        constraint.anchor = GridBagConstraints.WEST;
+        constraint.gridx = 0;
+        constraint.gridy = 0;
+        searchPanel.add(searchUserLabel, constraint);
+
+        JTextField searchTextField = new JTextField(12);
+        constraint.anchor = GridBagConstraints.CENTER;
+        constraint.gridx = 1;
+        constraint.gridy = 0;
+        searchPanel.add(searchTextField, constraint);
+
+        searchGo = new JButton("GO!");
+        searchGo.setFont(smallFont);
+        searchGo.addActionListener(buttonActionListener);
+        constraint.anchor = GridBagConstraints.EAST;
+        constraint.gridx = 2;
+        constraint.gridy = 0;
+        searchPanel.add(searchGo, constraint);
+
+        content.add(searchPanel, BorderLayout.CENTER);
+
+
+        //Bottom buttons (seeFriends, seeConvo, Logout)
+        seeFriendsButton = new JButton("See Friends");
+        seeFriendsButton.setFont(mediumFont);
+        seeFriendsButton.addActionListener(buttonActionListener);
+        constraint.anchor = GridBagConstraints.CENTER;
+        constraint.gridx = 0;
+        constraint.gridy = 1;
+        constraint.gridwidth = 2;
+        constraint.fill = GridBagConstraints.BOTH;
+        mainPanel.add(seeFriendsButton, constraint);
+
+        seeConvoButton = new JButton("See Conversations");
+        seeConvoButton.setFont(mediumFont);
+        seeConvoButton.addActionListener(buttonActionListener);
+        constraint.anchor = GridBagConstraints.CENTER;
+        constraint.gridx = 0;
+        constraint.gridy = 2;
+        constraint.gridwidth = 2;
+        constraint.fill = GridBagConstraints.BOTH;
+        mainPanel.add(seeConvoButton, constraint);
+
+        logoutButton = new JButton("Logout");
+        logoutButton.setFont(mediumFont);
+        logoutButton.addActionListener(buttonActionListener);
+        constraint.anchor = GridBagConstraints.CENTER;
+        constraint.gridx = 0;
+        constraint.gridy = 3;
+        constraint.gridwidth = 2;
+        constraint.fill = GridBagConstraints.BOTH;
+        mainPanel.add(logoutButton, constraint);
+
+        content.add(mainPanel, BorderLayout.SOUTH);
+        return content;
+    }
+
 
     public void run() {
         if (isConnected) {
