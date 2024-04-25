@@ -33,6 +33,7 @@ public class ClientGUI extends JComponent implements Runnable {
     private JButton searchGo;
     private JButton seeConvoButton;
     private JButton logoutButton;
+    private JButton sendButton;
 
 
     ActionListener buttonActionListener = new ActionListener() {
@@ -220,8 +221,6 @@ public class ClientGUI extends JComponent implements Runnable {
         mainPanel.add(registerPageButton, constraint);
 
 
-
-
         //TEMP CODE TO ADD MAIN MENU FUNCTIONALITY (from login page)
         mainMenuButton = new JButton("Main menu");
         mainMenuButton.setFont(mediumFont);
@@ -234,9 +233,7 @@ public class ClientGUI extends JComponent implements Runnable {
         mainPanel.add(mainMenuButton, constraint);
 
 
-
         //END TEMP CODE
-
 
 
         content.add(mainPanel, BorderLayout.CENTER);
@@ -246,12 +243,12 @@ public class ClientGUI extends JComponent implements Runnable {
 
     Container friendsPage() {
         //temp test friends list
-        User[] friends = new User[4];
-        friends[0] = new User("Bobby", "123", 5, "yo.jpg");
-        friends[1] = new User("Robby", "123", 5, "yo.jpg");
-        friends[2] = new User("Billy", "123", 5, "yo.jpg");
-        friends[3] = new User("Billy", "123", 5, "yo.jpg");
-
+        User[] friends = new User[5];
+        friends[0] = new User("Bobby", "123", 5, "otheruser.jpg");
+        friends[1] = new User("Robby", "123", 5, "otheruser.jpg");
+        friends[2] = new User("Billy", "123", 5, "otheruser.jpg");
+        friends[3] = new User("Billy", "123", 5, "otheruser.jpg");
+        friends[4] = new User("Biasdlly", "123", 5, "otheruser.jpg");
         Container content = new Container();
         content.setLayout(new BorderLayout());
 
@@ -281,31 +278,59 @@ public class ClientGUI extends JComponent implements Runnable {
             friendName.setFont(mediumFont);
             friendPanel.add(friendName, BorderLayout.WEST);
 
+            //add pfp
+            if (friends[x].getUserPFPImage() != null) {
+                JLabel profilePicture = new JLabel(new ImageIcon(
+                        friends[x].getUserPFPImage().getScaledInstance(100, 100, Image.SCALE_FAST)));
+                profilePicture.setHorizontalAlignment(JLabel.CENTER);
+                profilePicture.setSize(20, 20);
+
+                friendPanel.add(profilePicture, BorderLayout.WEST);
+            }
+
             // Create a panel for user functionality with GridLayout
-            JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
+            JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
 
-            //send message
+            //send message functionality
 
-            /*
-            JLabel searchUserLabel = new JLabel("Send message:");
-            searchUserLabel.setFont(mediumFont);
-            buttonPanel.add(searchUserLabel);
+            JLabel sendMessageLabel = new JLabel("Send message:");
+            sendMessageLabel.setFont(smallFont);
+            JTextField searchTextField = new JTextField(25);
+            sendButton = new JButton("Send");
+            sendButton.setFont(smallFont);
+            sendButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
 
-            JTextField searchTextField = new JTextField(12);
-            buttonPanel.add(searchTextField);
-            */
+                    //ADDS MESSAGE TO MESSAGE HISTORY
+                }
+            });
+            sendButton.setPreferredSize(new Dimension(80, 15));
+
+            JPanel panel = new JPanel();
+            panel.setLayout(new BorderLayout());
+
+            panel.add(searchTextField,BorderLayout.WEST);
+            panel.add(sendMessageLabel,BorderLayout.NORTH);
+            panel.add(sendButton,BorderLayout.EAST);
+            buttonPanel.add(panel);
 
             //block
+            JPanel panel1 = new JPanel();
+            panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
             blockButton = new JButton("Block");
             blockButton.setFont(smallFont);
+            int finalX = x;
             blockButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
 
                     //blocks user friend.getUsername() from friends list
+                    System.out.println( "block " + friends[finalX].getUsername()); //test can remove later
                 }
             });
-            blockButton.setPreferredSize(new Dimension(100, 25));
-            buttonPanel.add(blockButton);
+            blockButton.setPreferredSize(new Dimension(125, 25));
+            panel1.add(Box.createVerticalStrut(20));
+            panel1.add(blockButton,BorderLayout.NORTH);
+            panel1.add(Box.createVerticalStrut(10));
 
             //remove
             removeButton = new JButton("Remove");
@@ -313,10 +338,12 @@ public class ClientGUI extends JComponent implements Runnable {
             removeButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     //remove USER friend.getUsername() from friends list
+                    System.out.println( "remove " + friends[finalX].getUsername()); //test. can remove later
                 }
             });
             removeButton.setPreferredSize(new Dimension(100, 25));
-            buttonPanel.add(removeButton);
+            panel1.add(removeButton,BorderLayout.NORTH);
+            buttonPanel.add(panel1);
 
             friendPanel.add(buttonPanel, BorderLayout.EAST);
 
@@ -441,7 +468,6 @@ public class ClientGUI extends JComponent implements Runnable {
         topPanel.add(friendsOnlyButton, BorderLayout.EAST);
 
         content.add(topPanel, BorderLayout.NORTH);
-
 
 
         JPanel searchPanel = new JPanel();
