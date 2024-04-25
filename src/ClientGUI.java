@@ -79,7 +79,7 @@ public class ClientGUI extends JComponent implements Runnable {
 
             if (e.getSource() == friendsOnlyButton) {
                 if (switcher) {
-                    friendsOnlyButton.setText("Messages: Friends Only? T");
+                    friendsOnlyButton.setText("Messaging Mode: Friends");
                     switcher = false;
                     //CHANGE BOOLEAN CONDITION HERE!!! (SET TO TRUE i think)
 
@@ -88,12 +88,12 @@ public class ClientGUI extends JComponent implements Runnable {
 
                 } else {
                     switcher = true;
-                    friendsOnlyButton.setText("Messages: Friends Only? F");
+                    friendsOnlyButton.setText("Messaging Mode: All        ");
                     //CHANGE BOOLEAN CONDITION HERE!!! (set to false i think)
 
 
 
-                    }
+                }
             }
 
             // Needs to be called to change container content at runtime
@@ -468,6 +468,7 @@ public class ClientGUI extends JComponent implements Runnable {
         //top parts (PFP, username, button for condition)
         JPanel topPanel = new JPanel(new BorderLayout());
 
+        //adding PPF
         if (clientUser.getUserPFPImage() != null) {
             JLabel profilePicture = new JLabel(new ImageIcon(
                     clientUser.getUserPFPImage().getScaledInstance(100, 100, Image.SCALE_FAST)));
@@ -477,25 +478,33 @@ public class ClientGUI extends JComponent implements Runnable {
             topPanel.add(profilePicture, BorderLayout.WEST);
         }
 
+        //adding username
         JLabel usernameTop = new JLabel(clientUser.getUsername());
         usernameTop.setFont(mediumFont);
         usernameTop.setHorizontalAlignment(JLabel.CENTER);
         topPanel.add(usernameTop, BorderLayout.CENTER);
 
-
-        friendsOnlyButton = new JButton("Messages: Friends Only? F");
+        //adding friendsButton
+        friendsOnlyButton = new JButton("Messaging Mode: All        ");
         friendsOnlyButton.setFont(smallFont);
         friendsOnlyButton.addActionListener(buttonActionListener);
         topPanel.add(friendsOnlyButton, BorderLayout.EAST);
 
+        //horizontal line + Adding
+        JSeparator sepHorizontal = new JSeparator();
+        sepHorizontal.setOrientation(SwingConstants.HORIZONTAL);
+        topPanel.add(sepHorizontal, BorderLayout.SOUTH);
+
+
+        //adding topPanel
         content.add(topPanel, BorderLayout.NORTH);
 
-
-
-
+        //creating searchPanel
         JPanel searchPanel = new JPanel();
         searchPanel.setLayout(new GridBagLayout());
 
+
+        //adding searchLabel
         JLabel searchUserLabel = new JLabel("Search User:");
         searchUserLabel.setFont(mediumFont);
         constraint.anchor = GridBagConstraints.WEST;
@@ -503,12 +512,14 @@ public class ClientGUI extends JComponent implements Runnable {
         constraint.gridy = 0;
         searchPanel.add(searchUserLabel, constraint);
 
+        //adding search text Field
         JTextField searchTextField = new JTextField(12);
         constraint.anchor = GridBagConstraints.CENTER;
         constraint.gridx = 1;
         constraint.gridy = 0;
         searchPanel.add(searchTextField, constraint);
 
+        //adding search Button
         searchGo = new JButton("GO!");
         searchGo.setFont(smallFont);
         searchGo.addActionListener(buttonActionListener);
@@ -516,11 +527,13 @@ public class ClientGUI extends JComponent implements Runnable {
         constraint.gridx = 2;
         constraint.gridy = 0;
         searchPanel.add(searchGo, constraint);
-
         content.add(searchPanel, BorderLayout.CENTER);
 
 
+
         //Bottom buttons (seeFriends, seeConvo, Logout)
+
+        //adding friendsButton
         friendsButton = new JButton("See Friends");
         friendsButton.setFont(mediumFont);
         friendsButton.addActionListener(buttonActionListener);
@@ -531,6 +544,8 @@ public class ClientGUI extends JComponent implements Runnable {
         constraint.fill = GridBagConstraints.BOTH;
         mainPanel.add(friendsButton, constraint);
 
+
+        //adding convo button
         seeConvoButton = new JButton("See Conversations");
         seeConvoButton.setFont(mediumFont);
         seeConvoButton.addActionListener(buttonActionListener);
@@ -541,6 +556,7 @@ public class ClientGUI extends JComponent implements Runnable {
         constraint.fill = GridBagConstraints.BOTH;
         mainPanel.add(seeConvoButton, constraint);
 
+        //adding logout button
         logoutButton = new JButton("Logout");
         logoutButton.setFont(mediumFont);
         logoutButton.addActionListener(buttonActionListener);
@@ -551,6 +567,7 @@ public class ClientGUI extends JComponent implements Runnable {
         constraint.fill = GridBagConstraints.BOTH;
         mainPanel.add(logoutButton, constraint);
 
+        //adding mainPanel to final
         content.add(mainPanel, BorderLayout.SOUTH);
         return content;
     }
