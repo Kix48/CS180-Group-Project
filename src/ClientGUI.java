@@ -37,7 +37,6 @@ public class ClientGUI extends JComponent implements Runnable {
     boolean switcher = true; //for friendsOnly button
 
 
-
     ActionListener buttonActionListener = new ActionListener() {
         @Override
 
@@ -84,13 +83,10 @@ public class ClientGUI extends JComponent implements Runnable {
                     //CHANGE BOOLEAN CONDITION HERE!!! (SET TO TRUE i think)
 
 
-
-
                 } else {
                     switcher = true;
                     friendsOnlyButton.setText("Messaging Mode: All        ");
                     //CHANGE BOOLEAN CONDITION HERE!!! (set to false i think)
-
 
 
                 }
@@ -330,9 +326,9 @@ public class ClientGUI extends JComponent implements Runnable {
             JPanel panel = new JPanel();
             panel.setLayout(new BorderLayout());
 
-            panel.add(searchTextField,BorderLayout.WEST);
-            panel.add(sendMessageLabel,BorderLayout.NORTH);
-            panel.add(sendButton,BorderLayout.EAST);
+            panel.add(searchTextField, BorderLayout.WEST);
+            panel.add(sendMessageLabel, BorderLayout.NORTH);
+            panel.add(sendButton, BorderLayout.EAST);
             buttonPanel.add(panel);
 
             //block
@@ -345,12 +341,12 @@ public class ClientGUI extends JComponent implements Runnable {
                 public void actionPerformed(ActionEvent e) {
 
                     //blocks user friend.getUsername() from friends list
-                    System.out.println( "block " + friends[finalX].getUsername()); //test can remove later
+                    System.out.println("block " + friends[finalX].getUsername()); //test can remove later
                 }
             });
             blockButton.setPreferredSize(new Dimension(125, 25));
             panel1.add(Box.createVerticalStrut(20));
-            panel1.add(blockButton,BorderLayout.NORTH);
+            panel1.add(blockButton, BorderLayout.NORTH);
             panel1.add(Box.createVerticalStrut(10));
 
             //remove
@@ -359,11 +355,11 @@ public class ClientGUI extends JComponent implements Runnable {
             removeButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     //remove USER friend.getUsername() from friends list
-                    System.out.println( "remove " + friends[finalX].getUsername()); //test. can remove later
+                    System.out.println("remove " + friends[finalX].getUsername()); //test. can remove later
                 }
             });
             removeButton.setPreferredSize(new Dimension(100, 25));
-            panel1.add(removeButton,BorderLayout.NORTH);
+            panel1.add(removeButton, BorderLayout.NORTH);
             buttonPanel.add(panel1);
 
             friendPanel.add(buttonPanel, BorderLayout.EAST);
@@ -528,7 +524,6 @@ public class ClientGUI extends JComponent implements Runnable {
         constraint.gridy = 0;
         searchPanel.add(searchGo, constraint);
         content.add(searchPanel, BorderLayout.CENTER);
-
 
 
         //Bottom buttons (seeFriends, seeConvo, Logout)
