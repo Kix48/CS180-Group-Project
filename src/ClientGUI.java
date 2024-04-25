@@ -34,6 +34,8 @@ public class ClientGUI extends JComponent implements Runnable {
     private JButton seeConvoButton;
     private JButton logoutButton;
     private JButton sendButton;
+    boolean switcher = true; //for friendsOnly button
+
 
 
     ActionListener buttonActionListener = new ActionListener() {
@@ -73,6 +75,25 @@ public class ClientGUI extends JComponent implements Runnable {
                 frame.setContentPane(mainPage());
             } else if (e.getSource() == returnButton) {
                 frame.setContentPane(mainPage());
+            }
+
+            if (e.getSource() == friendsOnlyButton) {
+                if (switcher) {
+                    friendsOnlyButton.setText("Messages: Friends Only? T");
+                    switcher = false;
+                    //CHANGE BOOLEAN CONDITION HERE!!! (SET TO TRUE i think)
+
+
+
+
+                } else {
+                    switcher = true;
+                    friendsOnlyButton.setText("Messages: Friends Only? F");
+                    //CHANGE BOOLEAN CONDITION HERE!!! (set to false i think)
+
+
+
+                    }
             }
 
             // Needs to be called to change container content at runtime
@@ -462,12 +483,14 @@ public class ClientGUI extends JComponent implements Runnable {
         topPanel.add(usernameTop, BorderLayout.CENTER);
 
 
-        friendsOnlyButton = new JButton("Friends Only?");
+        friendsOnlyButton = new JButton("Messages: Friends Only? F");
         friendsOnlyButton.setFont(smallFont);
         friendsOnlyButton.addActionListener(buttonActionListener);
         topPanel.add(friendsOnlyButton, BorderLayout.EAST);
 
         content.add(topPanel, BorderLayout.NORTH);
+
+
 
 
         JPanel searchPanel = new JPanel();
