@@ -90,15 +90,11 @@ public class ClientGUI extends JComponent implements Runnable {
                 if (switcher) {
                     friendsOnlyButton.setText("Messaging Mode: Friends");
                     switcher = false;
-                    //CHANGE BOOLEAN CONDITION HERE!!! (SET TO TRUE i think)
-
-
+                    clientUser.setFriendsOnly(true);
                 } else {
                     switcher = true;
                     friendsOnlyButton.setText("Messaging Mode: All        ");
-                    //CHANGE BOOLEAN CONDITION HERE!!! (set to false i think)
-
-
+                    clientUser.setFriendsOnly(false);
                 }
             }
 
