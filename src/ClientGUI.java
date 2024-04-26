@@ -74,7 +74,17 @@ public class ClientGUI extends JComponent implements Runnable {
                 frame.setContentPane(mainPage());
             } else if (e.getSource() == returnButton) {
                 frame.setContentPane(mainPage());
+            } else if (e.getSource() == logoutButton) {
+                if (JOptionPane.showConfirmDialog(frame, "Are you sure you want to log out?",
+                        "Confirm", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {  // Confirms logout choice
+                    clientUser = null; // Logs user out
+                    frame.setContentPane(loginPage());
+                    frame.getContentPane().revalidate();
+                    JOptionPane.showMessageDialog(frame, "Logout successful", "Goodbye",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
             }
+
 
             if (e.getSource() == friendsOnlyButton) {
                 if (switcher) {
