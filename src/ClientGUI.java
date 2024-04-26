@@ -90,6 +90,8 @@ public class ClientGUI extends JComponent implements Runnable {
 
 
                 }
+            } else if (e.getSource() == logoutButton) {
+                frame.setContentPane(loginPage());
             }
 
             // Needs to be called to change container content at runtime
