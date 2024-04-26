@@ -230,6 +230,7 @@ public class Client implements ClientInterface {
             } else {
                 String readUsername = reader.readLine();
                 int readAge = Integer.parseInt(reader.readLine());
+                boolean readFriendsOnly = Boolean.parseBoolean(reader.readLine());
 
                 int fileLength = Integer.parseInt(reader.readLine());
 
@@ -244,7 +245,7 @@ public class Client implements ClientInterface {
 
                 BufferedImage readPFP = ImageIO.read(new ByteArrayInputStream(decoded));
 
-                return new User(readUsername, readAge, readPFP);
+                return new User(readUsername, readAge, readPFP, readFriendsOnly);
             }
 
         } catch (Exception e) {
@@ -491,7 +492,7 @@ public class Client implements ClientInterface {
         }
     }
 
-    public boolean setFriendsOnly(boolean friendsOnly) {
+    public boolean setFriendsOnly(boolean friendsOnly) throws Exception {
 
         try {
             writer.println();
@@ -505,16 +506,22 @@ public class Client implements ClientInterface {
 
             if (!resultOutput.equals("SUCCESS")) {
                 String resultMessage = reader.readLine();
-                System.out.printf("%s: %s\n", resultOutput, resultMessage);
+                //System.out.printf("%s: %s\n", requestResult, resultMessage);
+                throw new Exception(String.format("%s: %s.", resultOutput, resultMessage));
             } else {
-                System.out.println("Option successfully changed!");
+                //System.out.println("Option successfully changed!");
                 return true;
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            if (e.getMessage().contains("ERROR:")) {
+                throw new Exception(e.getMessage().substring(e.getMessage().indexOf(':') + 2));
+            } else {
+                throw new Exception("Exception while changing messaging settings.");
+            }
+            //return false;
         }
 
-        return false;
+        //return false;
     }
 }

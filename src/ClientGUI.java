@@ -34,8 +34,6 @@ public class ClientGUI extends JComponent implements Runnable {
     private JButton seeConvoButton;
     private JButton logoutButton;
     private JButton sendButton;
-    boolean switcher = true; //for friendsOnly button
-
 
     ActionListener buttonActionListener = new ActionListener() {
         @Override
@@ -83,18 +81,9 @@ public class ClientGUI extends JComponent implements Runnable {
                     JOptionPane.showMessageDialog(frame, "Logout successful", "Goodbye",
                             JOptionPane.INFORMATION_MESSAGE);
                 }
-            }
-
-
-            if (e.getSource() == friendsOnlyButton) {
-                if (switcher) {
-                    friendsOnlyButton.setText("Messaging Mode: Friends");
-                    switcher = false;
-                    clientUser.setFriendsOnly(true);
-                } else {
-                    switcher = true;
-                    friendsOnlyButton.setText("Messaging Mode: All        ");
-                    clientUser.setFriendsOnly(false);
+            } else if (e.getSource() == friendsOnlyButton) {
+                if (setFriendsOnly(!clientUser.isFriendsOnly())) {
+                    clientUser.setFriendsOnly(!clientUser.isFriendsOnly());
                 }
             }
 
@@ -182,6 +171,21 @@ public class ClientGUI extends JComponent implements Runnable {
         showPopup("User successfully registered.", JOptionPane.INFORMATION_MESSAGE);
 
         return true;
+    }
+
+    private boolean setFriendsOnly(boolean condition) {
+        try {
+            if (client.setFriendsOnly(condition)) {
+                friendsOnlyButton.setText(condition ? "Messaging Mode: Friends" : "Messaging Mode: All       ");
+                return true;
+            }
+        } catch (Exception e) {
+            showPopup(e.getMessage(), JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        showPopup("Failed to change message settings.", JOptionPane.ERROR_MESSAGE);
+        return false;
     }
 
     Container loginPage() {
@@ -487,7 +491,8 @@ public class ClientGUI extends JComponent implements Runnable {
         topPanel.add(usernameTop, BorderLayout.CENTER);
 
         //adding friendsButton
-        friendsOnlyButton = new JButton("Messaging Mode: All        ");
+        friendsOnlyButton = new JButton(
+                clientUser.isFriendsOnly() ? "Messaging Mode: Friends" : "Messaging Mode: All       ");
         friendsOnlyButton.setFont(smallFont);
         friendsOnlyButton.addActionListener(buttonActionListener);
         topPanel.add(friendsOnlyButton, BorderLayout.EAST);

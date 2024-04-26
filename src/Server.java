@@ -469,6 +469,7 @@ public class Server implements ServerInterface, Runnable {
             writer.println("SUCCESS");
             writer.println(foundUser.getUsername());
             writer.println(foundUser.getAge());
+            writer.println(foundUser.isFriendsOnly());
 
             // Read profile picture file to a byte array
             int fileLength = (int) userPFP.length();
@@ -504,7 +505,6 @@ public class Server implements ServerInterface, Runnable {
     }
 
     public void changeVisibility() {
-
         try {
             String username = this.reader.readLine();
             boolean condition = Boolean.parseBoolean(this.reader.readLine());
