@@ -34,6 +34,7 @@ public class ClientGUI extends JComponent implements Runnable {
     private JButton seeConvoButton;
     private JButton logoutButton;
     private JButton sendButton;
+    private JButton sendMessageButton;
 
     ActionListener buttonActionListener = new ActionListener() {
         @Override
@@ -85,6 +86,9 @@ public class ClientGUI extends JComponent implements Runnable {
                 if (setFriendsOnly(!clientUser.isFriendsOnly())) {
                     clientUser.setFriendsOnly(!clientUser.isFriendsOnly());
                 }
+            } else if (e.getSource() == seeConvoButton) {
+                //TEMP CONVO AREA
+                frame.setContentPane(MessagingPage());
             }
 
             // Needs to be called to change container content at runtime
@@ -575,6 +579,88 @@ public class ClientGUI extends JComponent implements Runnable {
 
         //adding mainPanel to final
         content.add(mainPanel, BorderLayout.SOUTH);
+        return content;
+    }
+
+    Container MessagingPage() {
+
+        Container content = new Container();
+        content.setLayout(new BorderLayout());
+
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridBagLayout());
+        GridBagConstraints constraint = new GridBagConstraints();
+
+        //title panel top
+        JLabel titleLabel = new JLabel("Messaging");
+        titleLabel.setFont(largeFont);
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        //titlePanel
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
+
+        //back button
+        returnButton = new JButton("Back");
+        returnButton.setFont(smallFont);
+        returnButton.addActionListener(buttonActionListener);
+        titlePanel.add(returnButton, BorderLayout.EAST);
+
+        //horizontal line + Adding
+        JSeparator sepHorizontal = new JSeparator();
+        sepHorizontal.setOrientation(SwingConstants.HORIZONTAL);
+        titlePanel.add(sepHorizontal, BorderLayout.SOUTH);
+
+        //adding topPanel
+        content.add(titlePanel, BorderLayout.NORTH);
+
+
+
+
+        //panel for messages + message history
+        JPanel messageListPanel = new JPanel();
+        messageListPanel.setLayout(new BoxLayout(messageListPanel, BoxLayout.Y_AXIS));
+
+
+
+
+
+        //sendMessagePanel
+        JPanel sendMessagePanel = new JPanel();
+        sendMessagePanel.setLayout(new GridBagLayout());
+
+
+        //adding sendMessageLabel
+        JLabel sendMessageLabel = new JLabel("Send Message:");
+        sendMessageLabel.setFont(mediumFont);
+        constraint.anchor = GridBagConstraints.WEST;
+        constraint.gridx = 0;
+        constraint.gridy = 0;
+        sendMessagePanel.add(sendMessageLabel, constraint);
+
+        //adding sendMessage text Field
+        JTextField sendMessageTextField = new JTextField(12);
+        constraint.anchor = GridBagConstraints.CENTER;
+        constraint.gridx = 1;
+        constraint.gridy = 0;
+        sendMessagePanel.add(sendMessageTextField, constraint);
+
+        //adding send Message Button
+        sendMessageButton = new JButton("Send");
+        sendMessageButton.setFont(smallFont);
+        sendMessageButton.addActionListener(buttonActionListener);
+        constraint.anchor = GridBagConstraints.EAST;
+        constraint.gridx = 2;
+        constraint.gridy = 0;
+        sendMessagePanel.add(sendMessageButton, constraint);
+
+        content.add(sendMessagePanel, BorderLayout.CENTER);
+
+
+
+
+
+
         return content;
     }
 
