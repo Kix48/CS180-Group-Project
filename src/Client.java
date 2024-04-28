@@ -232,6 +232,18 @@ public class Client implements ClientInterface {
                 int readAge = Integer.parseInt(reader.readLine());
                 boolean readFriendsOnly = Boolean.parseBoolean(reader.readLine());
 
+                ArrayList<String> friendsList = new ArrayList<String>();
+                int readFriendCount = Integer.parseInt(reader.readLine());
+                for (int i = 0; i < readFriendCount; i++) {
+                    friendsList.add(reader.readLine());
+                }
+
+                ArrayList<String> blockList = new ArrayList<String>();
+                int readBlockCount = Integer.parseInt(reader.readLine());
+                for (int i = 0; i < readBlockCount; i++) {
+                    blockList.add(reader.readLine());
+                }
+
                 int fileLength = Integer.parseInt(reader.readLine());
 
                 // Read in the Base64 encoded chunks of the file
@@ -245,7 +257,7 @@ public class Client implements ClientInterface {
 
                 BufferedImage readPFP = ImageIO.read(new ByteArrayInputStream(decoded));
 
-                return new User(readUsername, readAge, readPFP, readFriendsOnly);
+                return new User(readUsername, readAge, readPFP, readFriendsOnly, friendsList, blockList);
             }
 
         } catch (Exception e) {
