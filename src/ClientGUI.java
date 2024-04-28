@@ -4,6 +4,7 @@ import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.ArrayList;
 
 public class ClientGUI extends JComponent implements Runnable {
     private final String APP_NAME = "Chirp";
@@ -66,7 +67,19 @@ public class ClientGUI extends JComponent implements Runnable {
                     }
                 }
             } else if (e.getSource() == friendsButton) {
-                frame.setContentPane(friendsPage());
+                ArrayList<User> friendsList = new ArrayList<User>();
+                try {
+                    for (String friendUsername : clientUser.getFriends()) {
+                        User foundFriend = client.findUser(friendUsername);
+                        if (foundFriend != null) {
+                            friendsList.add(foundFriend);
+                        }
+                    }
+                } catch (Exception v) {
+                    showPopup("Failed to retrieve all friends", JOptionPane.ERROR_MESSAGE);
+                }
+
+                frame.setContentPane(userPage("FRIENDS LIST", friendsList));
             } else if (e.getSource() == mainMenuButton) {
                 //temp user for getting name
                 clientUser = new User("Test User", "Password123!", 21, null);
@@ -272,18 +285,11 @@ public class ClientGUI extends JComponent implements Runnable {
         return content;
     }
 
-    Container friendsPage() {
-        //temp test friends list
-        User[] friends = new User[5];
-        friends[0] = new User("Bobby", "123", 5, "otheruser.jpg");
-        friends[1] = new User("Robby", "123", 5, "otheruser.jpg");
-        friends[2] = new User("Billy", "123", 5, "otheruser.jpg");
-        friends[3] = new User("Billy", "123", 5, "otheruser.jpg");
-        friends[4] = new User("Biasdlly", "123", 5, "otheruser.jpg");
+    Container userPage(String title, ArrayList<User> users) {
         Container content = new Container();
         content.setLayout(new BorderLayout());
 
-        JLabel titleLabel = new JLabel("FRIENDS LIST");
+        JLabel titleLabel = new JLabel(title);
         titleLabel.setFont(largeFont);
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
 
@@ -297,25 +303,25 @@ public class ClientGUI extends JComponent implements Runnable {
 
         content.add(titlePanel, BorderLayout.NORTH);
 
-        JPanel friendListPanel = new JPanel();
-        friendListPanel.setLayout(new BoxLayout(friendListPanel, BoxLayout.Y_AXIS));
+        JPanel userListPanel = new JPanel();
+        userListPanel.setLayout(new BoxLayout(userListPanel, BoxLayout.Y_AXIS));
 
-        for (int x = 0; x < friends.length; x++) {
-            User friend = friends[x];
-            JPanel friendPanel = new JPanel(new BorderLayout());
+        for (int x = 0; x < users.size(); x++) {
+            User user = users.get(x);
+            JPanel userPanel = new JPanel(new BorderLayout());
 
             // User profile name
-            JLabel friendName = new JLabel(friends[x].getUsername());
-            friendName.setFont(mediumFont);
-            friendPanel.add(friendName, BorderLayout.WEST);
+            JLabel username = new JLabel(user.getUsername());
+            username.setFont(mediumFont);
+            userPanel.add(username, BorderLayout.WEST);
 
             //add pfp
-            if (friends[x].getUserPFPImage() != null) {
-                JLabel profilePicture = new JLabel(new ImageIcon(friends[x].getUserPFPImage().getScaledInstance(100, 100, Image.SCALE_FAST)));
+            if (user.getUserPFPImage() != null) {
+                JLabel profilePicture = new JLabel(new ImageIcon(user.getUserPFPImage().getScaledInstance(100, 100, Image.SCALE_FAST)));
                 profilePicture.setHorizontalAlignment(JLabel.CENTER);
                 profilePicture.setSize(20, 20);
 
-                friendPanel.add(profilePicture, BorderLayout.WEST);
+                userPanel.add(profilePicture, BorderLayout.WEST);
             }
 
             // Create a panel for user functionality with GridLayout
@@ -354,7 +360,7 @@ public class ClientGUI extends JComponent implements Runnable {
                 public void actionPerformed(ActionEvent e) {
 
                     //blocks user friend.getUsername() from friends list
-                    System.out.println("block " + friends[finalX].getUsername()); //test can remove later
+                    System.out.println("block " + users.get(finalX).getUsername()); //test can remove later
                 }
             });
             blockButton.setPreferredSize(new Dimension(125, 25));
@@ -368,18 +374,18 @@ public class ClientGUI extends JComponent implements Runnable {
             removeButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     //remove USER friend.getUsername() from friends list
-                    System.out.println("remove " + friends[finalX].getUsername()); //test. can remove later
+                    System.out.println("remove " + users.get(finalX).getUsername()); //test. can remove later
                 }
             });
             removeButton.setPreferredSize(new Dimension(100, 25));
             panel1.add(removeButton, BorderLayout.NORTH);
             buttonPanel.add(panel1);
 
-            friendPanel.add(buttonPanel, BorderLayout.EAST);
+            userPanel.add(buttonPanel, BorderLayout.EAST);
 
-            friendListPanel.add(friendPanel);
+            userListPanel.add(userPanel);
         }
-        content.add(new JScrollPane(friendListPanel), BorderLayout.CENTER);
+        content.add(new JScrollPane(userListPanel), BorderLayout.CENTER);
         return content;
     }
 

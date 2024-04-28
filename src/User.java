@@ -26,7 +26,8 @@ public class User implements UserInterface {
     private String userPFPFile; // Only used in the server
     private BufferedImage userPFPImage; // Only used in the client
 
-    public User(String username, int age, BufferedImage userPFPImage, boolean isFriendsOnly) {
+    public User(String username, int age, BufferedImage userPFPImage, boolean isFriendsOnly,
+                ArrayList<String> friends, ArrayList<String> blockedUsers) {
 
         if (username == null) {
             throw new NullPointerException();
@@ -41,8 +42,8 @@ public class User implements UserInterface {
         this.age = age;
         this.userPFPFile = "";
         this.userPFPImage = userPFPImage;
-        this.friends = new ArrayList<>();
-        this.blockedUsers = new ArrayList<>();
+        this.friends = friends;
+        this.blockedUsers = blockedUsers;
         this.friendsOnly = isFriendsOnly;
 
     } //end constructor

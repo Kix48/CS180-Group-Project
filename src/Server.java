@@ -470,6 +470,14 @@ public class Server implements ServerInterface, Runnable {
             writer.println(foundUser.getUsername());
             writer.println(foundUser.getAge());
             writer.println(foundUser.isFriendsOnly());
+            writer.println(foundUser.getFriends().size());
+            for (String friend : foundUser.getFriends()) {
+                writer.println(friend);
+            }
+            writer.println(foundUser.getBlockedUsers().size());
+            for (String block : foundUser.getBlockedUsers()) {
+                writer.println(block);
+            }
 
             // Read profile picture file to a byte array
             int fileLength = (int) userPFP.length();
