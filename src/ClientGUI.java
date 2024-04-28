@@ -74,13 +74,12 @@ public class ClientGUI extends JComponent implements Runnable {
             } else if (e.getSource() == returnButton) {
                 frame.setContentPane(mainPage());
             } else if (e.getSource() == logoutButton) {
-                if (JOptionPane.showConfirmDialog(frame, "Are you sure you want to log out?",
-                        "Confirm", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {  // Confirms logout choice
+
+                if (JOptionPane.showConfirmDialog(frame, "Are you sure you want to log out?", "Confirm", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {  // Confirms logout choice
                     clientUser = null; // Logs user out
                     frame.setContentPane(loginPage());
                     frame.getContentPane().revalidate();
-                    JOptionPane.showMessageDialog(frame, "Logout successful", "Goodbye",
-                            JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, "Logout successful", "Goodbye", JOptionPane.INFORMATION_MESSAGE);
                 }
             } else if (e.getSource() == friendsOnlyButton) {
                 if (setFriendsOnly(!clientUser.isFriendsOnly())) {
@@ -191,6 +190,7 @@ public class ClientGUI extends JComponent implements Runnable {
         showPopup("Failed to change message settings.", JOptionPane.ERROR_MESSAGE);
         return false;
     }
+
 
     Container loginPage() {
         Container content = new Container();
@@ -311,8 +311,7 @@ public class ClientGUI extends JComponent implements Runnable {
 
             //add pfp
             if (friends[x].getUserPFPImage() != null) {
-                JLabel profilePicture = new JLabel(new ImageIcon(
-                        friends[x].getUserPFPImage().getScaledInstance(100, 100, Image.SCALE_FAST)));
+                JLabel profilePicture = new JLabel(new ImageIcon(friends[x].getUserPFPImage().getScaledInstance(100, 100, Image.SCALE_FAST)));
                 profilePicture.setHorizontalAlignment(JLabel.CENTER);
                 profilePicture.setSize(20, 20);
 
@@ -480,8 +479,7 @@ public class ClientGUI extends JComponent implements Runnable {
 
         //adding PPF
         if (clientUser.getUserPFPImage() != null) {
-            JLabel profilePicture = new JLabel(new ImageIcon(
-                    clientUser.getUserPFPImage().getScaledInstance(100, 100, Image.SCALE_FAST)));
+            JLabel profilePicture = new JLabel(new ImageIcon(clientUser.getUserPFPImage().getScaledInstance(100, 100, Image.SCALE_FAST)));
             profilePicture.setHorizontalAlignment(JLabel.CENTER);
             profilePicture.setSize(20, 20);
 
@@ -495,8 +493,7 @@ public class ClientGUI extends JComponent implements Runnable {
         topPanel.add(usernameTop, BorderLayout.CENTER);
 
         //adding friendsButton
-        friendsOnlyButton = new JButton(
-                clientUser.isFriendsOnly() ? "Messaging Mode: Friends" : "Messaging Mode: All       ");
+        friendsOnlyButton = new JButton(clientUser.isFriendsOnly() ? "Messaging Mode: Friends" : "Messaging Mode: All       ");
         friendsOnlyButton.setFont(smallFont);
         friendsOnlyButton.addActionListener(buttonActionListener);
         topPanel.add(friendsOnlyButton, BorderLayout.EAST);
@@ -617,11 +614,98 @@ public class ClientGUI extends JComponent implements Runnable {
 
 
 
-        //panel for messages + message history
-        JPanel messageListPanel = new JPanel();
-        messageListPanel.setLayout(new BoxLayout(messageListPanel, BoxLayout.Y_AXIS));
+        //BLOCK OF TESTS ------------ MESSAGING  START
 
 
+        JPanel scrollPanelTest = new JPanel();
+        scrollPanelTest.setLayout(new BoxLayout(scrollPanelTest, BoxLayout.Y_AXIS));
+
+
+        //individual jpanel test
+        JPanel layoutPanel = new JPanel();
+        layoutPanel.setLayout(new BoxLayout(layoutPanel, BoxLayout.X_AXIS));
+
+        //name test
+        JLabel nameTest = new JLabel("Name Here!");
+        nameTest.setFont(mediumFont);
+        layoutPanel.add(nameTest, BorderLayout.WEST);
+
+
+        //message test
+        JTextArea messageTEST = new JTextArea("This is where the message would go, im making this as long as possible hoping that the message would do something that dosent make the entire thing cut off");
+        messageTEST.setFont(mediumFont);
+        messageTEST.setLineWrap(true);
+        messageTEST.setWrapStyleWord(true);
+        layoutPanel.add(messageTEST, BorderLayout.EAST);
+
+        scrollPanelTest.add(layoutPanel);
+
+        //////////////
+
+
+        JSeparator lineTest = new JSeparator();
+        lineTest.setOrientation(SwingConstants.HORIZONTAL);
+        scrollPanelTest.add(lineTest, BorderLayout.SOUTH);
+
+        ///////////////
+
+
+        ////////////////////////////
+
+        //individual jpanel test
+        JPanel layoutPanel2 = new JPanel();
+        layoutPanel2.setLayout(new BoxLayout(layoutPanel2, BoxLayout.X_AXIS));
+
+        //name test
+        JLabel nameTest2 = new JLabel("Gavin");
+        nameTest2.setFont(mediumFont);
+        layoutPanel2.add(nameTest2, BorderLayout.WEST);
+
+
+        //message test
+        JTextArea messageTEST2 = new JTextArea("GAVIN TEST that dosent make the entire thing cut off");
+        messageTEST2.setFont(mediumFont);
+        messageTEST2.setLineWrap(true);
+        messageTEST2.setWrapStyleWord(true);
+        layoutPanel2.add(messageTEST2, BorderLayout.EAST);
+
+        scrollPanelTest.add(layoutPanel2);
+
+
+        //////////////////////
+
+
+        JSeparator lineTest2 = new JSeparator();
+        lineTest2.setOrientation(SwingConstants.HORIZONTAL);
+        scrollPanelTest.add(lineTest2, BorderLayout.SOUTH);
+
+        //////////////////////
+
+
+        //individual jpanel test
+        JPanel layoutPanel3 = new JPanel();
+        layoutPanel3.setLayout(new BoxLayout(layoutPanel3, BoxLayout.X_AXIS));
+
+        //name test
+        JLabel nameTest3 = new JLabel("Colten");
+        nameTest3.setFont(mediumFont);
+        layoutPanel3.add(nameTest3, BorderLayout.WEST);
+
+
+        //message test
+        JTextArea messageTEST3 = new JTextArea("I hate CS!");
+        messageTEST3.setFont(mediumFont);
+        messageTEST3.setLineWrap(true);
+        messageTEST3.setWrapStyleWord(true);
+        layoutPanel3.add(messageTEST3, BorderLayout.EAST);
+
+        scrollPanelTest.add(layoutPanel3);
+
+
+        content.add(new JScrollPane(scrollPanelTest), BorderLayout.CENTER);
+
+
+        //BLOCK OF TESTS ------------ END
 
 
 
@@ -654,11 +738,7 @@ public class ClientGUI extends JComponent implements Runnable {
         constraint.gridy = 0;
         sendMessagePanel.add(sendMessageButton, constraint);
 
-        content.add(sendMessagePanel, BorderLayout.CENTER);
-
-
-
-
+        content.add(sendMessagePanel, BorderLayout.SOUTH);
 
 
         return content;
