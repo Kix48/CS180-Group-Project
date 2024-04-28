@@ -330,6 +330,17 @@ public class ClientGUI extends JComponent implements Runnable {
         boolean isFriendsList = title.contains("FRIEND");
         boolean isBlockList = title.contains("BLOCK");
 
+        if (!isBlockList) {
+            for (int i = 0; i < users.size(); i++) {
+                for (int j = 0; j < clientUser.getBlockedUsers().size(); j++) {
+                    if (users.get(i).getUsername().equals(clientUser.getBlockedUsers().get(j))) {
+                        users.remove(i);
+                        break;
+                    }
+                }
+            }
+        }
+
         Container content = new Container();
         content.setLayout(new BorderLayout());
 
@@ -378,10 +389,13 @@ public class ClientGUI extends JComponent implements Runnable {
             blockButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String selectedUser = usersList.getSelectedValue();
-                    String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
-                    if (selectedUsername != null) {
+                    if (selectedUser != null) {
+                        String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
+
                         //Unblock
-                        //client.blockUser(selectedUsername);
+                        if (client.unblockUser(selectedUsername)) {
+                            clientUser.removeBlockedUsers(selectedUsername);
+                        }
 
                         for (int i = 0; i < users.size(); i++) {
                             if (users.get(i).getUsername().equals(selectedUsername)) {
@@ -391,6 +405,7 @@ public class ClientGUI extends JComponent implements Runnable {
                         }
 
                         frame.setContentPane(usersPage(title, users));
+                        frame.getContentPane().revalidate();
                     }
                 }
             });
@@ -400,8 +415,8 @@ public class ClientGUI extends JComponent implements Runnable {
             openConvoButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String selectedUser = usersList.getSelectedValue();
-                    String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
-                    if (selectedUsername != null) {
+                    if (selectedUser != null) {
+                        String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
                         // TODO:
                         // open a convo with the selected friend
                     }
@@ -413,9 +428,20 @@ public class ClientGUI extends JComponent implements Runnable {
             blockButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String selectedUser = usersList.getSelectedValue();
-                    String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
-                    if (selectedUsername != null) {
-                        client.blockUser(selectedUsername);
+                    if (selectedUser != null) {
+                        String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
+                        if (client.blockUser(selectedUsername)) {
+                            clientUser.addBlockedUsers(selectedUsername);
+                            for (int i = 0; i < users.size(); i++) {
+                                if (users.get(i).getUsername().equals(selectedUsername)) {
+                                    users.remove(i);
+                                    break;
+                                }
+                            }
+
+                            frame.setContentPane(usersPage(title, users));
+                            frame.getContentPane().revalidate();
+                        }
                     }
                 }
             });

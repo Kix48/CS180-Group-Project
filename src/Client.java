@@ -365,6 +365,48 @@ public class Client implements ClientInterface {
         return false;
     }
 
+    public boolean removeFriend(String friendUsername) {
+
+        //
+        // String sanitization
+        // REMINDER: Add specific error messages (Phase 3)
+        //
+
+        // Check friendUsername (Not empty, size check, no newline or tab)
+        if (friendUsername == null || friendUsername.equals("") || (friendUsername.length() > 16)
+                || friendUsername.contains("\n") || friendUsername.contains("\t")) {
+            return false;
+        }
+
+        //remove any whitespace
+        friendUsername = friendUsername.trim();
+
+        try {
+            //send information
+            writer.println();
+            writer.println("REMOVE_FRIEND");
+            writer.println(clientUsername);
+            writer.println(friendUsername);
+            writer.flush();
+
+            //Read Result
+            String resultOutput = reader.readLine();
+
+            if (!resultOutput.equals("SUCCESS")) {
+                String resultMessage = reader.readLine();
+                System.out.printf("%s: %s\n", resultOutput, resultMessage);
+            } else {
+                //System.out.println("Friend successfully removed!");
+                return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
     public boolean blockUser(String usernameToBlock) {
 
         //
@@ -397,6 +439,48 @@ public class Client implements ClientInterface {
                 System.out.printf("%s: %s\n", resultOutput, resultMessage);
             } else {
                 //System.out.println("User successfully blocked!");
+                return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean unblockUser(String usernameToUnblock) {
+
+        //
+        // String sanitization
+        // REMINDER: Add specific error messages (Phase 3)
+        //
+
+        // Check usernameToUnblock (Not empty, size check, no newline or tab)
+        if (usernameToUnblock == null || usernameToUnblock.equals("") || (usernameToUnblock.length() > 16)
+                || usernameToUnblock.contains("\n") || usernameToUnblock.contains("\t")) {
+            return false;
+        }
+
+        //remove any whitespace
+        usernameToUnblock = usernameToUnblock.trim();
+
+        try {
+            //send information
+            writer.println();
+            writer.println("UNBLOCK");
+            writer.println(clientUsername);
+            writer.println(usernameToUnblock);
+            writer.flush();
+
+            //Read Result
+            String resultOutput = reader.readLine();
+
+            if (!resultOutput.equals("SUCCESS")) {
+                String resultMessage = reader.readLine();
+                System.out.printf("%s: %s\n", resultOutput, resultMessage);
+            } else {
+                //System.out.println("User successfully unblocked!");
                 return true;
             }
 

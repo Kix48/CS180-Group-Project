@@ -178,10 +178,56 @@ public class Server implements ServerInterface, Runnable {
 
     }
 
-    public void blockUser() {
-
+    public void removeFriend() {
         try {
 
+            String username = this.reader.readLine();
+            String friendUsername = this.reader.readLine();
+
+            User userPerson1 = this.databaseHelper.readUser(username);
+            User userFriend = this.databaseHelper.readUser(friendUsername);
+
+            //checks for each User (existence/validity)
+            if (userPerson1 == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Invalid username for User removing another");
+                this.writer.flush();
+                return;
+            }
+
+            if (userFriend == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Invalid username friend being removed");
+                this.writer.flush();
+                return;
+            }
+
+            //remove friend if successful (all works within method within User.java)
+            if (userPerson1.removeFriends(userFriend.getUsername())) {
+                this.databaseHelper.writeUser(userPerson1);
+            }
+
+            //send completion if so
+            writer.println("SUCCESS");
+            writer.flush();
+
+        } catch (Exception e) {
+            // REMINDER: Remove console output
+            e.printStackTrace();
+
+            // Send back an error
+            this.writer.println("ERROR");
+            this.writer.println(e.getMessage());
+            this.writer.flush();
+            return;
+        }
+
+    }
+
+    public void blockUser() {
+        try {
             String username = this.reader.readLine();
             String userToBlock = this.reader.readLine();
 
@@ -207,6 +253,53 @@ public class Server implements ServerInterface, Runnable {
 
             //block user if successful (all works within method within User.java)
             if (userPerson1.addBlockedUsers(userBlock.getUsername())) {
+                this.databaseHelper.writeUser(userPerson1);
+            }
+
+            //send completion if so
+            writer.println("SUCCESS");
+            writer.flush();
+
+        } catch (Exception e) {
+            // REMINDER: Remove console output
+            e.printStackTrace();
+
+            // Send back an error
+            this.writer.println("ERROR");
+            this.writer.println(e.getMessage());
+            this.writer.flush();
+            return;
+        }
+
+    }
+
+    public void unblockUser() {
+        try {
+            String username = this.reader.readLine();
+            String userToUnblock = this.reader.readLine();
+
+            User userPerson1 = this.databaseHelper.readUser(username);
+            User userUnblock = this.databaseHelper.readUser(userToUnblock);
+
+            //checks for each User (existence/validity)
+            if (userPerson1 == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Invalid username for User unblocking another");
+                this.writer.flush();
+                return;
+            }
+
+            if (userUnblock == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Invalid username user being unblocked");
+                this.writer.flush();
+                return;
+            }
+
+            //unblock user if successful (all works within method within User.java)
+            if (userPerson1.removeBlockedUsers(userUnblock.getUsername())) {
                 this.databaseHelper.writeUser(userPerson1);
             }
 
@@ -618,8 +711,14 @@ public class Server implements ServerInterface, Runnable {
                         case "ADD_FRIEND":
                             this.addFriend();
                             break;
+                        case "REMOVE_FRIEND":
+                            this.removeFriend();
+                            break;
                         case "BLOCK":
                             this.blockUser();
+                            break;
+                        case "UNBLOCK":
+                            this.unblockUser();
                             break;
                         case "MESSAGE_HISTORY":
                             this.getMessageHistory();

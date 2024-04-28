@@ -167,7 +167,7 @@ public class User implements UserInterface {
             }
         }
 
-        return false;
+        return true;
     }
 
     public boolean removeBlockedUsers(String name) { //removes user from blocked

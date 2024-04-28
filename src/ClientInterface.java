@@ -21,7 +21,9 @@ public interface ClientInterface {
     public User findUser(String username) throws Exception;
     public ArrayList<String> searchUser(String token) throws Exception;
     public boolean addFriend(String friendUsername);
+    public boolean removeFriend(String friendUsername);
     public boolean blockUser(String usernameToBlock);
+    public boolean unblockUser(String usernameToUnblock);
     public MessageHistory getMessageHistory(String username);
     public boolean sendMessage(String receiver, String message);
     public boolean removeMessage(String receiver, int messageIdx);

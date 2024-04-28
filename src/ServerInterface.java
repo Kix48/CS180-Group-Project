@@ -24,6 +24,8 @@ public interface ServerInterface {
     public void findUser();
     public void searchUser();
     public void addFriend();
+    public void removeFriend();
     public void blockUser();
+    public void unblockUser();
     public void changeVisibility();
 }
