@@ -20,6 +20,7 @@ public class ClientGUI extends JComponent implements Runnable {
     private JTextField usernameField;
     private JTextField passwordField;
     private JTextField ageField;
+    private JTextField searchTextField;
     private JButton loginButton;
     private JButton registerPageButton;
     private JButton registerButton;
@@ -33,6 +34,7 @@ public class ClientGUI extends JComponent implements Runnable {
     private JButton friendsOnlyButton;
     private JButton searchGo;
     private JButton seeConvoButton;
+    private JButton blockListButton;
     private JButton logoutButton;
     private JButton sendButton;
     private JButton sendMessageButton;
@@ -79,7 +81,7 @@ public class ClientGUI extends JComponent implements Runnable {
                     showPopup("Failed to retrieve all friends", JOptionPane.ERROR_MESSAGE);
                 }
 
-                frame.setContentPane(userPage("FRIENDS LIST", friendsList));
+                frame.setContentPane(usersPage("FRIENDS LIST", friendsList));
             } else if (e.getSource() == mainMenuButton) {
                 //temp user for getting name
                 clientUser = new User("Test User", "Password123!", 21, null);
@@ -101,6 +103,23 @@ public class ClientGUI extends JComponent implements Runnable {
             } else if (e.getSource() == seeConvoButton) {
                 //TEMP CONVO AREA
                 frame.setContentPane(MessagingPage());
+            } else if (e.getSource() == searchGo) {
+                searchUser();
+            } else if (e.getSource() == blockListButton) {
+                ArrayList<User> blockList = new ArrayList<User>();
+                try {
+                    for (String blockedUsername : clientUser.getBlockedUsers()) {
+                        User foundBlock = client.findUser(blockedUsername);
+                        if (foundBlock != null) {
+                            blockList.add(foundBlock);
+                        }
+                    }
+                } catch (Exception v) {
+                    v.printStackTrace();
+                    showPopup("Failed to retrieve all blocks", JOptionPane.ERROR_MESSAGE);
+                }
+
+                frame.setContentPane(usersPage("BLOCK LIST", blockList));
             }
 
             // Needs to be called to change container content at runtime
@@ -204,6 +223,28 @@ public class ClientGUI extends JComponent implements Runnable {
         return false;
     }
 
+    private boolean searchUser() {
+        try {
+            ArrayList<User> foundUsers = new ArrayList<User>();
+            ArrayList<String> foundUsernames = client.searchUser(searchTextField.getText());
+            if (foundUsernames.size() > 0) {
+                for (String username : foundUsernames) {
+                    User foundUser = client.findUser(username);
+                    if (foundUser != null) {
+                        foundUsers.add(foundUser);
+                    }
+                }
+                frame.setContentPane(usersPage("SEARCH RESULTS", foundUsers));
+                return true;
+            }
+        } catch (Exception e) {
+            showPopup(e.getMessage(), JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        showPopup("No users found with search.", JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
 
     Container loginPage() {
         Container content = new Container();
@@ -285,7 +326,109 @@ public class ClientGUI extends JComponent implements Runnable {
         return content;
     }
 
-    Container userPage(String title, ArrayList<User> users) {
+    Container usersPage(String title, ArrayList<User> users) {
+        boolean isFriendsList = title.contains("FRIEND");
+        boolean isBlockList = title.contains("BLOCK");
+
+        Container content = new Container();
+        content.setLayout(new BorderLayout());
+
+        // Title Panel
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        JLabel titleLabel = new JLabel(title);
+        titleLabel.setFont(largeFont);
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
+
+        // Back Button
+        returnButton = new JButton("Back");
+        returnButton.setFont(mediumFont);
+        returnButton.addActionListener(buttonActionListener);
+        titlePanel.add(returnButton, BorderLayout.EAST);
+
+        // Horizontal Separator
+        JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+        titlePanel.add(separator, BorderLayout.SOUTH);
+
+        content.add(titlePanel, BorderLayout.NORTH);
+
+        // Friends List Panel
+        JPanel userListPanel = new JPanel(new BorderLayout());
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        for (User user : users) {
+            if (user.getAge() == 1) {
+                listModel.addElement(String.format("%s (%d year old)", user.getUsername(), user.getAge()));
+            } else {
+                listModel.addElement(String.format("%s (%d years old)", user.getUsername(), user.getAge()));
+            }
+        }
+        JList<String> usersList = new JList<>(listModel);
+        JScrollPane scroll = new JScrollPane(usersList);
+
+        scroll.setPreferredSize(new Dimension(300, scroll.getPreferredSize().height));
+        userListPanel.add(scroll, BorderLayout.CENTER);
+        content.add(userListPanel, BorderLayout.WEST);
+
+        // Actions Panel
+        JPanel actionsPanel = new JPanel();
+        actionsPanel.setLayout(new BoxLayout(actionsPanel, BoxLayout.Y_AXIS));
+
+        if (isBlockList) {
+            JButton blockButton = new JButton("Unblock");
+            blockButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String selectedUser = usersList.getSelectedValue();
+                    String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
+                    if (selectedUsername != null) {
+                        //Unblock
+                        //client.blockUser(selectedUsername);
+
+                        for (int i = 0; i < users.size(); i++) {
+                            if (users.get(i).getUsername().equals(selectedUsername)) {
+                                users.remove(i);
+                                break;
+                            }
+                        }
+
+                        frame.setContentPane(usersPage(title, users));
+                    }
+                }
+            });
+            actionsPanel.add(blockButton);
+        } else {
+            JButton openConvoButton = new JButton("Open Conversation");
+            openConvoButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String selectedUser = usersList.getSelectedValue();
+                    String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
+                    if (selectedUsername != null) {
+                        // TODO:
+                        // open a convo with the selected friend
+                    }
+                }
+            });
+            actionsPanel.add(openConvoButton);
+
+            JButton blockButton = new JButton("Block");
+            blockButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String selectedUser = usersList.getSelectedValue();
+                    String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
+                    if (selectedUsername != null) {
+                        client.blockUser(selectedUsername);
+                    }
+                }
+            });
+            actionsPanel.add(blockButton);
+        }
+
+        content.add(actionsPanel, BorderLayout.CENTER);
+
+        return content;
+    }
+
+/*
+    Container usersPage(String title, ArrayList<User> users) {
         Container content = new Container();
         content.setLayout(new BorderLayout());
 
@@ -311,9 +454,9 @@ public class ClientGUI extends JComponent implements Runnable {
             JPanel userPanel = new JPanel(new BorderLayout());
 
             // User profile name
-            JLabel username = new JLabel(user.getUsername());
+            JLabel username = new JLabel(String.format("%s (%dyr)", user.getUsername(), user.getAge()));
             username.setFont(mediumFont);
-            userPanel.add(username, BorderLayout.WEST);
+            userPanel.add(username, BorderLayout.NORTH);
 
             //add pfp
             if (user.getUserPFPImage() != null) {
@@ -329,25 +472,20 @@ public class ClientGUI extends JComponent implements Runnable {
 
             //send message functionality
 
-            JLabel sendMessageLabel = new JLabel("Send message:");
-            sendMessageLabel.setFont(smallFont);
-            JTextField searchTextField = new JTextField(25);
-            sendButton = new JButton("Send");
-            sendButton.setFont(smallFont);
-            sendButton.addActionListener(new ActionListener() {
+            seeConvoButton = new JButton("See Conversation");
+            seeConvoButton.setFont(smallFont);
+            seeConvoButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
 
                     //ADDS MESSAGE TO MESSAGE HISTORY
                 }
             });
-            sendButton.setPreferredSize(new Dimension(80, 15));
+            seeConvoButton.setPreferredSize(new Dimension(80, 15));
 
             JPanel panel = new JPanel();
             panel.setLayout(new BorderLayout());
 
-            panel.add(searchTextField, BorderLayout.WEST);
-            panel.add(sendMessageLabel, BorderLayout.NORTH);
-            panel.add(sendButton, BorderLayout.EAST);
+            panel.add(seeConvoButton, BorderLayout.WEST);
             buttonPanel.add(panel);
 
             //block
@@ -388,6 +526,7 @@ public class ClientGUI extends JComponent implements Runnable {
         content.add(new JScrollPane(userListPanel), BorderLayout.CENTER);
         return content;
     }
+*/
 
     Container registrationPage() {
         Container content = new Container();
@@ -527,7 +666,7 @@ public class ClientGUI extends JComponent implements Runnable {
         searchPanel.add(searchUserLabel, constraint);
 
         //adding search text Field
-        JTextField searchTextField = new JTextField(12);
+        searchTextField = new JTextField(12);
         constraint.anchor = GridBagConstraints.CENTER;
         constraint.gridx = 1;
         constraint.gridy = 0;
@@ -546,28 +685,38 @@ public class ClientGUI extends JComponent implements Runnable {
 
         //Bottom buttons (seeFriends, seeConvo, Logout)
 
-        //adding friendsButton
-        friendsButton = new JButton("See Friends");
-        friendsButton.setFont(mediumFont);
-        friendsButton.addActionListener(buttonActionListener);
-        constraint.anchor = GridBagConstraints.CENTER;
-        constraint.gridx = 0;
-        constraint.gridy = 1;
-        constraint.gridwidth = 2;
-        constraint.fill = GridBagConstraints.BOTH;
-        mainPanel.add(friendsButton, constraint);
-
-
         //adding convo button
         seeConvoButton = new JButton("See Conversations");
         seeConvoButton.setFont(mediumFont);
         seeConvoButton.addActionListener(buttonActionListener);
         constraint.anchor = GridBagConstraints.CENTER;
         constraint.gridx = 0;
-        constraint.gridy = 2;
+        constraint.gridy = 1;
         constraint.gridwidth = 2;
         constraint.fill = GridBagConstraints.BOTH;
         mainPanel.add(seeConvoButton, constraint);
+
+        //adding friendsButton
+        friendsButton = new JButton("See Friends");
+        friendsButton.setFont(mediumFont);
+        friendsButton.addActionListener(buttonActionListener);
+        constraint.anchor = GridBagConstraints.CENTER;
+        constraint.gridx = 0;
+        constraint.gridy = 2;
+        constraint.gridwidth = 2;
+        constraint.fill = GridBagConstraints.BOTH;
+        mainPanel.add(friendsButton, constraint);
+
+        //adding block list button
+        blockListButton = new JButton("See Blocks");
+        blockListButton.setFont(mediumFont);
+        blockListButton.addActionListener(buttonActionListener);
+        constraint.anchor = GridBagConstraints.CENTER;
+        constraint.gridx = 0;
+        constraint.gridy = 3;
+        constraint.gridwidth = 2;
+        constraint.fill = GridBagConstraints.BOTH;
+        mainPanel.add(blockListButton, constraint);
 
         //adding logout button
         logoutButton = new JButton("Logout");
@@ -575,7 +724,7 @@ public class ClientGUI extends JComponent implements Runnable {
         logoutButton.addActionListener(buttonActionListener);
         constraint.anchor = GridBagConstraints.CENTER;
         constraint.gridx = 0;
-        constraint.gridy = 3;
+        constraint.gridy = 4;
         constraint.gridwidth = 2;
         constraint.fill = GridBagConstraints.BOTH;
         mainPanel.add(logoutButton, constraint);

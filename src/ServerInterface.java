@@ -22,6 +22,7 @@ public interface ServerInterface {
     public void sendMessage();
     public void removeMessage();
     public void findUser();
+    public void searchUser();
     public void addFriend();
     public void blockUser();
     public void changeVisibility();

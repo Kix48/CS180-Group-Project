@@ -1,4 +1,6 @@
 import java.io.File;
+import java.util.ArrayList;
+
 /**
  * ClientInterface.java Interface
  *
@@ -17,6 +19,7 @@ public interface ClientInterface {
     public boolean register(String username, String password, int age, File userPFP) throws Exception;
     public boolean login(String username, String password) throws Exception;
     public User findUser(String username) throws Exception;
+    public ArrayList<String> searchUser(String token) throws Exception;
     public boolean addFriend(String friendUsername);
     public boolean blockUser(String usernameToBlock);
     public MessageHistory getMessageHistory(String username);

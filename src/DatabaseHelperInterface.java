@@ -1,4 +1,6 @@
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
 /**
  * DatabaseHelperInterface.java Interface
  *
@@ -14,6 +16,7 @@ import java.awt.image.BufferedImage;
 public interface DatabaseHelperInterface {
     public User readUser(String username);
     public boolean writeUser(User user);
+    public ArrayList<String> searchUser(String token);
     public BufferedImage readImage(String filename);
     public boolean writeImage(BufferedImage image, String filename);
     public MessageHistory readMessageHistory(String username1, String username2);

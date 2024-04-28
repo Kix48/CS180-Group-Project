@@ -272,6 +272,57 @@ public class Client implements ClientInterface {
         //return null;
     }
 
+    public ArrayList<String> searchUser(String token) throws Exception {
+        //
+        // String sanitization
+        //
+
+        // Check username (Not empty, size check, no newline or tab)
+        if (token == null || token.equals("") || (token.length() > 16)
+                || token.contains("\n") || token.contains("\t")) {
+            throw new Exception("Invalid search term (Must be 16 characters or less).");
+            //return null;
+        }
+
+        //remove any whitespace
+        token = token.trim();
+
+        try {
+            //send information
+            writer.println();
+            writer.println("SEARCH_USER");
+            writer.println(token);
+            writer.flush();
+
+            //Read Result
+            String resultOutput = reader.readLine();
+
+            if (!resultOutput.equals("SUCCESS")) {
+                String resultMessage = reader.readLine();
+                //System.out.printf("%s: %s\n", requestResult, resultMessage);
+                throw new Exception(String.format("%s: %s.", resultOutput, resultMessage));
+            } else {
+                ArrayList<String> userList = new ArrayList<String>();
+                int readUserCount = Integer.parseInt(reader.readLine());
+                for (int i = 0; i < readUserCount; i++) {
+                    userList.add(reader.readLine());
+                }
+
+                return userList;
+            }
+
+        } catch (Exception e) {
+            if (e.getMessage().contains("ERROR:")) {
+                throw new Exception(e.getMessage().substring(e.getMessage().indexOf(':') + 2));
+            } else {
+                throw new Exception("Exception while searching for users.");
+            }
+            //return false;
+        }
+
+        //return null;
+    }
+
     public boolean addFriend(String friendUsername) {
 
         //
@@ -303,7 +354,7 @@ public class Client implements ClientInterface {
                 String resultMessage = reader.readLine();
                 System.out.printf("%s: %s\n", resultOutput, resultMessage);
             } else {
-                System.out.println("Friend successfully added!");
+                //System.out.println("Friend successfully added!");
                 return true;
             }
 
@@ -345,7 +396,7 @@ public class Client implements ClientInterface {
                 String resultMessage = reader.readLine();
                 System.out.printf("%s: %s\n", resultOutput, resultMessage);
             } else {
-                System.out.println("User Successfully Blocked!");
+                //System.out.println("User successfully blocked!");
                 return true;
             }
 

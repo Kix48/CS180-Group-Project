@@ -63,17 +63,24 @@ public class DatabaseHelper implements DatabaseHelperInterface {
 
                 String readUserPFPFile = bfr.readLine();
 
+                ArrayList<String> readFriends = new ArrayList<String>();
                 String readFriendsData = bfr.readLine();
-                readFriendsData = readFriendsData.replace("[", "");
-                readFriendsData = readFriendsData.replace("]", "");
-                String[] readFriendsArray = readFriendsData.split(", ");
-                ArrayList<String> readFriends = new ArrayList<String>(Arrays.asList(readFriendsArray));
+                if (!readFriendsData.equals("[]")) {
+                    readFriendsData = readFriendsData.replace("[", "");
+                    readFriendsData = readFriendsData.replace("]", "");
+                    String[] readFriendsArray = readFriendsData.split(", ");
+                    readFriends = new ArrayList<String>(Arrays.asList(readFriendsArray));
+                }
 
+                ArrayList<String> readBlockedUsers = new ArrayList<String>();
                 String readBlockedUsersData = bfr.readLine();
-                readBlockedUsersData = readBlockedUsersData.replace("[", "");
-                readBlockedUsersData = readBlockedUsersData.replace("]", "");
-                String[] readBlockedUsersArray = readBlockedUsersData.split(",");
-                ArrayList<String> readBlockedUsers = new ArrayList<String>(Arrays.asList(readBlockedUsersArray));
+                if (!readBlockedUsersData.equals("[]")) {
+                    readBlockedUsersData = readBlockedUsersData.replace("[", "");
+                    readBlockedUsersData = readBlockedUsersData.replace("]", "");
+                    String[] readBlockedUsersArray = readBlockedUsersData.split(",");
+                    readBlockedUsers = new ArrayList<String>(Arrays.asList(readBlockedUsersArray));
+                }
+
                 boolean friendsOnly = Boolean.parseBoolean(bfr.readLine());
 
                 bfr.close();
@@ -117,6 +124,33 @@ public class DatabaseHelper implements DatabaseHelperInterface {
         }
 
         return false;
+    }
+
+    public ArrayList<String> searchUser(String token) {
+        ArrayList<String> foundUsers = new ArrayList<String>();
+
+        File userDirectory = new File(USERS_DIRECTORY);
+        File[] allFiles = userDirectory.listFiles();
+
+        try {
+            boolean exactMatchExists = false;
+            for (File file : allFiles) {
+                String canonicalName = file.getCanonicalFile().getName();
+                canonicalName = canonicalName.substring(0, canonicalName.length() - 4);
+                if (!exactMatchExists && canonicalName.equals(token)) {
+                    exactMatchExists = true;
+                    foundUsers.add(0, token);
+                } else {
+                    if (canonicalName.contains(token)) {
+                        foundUsers.add(canonicalName);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            return null;
+        }
+
+        return foundUsers;
     }
 
     public BufferedImage readImage(String filename) {

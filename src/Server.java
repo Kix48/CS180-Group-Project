@@ -512,6 +512,45 @@ public class Server implements ServerInterface, Runnable {
         }
     }
 
+    public void searchUser() {
+        try {
+            String usernameToken = reader.readLine();
+
+            ArrayList<String> foundUsernames = databaseHelper.searchUser(usernameToken);
+
+            if (foundUsernames == null || foundUsernames.size() == 0) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("No users found");
+                this.writer.flush();
+                return;
+            }
+
+            // Send back user data
+            int maxResults = 10; // Cap results to a certain amount
+            writer.println("SUCCESS");
+            if (foundUsernames.size() > maxResults) {
+                writer.println(maxResults);
+                for (int i = 0; i < maxResults; i++) {
+                    writer.println(foundUsernames.get(i));
+                }
+            } else {
+                writer.println(foundUsernames.size());
+                for (String username : foundUsernames) {
+                    writer.println(username);
+                }
+            }
+            writer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            // Send back an error
+            this.writer.println("ERROR");
+            this.writer.println(e.getMessage());
+            this.writer.flush();
+        }
+    }
+
     public void changeVisibility() {
         try {
             String username = this.reader.readLine();
@@ -572,6 +611,9 @@ public class Server implements ServerInterface, Runnable {
                             break;
                         case "FIND_USER":
                             this.findUser();
+                            break;
+                        case "SEARCH_USER":
+                            this.searchUser();
                             break;
                         case "ADD_FRIEND":
                             this.addFriend();
