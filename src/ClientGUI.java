@@ -4,6 +4,7 @@ import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.ArrayList;
 
 public class ClientGUI extends JComponent implements Runnable {
     private final String APP_NAME = "Chirp";
@@ -273,113 +274,96 @@ public class ClientGUI extends JComponent implements Runnable {
     }
 
     Container friendsPage() {
-        //temp test friends list
-        User[] friends = new User[5];
-        friends[0] = new User("Bobby", "123", 5, "otheruser.jpg");
-        friends[1] = new User("Robby", "123", 5, "otheruser.jpg");
-        friends[2] = new User("Billy", "123", 5, "otheruser.jpg");
-        friends[3] = new User("Billy", "123", 5, "otheruser.jpg");
-        friends[4] = new User("Biasdlly", "123", 5, "otheruser.jpg");
         Container content = new Container();
         content.setLayout(new BorderLayout());
 
-        JLabel titleLabel = new JLabel("FRIENDS LIST");
+        // Title Panel
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        JLabel titleLabel = new JLabel("Friends");
         titleLabel.setFont(largeFont);
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
-
-        JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.add(titleLabel, BorderLayout.CENTER);
 
+        // Back Button
         returnButton = new JButton("Back");
-        returnButton.setFont(smallFont);
+        returnButton.setFont(mediumFont);
         returnButton.addActionListener(buttonActionListener);
         titlePanel.add(returnButton, BorderLayout.EAST);
 
+        // Horizontal Separator
+        JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+        titlePanel.add(separator, BorderLayout.SOUTH);
+
         content.add(titlePanel, BorderLayout.NORTH);
 
-        JPanel friendListPanel = new JPanel();
-        friendListPanel.setLayout(new BoxLayout(friendListPanel, BoxLayout.Y_AXIS));
-
-        for (int x = 0; x < friends.length; x++) {
-            User friend = friends[x];
-            JPanel friendPanel = new JPanel(new BorderLayout());
-
-            // User profile name
-            JLabel friendName = new JLabel(friends[x].getUsername());
-            friendName.setFont(mediumFont);
-            friendPanel.add(friendName, BorderLayout.WEST);
-
-            //add pfp
-            if (friends[x].getUserPFPImage() != null) {
-                JLabel profilePicture = new JLabel(new ImageIcon(friends[x].getUserPFPImage().getScaledInstance(100, 100, Image.SCALE_FAST)));
-                profilePicture.setHorizontalAlignment(JLabel.CENTER);
-                profilePicture.setSize(20, 20);
-
-                friendPanel.add(profilePicture, BorderLayout.WEST);
-            }
-
-            // Create a panel for user functionality with GridLayout
-            JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
-
-            //send message functionality
-
-            JLabel sendMessageLabel = new JLabel("Send message:");
-            sendMessageLabel.setFont(smallFont);
-            JTextField searchTextField = new JTextField(25);
-            sendButton = new JButton("Send");
-            sendButton.setFont(smallFont);
-            sendButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-
-                    //ADDS MESSAGE TO MESSAGE HISTORY
-                }
-            });
-            sendButton.setPreferredSize(new Dimension(80, 15));
-
-            JPanel panel = new JPanel();
-            panel.setLayout(new BorderLayout());
-
-            panel.add(searchTextField, BorderLayout.WEST);
-            panel.add(sendMessageLabel, BorderLayout.NORTH);
-            panel.add(sendButton, BorderLayout.EAST);
-            buttonPanel.add(panel);
-
-            //block
-            JPanel panel1 = new JPanel();
-            panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
-            blockButton = new JButton("Block");
-            blockButton.setFont(smallFont);
-            int finalX = x;
-            blockButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-
-                    //blocks user friend.getUsername() from friends list
-                    System.out.println("block " + friends[finalX].getUsername()); //test can remove later
-                }
-            });
-            blockButton.setPreferredSize(new Dimension(125, 25));
-            panel1.add(Box.createVerticalStrut(20));
-            panel1.add(blockButton, BorderLayout.NORTH);
-            panel1.add(Box.createVerticalStrut(10));
-
-            //remove
-            removeButton = new JButton("Remove");
-            removeButton.setFont(smallFont);
-            removeButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    //remove USER friend.getUsername() from friends list
-                    System.out.println("remove " + friends[finalX].getUsername()); //test. can remove later
-                }
-            });
-            removeButton.setPreferredSize(new Dimension(100, 25));
-            panel1.add(removeButton, BorderLayout.NORTH);
-            buttonPanel.add(panel1);
-
-            friendPanel.add(buttonPanel, BorderLayout.EAST);
-
-            friendListPanel.add(friendPanel);
+        // Friends List Panel
+        JPanel friendsListPanel = new JPanel(new BorderLayout());
+        ArrayList<String> friends = clientUser.getFriends();
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        for (String friend : friends) {
+            listModel.addElement(friend);
         }
-        content.add(new JScrollPane(friendListPanel), BorderLayout.CENTER);
+        JList<String> friendsList = new JList<>(listModel);
+        JScrollPane scroll = new JScrollPane(friendsList);
+
+        scroll.setPreferredSize(new Dimension(300, scroll.getPreferredSize().height));
+        friendsListPanel.add(scroll, BorderLayout.CENTER);
+        content.add(friendsListPanel, BorderLayout.WEST);
+
+        // Actions Panel
+        JPanel actionsPanel = new JPanel();
+        actionsPanel.setLayout(new BoxLayout(actionsPanel, BoxLayout.Y_AXIS));
+        JButton blockButton = new JButton("Block");
+        blockButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String selectedFriend = friendsList.getSelectedValue();
+                if (selectedFriend != null) {
+                    client.blockUser(selectedFriend);
+                }
+            }
+        });
+        actionsPanel.add(blockButton);
+
+        JButton openConvoButton = new JButton("Open Conversation");
+        openConvoButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String selectedFriend = friendsList.getSelectedValue();
+                if (selectedFriend != null) {
+                    // TODO:
+                    // open a convo with the selected friend
+                }
+            }
+        });
+        actionsPanel.add(openConvoButton);
+        content.add(actionsPanel, BorderLayout.CENTER);
+
+        // Add Friend Panel
+        JPanel addFriendPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+        JTextField addFriendField = new JTextField("Enter a username", 10);
+        addFriendField.setHorizontalAlignment(JTextField.LEFT);
+        addFriendPanel.add(addFriendField);
+
+        JButton addFriendButton = new JButton("Add Friend");
+        addFriendButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String newFriendUsername = addFriendField.getText();
+                if (newFriendUsername != null && !newFriendUsername.isEmpty()) {
+                    if (client.addFriend(newFriendUsername)) {
+                        clientUser.addFriends(newFriendUsername);
+                        // Refreshes the JList
+                        ArrayList<String> friends = clientUser.getFriends();
+                        DefaultListModel<String> listModel = new DefaultListModel<>();
+                        for (String friend : friends) {
+                            listModel.addElement(friend);
+                        }
+                        friendsList.setModel(listModel);
+                    }
+                }
+            }
+        });
+        addFriendPanel.add(addFriendButton);
+        content.add(addFriendPanel, BorderLayout.SOUTH);
+
         return content;
     }
 
