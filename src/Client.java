@@ -27,6 +27,8 @@ public class Client implements ClientInterface {
     private PrintWriter writer;
     private String clientUsername; // Current client's name, updates when logged in successfully
 
+    private Object synchronizedObject = new Object();
+
     public boolean initialize() {
         try {
             // Cannot use try-with-resources with class field for some reason
@@ -92,53 +94,55 @@ public class Client implements ClientInterface {
         // Data transfer
         //
 
-        try {
-            writer.println();
-            writer.println("REGISTER");
-            writer.println(username);
-            writer.println(password);
-            writer.println(age);
+        synchronized (synchronizedObject) {
+            try {
+                writer.println();
+                writer.println("REGISTER");
+                writer.println(username);
+                writer.println(password);
+                writer.println(age);
 
-            // Read profile picture file to a byte array
-            int fileLength = (int) userPFP.length();
-            byte[] buffer = new byte[fileLength];
-            BufferedInputStream bufferIn = new BufferedInputStream(new FileInputStream(userPFP));
-            bufferIn.read(buffer, 0, fileLength);
+                // Read profile picture file to a byte array
+                int fileLength = (int) userPFP.length();
+                byte[] buffer = new byte[fileLength];
+                BufferedInputStream bufferIn = new BufferedInputStream(new FileInputStream(userPFP));
+                bufferIn.read(buffer, 0, fileLength);
 
-            // Base64 encode the file data
-            String encoded = Base64.getEncoder().encodeToString(buffer);
-            writer.println(encoded.length());
+                // Base64 encode the file data
+                String encoded = Base64.getEncoder().encodeToString(buffer);
+                writer.println(encoded.length());
 
-            // Send encoded file data in chunks because it is too large to send in one flush
-            int offset = 0;
-            while (offset < encoded.length()) {
-                int sectionEnd = offset + 1000;
-                if (sectionEnd > encoded.length()) {
-                    sectionEnd = encoded.length();
+                // Send encoded file data in chunks because it is too large to send in one flush
+                int offset = 0;
+                while (offset < encoded.length()) {
+                    int sectionEnd = offset + 1000;
+                    if (sectionEnd > encoded.length()) {
+                        sectionEnd = encoded.length();
+                    }
+                    String section = encoded.substring(offset, sectionEnd);
+                    writer.println(section);
+                    writer.flush();
+                    offset += 1000;
                 }
-                String section = encoded.substring(offset, sectionEnd);
-                writer.println(section);
-                writer.flush();
-                offset += 1000;
-            }
 
-            // Read result
-            String requestResult = reader.readLine();
-            if (!requestResult.equals("SUCCESS")) {
-                String resultMessage = reader.readLine();
-                //System.out.printf("%s: %s\n", requestResult, resultMessage);
-                throw new Exception(String.format("%s: %s.", requestResult, resultMessage));
-            } else {
-                //System.out.println("Registration succeeded!");
-                return true;
+                // Read result
+                String requestResult = reader.readLine();
+                if (!requestResult.equals("SUCCESS")) {
+                    String resultMessage = reader.readLine();
+                    //System.out.printf("%s: %s\n", requestResult, resultMessage);
+                    throw new Exception(String.format("%s: %s.", requestResult, resultMessage));
+                } else {
+                    //System.out.println("Registration succeeded!");
+                    return true;
+                }
+            } catch (Exception e) {
+                if (e.getMessage().contains("ERROR:")) {
+                    throw new Exception(e.getMessage().substring(e.getMessage().indexOf(':') + 2));
+                } else {
+                    throw new Exception("Exception while registering user.");
+                }
+                //return false;
             }
-        } catch (Exception e) {
-            if (e.getMessage().contains("ERROR:")) {
-                throw new Exception(e.getMessage().substring(e.getMessage().indexOf(':') + 2));
-            } else {
-                throw new Exception("Exception while registering user.");
-            }
-            //return false;
         }
 
         //return false;
@@ -168,31 +172,33 @@ public class Client implements ClientInterface {
         username = username.trim();
         password = password.trim();
 
-        try {
-            writer.println();
-            writer.println("LOGIN");
-            writer.println(username);
-            writer.println(password);
-            writer.flush();
+        synchronized (synchronizedObject) {
+            try {
+                writer.println();
+                writer.println("LOGIN");
+                writer.println(username);
+                writer.println(password);
+                writer.flush();
 
-            // Read result
-            String requestResult = reader.readLine();
-            if (!requestResult.equals("SUCCESS")) {
-                String resultMessage = reader.readLine();
-                //System.out.printf("%s: %s\n", requestResult, resultMessage);
-                throw new Exception(String.format("%s: %s.", requestResult, resultMessage));
-            } else {
-                clientUsername = username;    // Assigns current user their name
-                //System.out.println("Login succeeded, welcome " + clientUsername + "!");
-                return true;
+                // Read result
+                String requestResult = reader.readLine();
+                if (!requestResult.equals("SUCCESS")) {
+                    String resultMessage = reader.readLine();
+                    //System.out.printf("%s: %s\n", requestResult, resultMessage);
+                    throw new Exception(String.format("%s: %s.", requestResult, resultMessage));
+                } else {
+                    clientUsername = username;    // Assigns current user their name
+                    //System.out.println("Login succeeded, welcome " + clientUsername + "!");
+                    return true;
+                }
+            } catch (Exception e) {
+                if (e.getMessage().contains("ERROR:")) {
+                    throw new Exception(e.getMessage().substring(e.getMessage().indexOf(':') + 2));
+                } else {
+                    throw new Exception("Exception while logging in.");
+                }
+                //return false;
             }
-        } catch (Exception e) {
-            if (e.getMessage().contains("ERROR:")) {
-                throw new Exception(e.getMessage().substring(e.getMessage().indexOf(':') + 2));
-            } else {
-                throw new Exception("Exception while logging in.");
-            }
-            //return false;
         }
 
         //return false;
@@ -213,60 +219,62 @@ public class Client implements ClientInterface {
         //remove any whitespace
         username = username.trim();
 
-        try {
-            //send information
-            writer.println();
-            writer.println("FIND_USER");
-            writer.println(username);
-            writer.flush();
+        synchronized (synchronizedObject) {
+            try {
+                //send information
+                writer.println();
+                writer.println("FIND_USER");
+                writer.println(username);
+                writer.flush();
 
-            //Read Result
-            String resultOutput = reader.readLine();
+                //Read Result
+                String resultOutput = reader.readLine();
 
-            if (!resultOutput.equals("SUCCESS")) {
-                String resultMessage = reader.readLine();
-                //System.out.printf("%s: %s\n", requestResult, resultMessage);
-                throw new Exception(String.format("%s: %s.", resultOutput, resultMessage));
-            } else {
-                String readUsername = reader.readLine();
-                int readAge = Integer.parseInt(reader.readLine());
-                boolean readFriendsOnly = Boolean.parseBoolean(reader.readLine());
+                if (!resultOutput.equals("SUCCESS")) {
+                    String resultMessage = reader.readLine();
+                    //System.out.printf("%s: %s\n", requestResult, resultMessage);
+                    throw new Exception(String.format("%s: %s.", resultOutput, resultMessage));
+                } else {
+                    String readUsername = reader.readLine();
+                    int readAge = Integer.parseInt(reader.readLine());
+                    boolean readFriendsOnly = Boolean.parseBoolean(reader.readLine());
 
-                ArrayList<String> friendsList = new ArrayList<String>();
-                int readFriendCount = Integer.parseInt(reader.readLine());
-                for (int i = 0; i < readFriendCount; i++) {
-                    friendsList.add(reader.readLine());
+                    ArrayList<String> friendsList = new ArrayList<String>();
+                    int readFriendCount = Integer.parseInt(reader.readLine());
+                    for (int i = 0; i < readFriendCount; i++) {
+                        friendsList.add(reader.readLine());
+                    }
+
+                    ArrayList<String> blockList = new ArrayList<String>();
+                    int readBlockCount = Integer.parseInt(reader.readLine());
+                    for (int i = 0; i < readBlockCount; i++) {
+                        blockList.add(reader.readLine());
+                    }
+
+                    int fileLength = Integer.parseInt(reader.readLine());
+
+                    // Read in the Base64 encoded chunks of the file
+                    String encoded = "";
+                    do {
+                        encoded += reader.readLine();
+                    } while (encoded.length() < fileLength);
+
+                    // Decode the file data
+                    byte[] decoded = Base64.getDecoder().decode(encoded);
+
+                    BufferedImage readPFP = ImageIO.read(new ByteArrayInputStream(decoded));
+
+                    return new User(readUsername, readAge, readPFP, readFriendsOnly, friendsList, blockList);
                 }
 
-                ArrayList<String> blockList = new ArrayList<String>();
-                int readBlockCount = Integer.parseInt(reader.readLine());
-                for (int i = 0; i < readBlockCount; i++) {
-                    blockList.add(reader.readLine());
+            } catch (Exception e) {
+                if (e.getMessage().contains("ERROR:")) {
+                    throw new Exception(e.getMessage().substring(e.getMessage().indexOf(':') + 2));
+                } else {
+                    throw new Exception("Exception while finding user.");
                 }
-
-                int fileLength = Integer.parseInt(reader.readLine());
-
-                // Read in the Base64 encoded chunks of the file
-                String encoded = "";
-                do {
-                    encoded += reader.readLine();
-                } while (encoded.length() < fileLength);
-
-                // Decode the file data
-                byte[] decoded = Base64.getDecoder().decode(encoded);
-
-                BufferedImage readPFP = ImageIO.read(new ByteArrayInputStream(decoded));
-
-                return new User(readUsername, readAge, readPFP, readFriendsOnly, friendsList, blockList);
+                //return false;
             }
-
-        } catch (Exception e) {
-            if (e.getMessage().contains("ERROR:")) {
-                throw new Exception(e.getMessage().substring(e.getMessage().indexOf(':') + 2));
-            } else {
-                throw new Exception("Exception while finding user.");
-            }
-            //return false;
         }
 
         //return null;
@@ -287,37 +295,39 @@ public class Client implements ClientInterface {
         //remove any whitespace
         token = token.trim();
 
-        try {
-            //send information
-            writer.println();
-            writer.println("SEARCH_USER");
-            writer.println(token);
-            writer.flush();
+        synchronized (synchronizedObject) {
+            try {
+                //send information
+                writer.println();
+                writer.println("SEARCH_USER");
+                writer.println(token);
+                writer.flush();
 
-            //Read Result
-            String resultOutput = reader.readLine();
+                //Read Result
+                String resultOutput = reader.readLine();
 
-            if (!resultOutput.equals("SUCCESS")) {
-                String resultMessage = reader.readLine();
-                //System.out.printf("%s: %s\n", requestResult, resultMessage);
-                throw new Exception(String.format("%s: %s.", resultOutput, resultMessage));
-            } else {
-                ArrayList<String> userList = new ArrayList<String>();
-                int readUserCount = Integer.parseInt(reader.readLine());
-                for (int i = 0; i < readUserCount; i++) {
-                    userList.add(reader.readLine());
+                if (!resultOutput.equals("SUCCESS")) {
+                    String resultMessage = reader.readLine();
+                    //System.out.printf("%s: %s\n", requestResult, resultMessage);
+                    throw new Exception(String.format("%s: %s.", resultOutput, resultMessage));
+                } else {
+                    ArrayList<String> userList = new ArrayList<String>();
+                    int readUserCount = Integer.parseInt(reader.readLine());
+                    for (int i = 0; i < readUserCount; i++) {
+                        userList.add(reader.readLine());
+                    }
+
+                    return userList;
                 }
 
-                return userList;
+            } catch (Exception e) {
+                if (e.getMessage().contains("ERROR:")) {
+                    throw new Exception(e.getMessage().substring(e.getMessage().indexOf(':') + 2));
+                } else {
+                    throw new Exception("Exception while searching for users.");
+                }
+                //return false;
             }
-
-        } catch (Exception e) {
-            if (e.getMessage().contains("ERROR:")) {
-                throw new Exception(e.getMessage().substring(e.getMessage().indexOf(':') + 2));
-            } else {
-                throw new Exception("Exception while searching for users.");
-            }
-            //return false;
         }
 
         //return null;
@@ -339,27 +349,29 @@ public class Client implements ClientInterface {
         //remove any whitespace
         friendUsername = friendUsername.trim();
 
-        try {
-            //send information
-            writer.println();
-            writer.println("ADD_FRIEND");
-            writer.println(clientUsername);
-            writer.println(friendUsername);
-            writer.flush();
+        synchronized (synchronizedObject) {
+            try {
+                //send information
+                writer.println();
+                writer.println("ADD_FRIEND");
+                writer.println(clientUsername);
+                writer.println(friendUsername);
+                writer.flush();
 
-            //Read Result
-            String resultOutput = reader.readLine();
+                //Read Result
+                String resultOutput = reader.readLine();
 
-            if (!resultOutput.equals("SUCCESS")) {
-                String resultMessage = reader.readLine();
-                //System.out.printf("%s: %s\n", resultOutput, resultMessage);
-            } else {
-                //System.out.println("Friend successfully added!");
-                return true;
+                if (!resultOutput.equals("SUCCESS")) {
+                    String resultMessage = reader.readLine();
+                    //System.out.printf("%s: %s\n", resultOutput, resultMessage);
+                } else {
+                    //System.out.println("Friend successfully added!");
+                    return true;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         return false;
@@ -381,27 +393,29 @@ public class Client implements ClientInterface {
         //remove any whitespace
         friendUsername = friendUsername.trim();
 
-        try {
-            //send information
-            writer.println();
-            writer.println("REMOVE_FRIEND");
-            writer.println(clientUsername);
-            writer.println(friendUsername);
-            writer.flush();
+        synchronized (synchronizedObject) {
+            try {
+                //send information
+                writer.println();
+                writer.println("REMOVE_FRIEND");
+                writer.println(clientUsername);
+                writer.println(friendUsername);
+                writer.flush();
 
-            //Read Result
-            String resultOutput = reader.readLine();
+                //Read Result
+                String resultOutput = reader.readLine();
 
-            if (!resultOutput.equals("SUCCESS")) {
-                String resultMessage = reader.readLine();
-                //System.out.printf("%s: %s\n", resultOutput, resultMessage);
-            } else {
-                //System.out.println("Friend successfully removed!");
-                return true;
+                if (!resultOutput.equals("SUCCESS")) {
+                    String resultMessage = reader.readLine();
+                    //System.out.printf("%s: %s\n", resultOutput, resultMessage);
+                } else {
+                    //System.out.println("Friend successfully removed!");
+                    return true;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         return false;
@@ -423,27 +437,29 @@ public class Client implements ClientInterface {
         //remove any whitespace
         usernameToBlock = usernameToBlock.trim();
 
-        try {
-            //send information
-            writer.println();
-            writer.println("BLOCK");
-            writer.println(clientUsername);
-            writer.println(usernameToBlock);
-            writer.flush();
+        synchronized (synchronizedObject) {
+            try {
+                //send information
+                writer.println();
+                writer.println("BLOCK");
+                writer.println(clientUsername);
+                writer.println(usernameToBlock);
+                writer.flush();
 
-            //Read Result
-            String resultOutput = reader.readLine();
+                //Read Result
+                String resultOutput = reader.readLine();
 
-            if (!resultOutput.equals("SUCCESS")) {
-                String resultMessage = reader.readLine();
-                //System.out.printf("%s: %s\n", resultOutput, resultMessage);
-            } else {
-                //System.out.println("User successfully blocked!");
-                return true;
+                if (!resultOutput.equals("SUCCESS")) {
+                    String resultMessage = reader.readLine();
+                    //System.out.printf("%s: %s\n", resultOutput, resultMessage);
+                } else {
+                    //System.out.println("User successfully blocked!");
+                    return true;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         return false;
@@ -465,27 +481,29 @@ public class Client implements ClientInterface {
         //remove any whitespace
         usernameToUnblock = usernameToUnblock.trim();
 
-        try {
-            //send information
-            writer.println();
-            writer.println("UNBLOCK");
-            writer.println(clientUsername);
-            writer.println(usernameToUnblock);
-            writer.flush();
+        synchronized (synchronizedObject) {
+            try {
+                //send information
+                writer.println();
+                writer.println("UNBLOCK");
+                writer.println(clientUsername);
+                writer.println(usernameToUnblock);
+                writer.flush();
 
-            //Read Result
-            String resultOutput = reader.readLine();
+                //Read Result
+                String resultOutput = reader.readLine();
 
-            if (!resultOutput.equals("SUCCESS")) {
-                String resultMessage = reader.readLine();
-                //System.out.printf("%s: %s\n", resultOutput, resultMessage);
-            } else {
-                //System.out.println("User successfully unblocked!");
-                return true;
+                if (!resultOutput.equals("SUCCESS")) {
+                    String resultMessage = reader.readLine();
+                    //System.out.printf("%s: %s\n", resultOutput, resultMessage);
+                } else {
+                    //System.out.println("User successfully unblocked!");
+                    return true;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         return false;
@@ -506,48 +524,50 @@ public class Client implements ClientInterface {
         // Remove extra whitespaces
         username = username.trim();
 
-        try {
-            writer.println();
-            writer.println("MESSAGE_HISTORY");
-            writer.println(clientUsername);
-            writer.println(username);
-            writer.flush();
+        synchronized (synchronizedObject) {
+            try {
+                writer.println();
+                writer.println("MESSAGE_HISTORY");
+                writer.println(clientUsername);
+                writer.println(username);
+                writer.flush();
 
-            // Read result
-            String requestResult = reader.readLine();
-            if (!requestResult.equals("SUCCESS")) {
-                String resultMessage = reader.readLine();
-                //System.out.printf("%s: %s\n", requestResult, resultMessage);
-            } else {
-                String readUser1 = reader.readLine();
-                String readUser2 = reader.readLine();
-                int readMessagesLength = Integer.parseInt(reader.readLine());
+                // Read result
+                String requestResult = reader.readLine();
+                if (!requestResult.equals("SUCCESS")) {
+                    String resultMessage = reader.readLine();
+                    //System.out.printf("%s: %s\n", requestResult, resultMessage);
+                } else {
+                    String readUser1 = reader.readLine();
+                    String readUser2 = reader.readLine();
+                    int readMessagesLength = Integer.parseInt(reader.readLine());
 
-                ArrayList<Message> readMessages = new ArrayList<Message>();
-                for (int i = 0; i < readMessagesLength; i++) {
-                    // [DATE] SENDER: MESSAGE
-                    String readMessage = reader.readLine();
-                    int rightBracketPos = readMessage.indexOf("]");
-                    SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yy hh:mm:ss a z");
-                    Date readDate = dateFormatter.parse(readMessage.substring(1, rightBracketPos));
-                    int colonPos = readMessage.indexOf(":", rightBracketPos);
-                    String readSender = readMessage.substring(rightBracketPos + 2, colonPos);
-                    String readMessageStr = readMessage.substring(colonPos + 2);
+                    ArrayList<Message> readMessages = new ArrayList<Message>();
+                    for (int i = 0; i < readMessagesLength; i++) {
+                        // [DATE] SENDER: MESSAGE
+                        String readMessage = reader.readLine();
+                        int rightBracketPos = readMessage.indexOf("]");
+                        SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yy hh:mm:ss a z");
+                        Date readDate = dateFormatter.parse(readMessage.substring(1, rightBracketPos));
+                        int colonPos = readMessage.indexOf(":", rightBracketPos);
+                        String readSender = readMessage.substring(rightBracketPos + 2, colonPos);
+                        String readMessageStr = readMessage.substring(colonPos + 2);
 
-                    String reciever = readUser1;
-                    if (readSender.equals(readUser1)) {
-                        reciever = readUser2;
+                        String reciever = readUser1;
+                        if (readSender.equals(readUser1)) {
+                            reciever = readUser2;
+                        }
+
+                        readMessages.add(new Message(readSender, reciever, readMessageStr, readDate));
                     }
 
-                    readMessages.add(new Message(readSender, reciever, readMessageStr, readDate));
+                    return new MessageHistory(readUser1, readUser2, readMessages);
                 }
-
-                return new MessageHistory(readUser1, readUser2, readMessages);
+            } catch (Exception e) {
+                // REMINDER: Remove console output
+                e.printStackTrace();
+                return null;
             }
-        } catch (Exception e) {
-            // REMINDER: Remove console output
-            e.printStackTrace();
-            return null;
         }
 
         return null;
@@ -568,60 +588,62 @@ public class Client implements ClientInterface {
         //remove any whitespace
         token = token.trim();
 
-        try {
-            //send information
-            writer.println();
-            writer.println("SEARCH_MESSAGE_HISTORIES");
-            writer.println(token);
-            writer.flush();
+        synchronized (synchronizedObject) {
+            try {
+                //send information
+                writer.println();
+                writer.println("SEARCH_MESSAGE_HISTORIES");
+                writer.println(token);
+                writer.flush();
 
-            //Read Result
-            String resultOutput = reader.readLine();
+                //Read Result
+                String resultOutput = reader.readLine();
 
-            if (!resultOutput.equals("SUCCESS")) {
-                String resultMessage = reader.readLine();
-                //System.out.printf("%s: %s\n", requestResult, resultMessage);
-                throw new Exception(String.format("%s: %s.", resultOutput, resultMessage));
-            } else {
-                ArrayList<MessageHistory> messageHistoryList = new ArrayList<MessageHistory>();
-                int readMessageHistoryCount = Integer.parseInt(reader.readLine());
-                for (int i = 0; i < readMessageHistoryCount; i++) {
-                    String readUser1 = reader.readLine();
-                    String readUser2 = reader.readLine();
-                    int readMessagesLength = Integer.parseInt(reader.readLine());
+                if (!resultOutput.equals("SUCCESS")) {
+                    String resultMessage = reader.readLine();
+                    //System.out.printf("%s: %s\n", requestResult, resultMessage);
+                    throw new Exception(String.format("%s: %s.", resultOutput, resultMessage));
+                } else {
+                    ArrayList<MessageHistory> messageHistoryList = new ArrayList<MessageHistory>();
+                    int readMessageHistoryCount = Integer.parseInt(reader.readLine());
+                    for (int i = 0; i < readMessageHistoryCount; i++) {
+                        String readUser1 = reader.readLine();
+                        String readUser2 = reader.readLine();
+                        int readMessagesLength = Integer.parseInt(reader.readLine());
 
-                    ArrayList<Message> readMessages = new ArrayList<Message>();
-                    for (int j = 0; j < readMessagesLength; j++) {
-                        // [DATE] SENDER: MESSAGE
-                        String readMessage = reader.readLine();
-                        int rightBracketPos = readMessage.indexOf("]");
-                        SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yy hh:mm:ss a z");
-                        Date readDate = dateFormatter.parse(readMessage.substring(1, rightBracketPos));
-                        int colonPos = readMessage.indexOf(":", rightBracketPos);
-                        String readSender = readMessage.substring(rightBracketPos + 2, colonPos);
-                        String readMessageStr = readMessage.substring(colonPos + 2);
+                        ArrayList<Message> readMessages = new ArrayList<Message>();
+                        for (int j = 0; j < readMessagesLength; j++) {
+                            // [DATE] SENDER: MESSAGE
+                            String readMessage = reader.readLine();
+                            int rightBracketPos = readMessage.indexOf("]");
+                            SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yy hh:mm:ss a z");
+                            Date readDate = dateFormatter.parse(readMessage.substring(1, rightBracketPos));
+                            int colonPos = readMessage.indexOf(":", rightBracketPos);
+                            String readSender = readMessage.substring(rightBracketPos + 2, colonPos);
+                            String readMessageStr = readMessage.substring(colonPos + 2);
 
-                        String reciever = readUser1;
-                        if (readSender.equals(readUser1)) {
-                            reciever = readUser2;
+                            String reciever = readUser1;
+                            if (readSender.equals(readUser1)) {
+                                reciever = readUser2;
+                            }
+
+                            readMessages.add(new Message(readSender, reciever, readMessageStr, readDate));
                         }
 
-                        readMessages.add(new Message(readSender, reciever, readMessageStr, readDate));
+                        messageHistoryList.add(new MessageHistory(readUser1, readUser2, readMessages));
                     }
 
-                    messageHistoryList.add(new MessageHistory(readUser1, readUser2, readMessages));
+                    return messageHistoryList;
                 }
 
-                return messageHistoryList;
+            } catch (Exception e) {
+                if (e.getMessage().contains("ERROR:")) {
+                    throw new Exception(e.getMessage().substring(e.getMessage().indexOf(':') + 2));
+                } else {
+                    throw new Exception("Exception while searching for message histories.");
+                }
+                //return false;
             }
-
-        } catch (Exception e) {
-            if (e.getMessage().contains("ERROR:")) {
-                throw new Exception(e.getMessage().substring(e.getMessage().indexOf(':') + 2));
-            } else {
-                throw new Exception("Exception while searching for message histories.");
-            }
-            //return false;
         }
 
         //return null;
@@ -649,32 +671,34 @@ public class Client implements ClientInterface {
             //return false;
         }
 
-        try {
-            writer.println();
-            writer.println("SEND_MESSAGE");
+        synchronized (synchronizedObject) {
+            try {
+                writer.println();
+                writer.println("SEND_MESSAGE");
 
-            writer.println(clientUsername);
-            writer.println(receiver);
-            writer.println(message);
-            writer.flush();
+                writer.println(clientUsername);
+                writer.println(receiver);
+                writer.println(message);
+                writer.flush();
 
-            String requestResult = reader.readLine();
-            if (!requestResult.equals("SUCCESS")) {
-                String resultMessage = reader.readLine();
-                //System.out.printf("%s: %s\n", requestResult, resultMessage);
-                throw new Exception(String.format("%s: %s.", requestResult, resultMessage));
-            } else {
-                //System.out.println("Message sent successfully changed!");
-                return true;
+                String requestResult = reader.readLine();
+                if (!requestResult.equals("SUCCESS")) {
+                    String resultMessage = reader.readLine();
+                    //System.out.printf("%s: %s\n", requestResult, resultMessage);
+                    throw new Exception(String.format("%s: %s.", requestResult, resultMessage));
+                } else {
+                    //System.out.println("Message sent successfully changed!");
+                    return true;
+                }
+
+            } catch (Exception e) {
+                if (e.getMessage().contains("ERROR:")) {
+                    throw new Exception(e.getMessage().substring(e.getMessage().indexOf(':') + 2));
+                } else {
+                    throw new Exception("Exception while sending messaging.");
+                }
+                //return false;
             }
-
-        } catch (Exception e) {
-            if (e.getMessage().contains("ERROR:")) {
-                throw new Exception(e.getMessage().substring(e.getMessage().indexOf(':') + 2));
-            } else {
-                throw new Exception("Exception while sending messaging.");
-            }
-            //return false;
         }
 
         //return false;
@@ -697,58 +721,61 @@ public class Client implements ClientInterface {
             return false;
         }
 
-        try {
-            writer.println();
-            writer.println("REMOVE_MESSAGE");
+        synchronized (synchronizedObject) {
+            try {
+                writer.println();
+                writer.println("REMOVE_MESSAGE");
 
-            writer.println(clientUsername);
-            writer.println(receiver);
-            writer.println(messageIdx);
-            writer.flush();
+                writer.println(clientUsername);
+                writer.println(receiver);
+                writer.println(messageIdx);
+                writer.flush();
 
-            String requestResult = reader.readLine();
-            if (!(requestResult.equals("SUCCESS"))) {
-                String resultMessage = reader.readLine();
-                //System.out.printf("%s: %s\n", requestResult, resultMessage);
+                String requestResult = reader.readLine();
+                if (!(requestResult.equals("SUCCESS"))) {
+                    String resultMessage = reader.readLine();
+                    //System.out.printf("%s: %s\n", requestResult, resultMessage);
+                    return false;
+                } else {
+                    return true;
+                }
+            } catch (IOException e) {
+                // REMINDER: Remove console output
+                e.printStackTrace();
                 return false;
-            } else {
-                return true;
             }
-        } catch (IOException e) {
-            // REMINDER: Remove console output
-            e.printStackTrace();
-            return false;
         }
     }
 
     public boolean setFriendsOnly(boolean friendsOnly) throws Exception {
+        synchronized (synchronizedObject) {
+            try {
+                writer.println();
+                writer.println("FRIENDS_ONLY");
+                writer.println(clientUsername);
+                writer.println(friendsOnly);
+                writer.flush();
 
-        try {
-            writer.println();
-            writer.println("FRIENDS_ONLY");
-            writer.println(clientUsername);
-            writer.println(friendsOnly);
-            writer.flush();
+                //Read Results
+                String resultOutput = reader.readLine();
 
-            //Read Results
-            String resultOutput = reader.readLine();
+                if (!resultOutput.equals("SUCCESS")) {
+                    String resultMessage = reader.readLine();
+                    //System.out.printf("%s: %s\n", requestResult, resultMessage);
+                    throw new Exception(String.format("%s: %s.", resultOutput, resultMessage));
+                } else {
+                    //System.out.println("Option successfully changed!");
+                    return true;
+                }
 
-            if (!resultOutput.equals("SUCCESS")) {
-                String resultMessage = reader.readLine();
-                //System.out.printf("%s: %s\n", requestResult, resultMessage);
-                throw new Exception(String.format("%s: %s.", resultOutput, resultMessage));
-            } else {
-                //System.out.println("Option successfully changed!");
-                return true;
+            } catch (Exception e) {
+                if (e.getMessage().contains("ERROR:")) {
+                    throw new Exception(e.getMessage().substring(e.getMessage().indexOf(':') + 2));
+                } else {
+                    throw new Exception("Exception while changing messaging settings.");
+                }
+                //return false;
             }
-
-        } catch (Exception e) {
-            if (e.getMessage().contains("ERROR:")) {
-                throw new Exception(e.getMessage().substring(e.getMessage().indexOf(':') + 2));
-            } else {
-                throw new Exception("Exception while changing messaging settings.");
-            }
-            //return false;
         }
 
         //return false;

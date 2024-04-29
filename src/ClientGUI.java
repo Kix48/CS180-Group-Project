@@ -21,7 +21,7 @@ public class ClientGUI extends JComponent implements Runnable {
     private final String APP_NAME = "Chirp";
     private final int INITIAL_WIDTH = 800;
     private final int INITIAL_HEIGHT = 600;
-    private final long REFRESH_TIME_MS = 3000;
+    private final long REFRESH_TIME_MS = 5000;
     private Client client;
     private boolean isConnected;
     private User clientUser;
@@ -33,6 +33,7 @@ public class ClientGUI extends JComponent implements Runnable {
     private JTextField passwordField;
     private JTextField ageField;
     private JTextField searchTextField;
+    private JTextField messageIndexField;
     private JTextArea sendMessageText;
     private JButton loginButton;
     private JButton registerPageButton;
@@ -51,6 +52,7 @@ public class ClientGUI extends JComponent implements Runnable {
     private Thread updaterThread;
     private ArrayList<MessageHistory> currentConversations;
     private boolean insideConversation = false;
+    private boolean insideConversationList = false;
 
     ActionListener buttonActionListener = new ActionListener() {
         @Override
@@ -138,11 +140,13 @@ public class ClientGUI extends JComponent implements Runnable {
                 frame.setContentPane(listPage("BLOCK LIST", blockList, null));
             } else if (e.getSource() == sendMessageButton) {
                 try {
-                    if (client.sendMessage(currentMessageReceiver, sendMessageText.getText())) {
-                        MessageHistory history = client.getMessageHistory(currentMessageReceiver);
+                    if (sendMessageText.getText() != null && !sendMessageText.getText().equals("")) {
+                        if (client.sendMessage(currentMessageReceiver, sendMessageText.getText())) {
+                            MessageHistory history = client.getMessageHistory(currentMessageReceiver);
 
-                        frame.setContentPane(messagingPage(history, currentMessageReceiver));
-                        frame.getContentPane().revalidate();
+                            frame.setContentPane(messagingPage(history, currentMessageReceiver));
+                            frame.getContentPane().revalidate();
+                        }
                     }
                 } catch (Exception v) {
                     showPopup(v.getMessage(), JOptionPane.ERROR_MESSAGE);
@@ -156,7 +160,7 @@ public class ClientGUI extends JComponent implements Runnable {
 
     // Needed for text wrapping of messages
     // https://stackoverflow.com/questions/7306295/swing-jlist-with-multiline-text-and-dynamic-height?rq=1/
-    public class CustomCellRenderer implements ListCellRenderer {
+    public class CustomCellRenderer extends DefaultListCellRenderer {
 
         private JPanel panel;
         private JTextArea textArea;
@@ -176,13 +180,12 @@ public class ClientGUI extends JComponent implements Runnable {
         public Component getListCellRendererComponent(final JList list,
                                                       final Object value, final int index, final boolean isSelected,
                                                       final boolean hasFocus) {
-
             textArea.setText((String) value);
             int width = list.getWidth();
             if (width > 0)
                 textArea.setSize(width, Short.MAX_VALUE);
-            return panel;
 
+            return panel;
         }
     }
 
@@ -326,7 +329,8 @@ public class ClientGUI extends JComponent implements Runnable {
             try {
                 // Get updated conversations
                 currentConversations = client.searchMessageHistories(clientUser.getUsername());
-                if (insideConversation && sendMessageText != null && sendMessageText.getText().equals("")) {
+                if (insideConversation && sendMessageText != null && sendMessageText.getText().equals("")
+                && messageIndexField != null && messageIndexField.getText().equals("")) {
                     MessageHistory currentMessageHistory = null;
                     for (MessageHistory history : currentConversations) {
                         if (history.getUser1().equals(currentMessageReceiver)
@@ -338,18 +342,26 @@ public class ClientGUI extends JComponent implements Runnable {
 
                     frame.setContentPane(messagingPage(currentMessageHistory, currentMessageReceiver));
                     frame.getContentPane().validate();
+                } else if (insideConversationList) {
+/*                    if (currentConversations.size() > 0) {
+                        frame.setContentPane(listPage("CONVERSATIONS", null, currentConversations));
+                        frame.getContentPane().validate();
+                    }*/
                 }
 
                 wait(REFRESH_TIME_MS);
             } catch (Exception e) {
                 // Most likely going to be an interrupt exception
-                e.printStackTrace();
+                if (!e.getMessage().equals("No message histories found.")) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     Container loginPage() {
         insideConversation = false;
+        insideConversationList = false;
 
         Container content = new Container();
         content.setLayout(new BorderLayout());
@@ -416,6 +428,7 @@ public class ClientGUI extends JComponent implements Runnable {
 
     Container listPage(String title, ArrayList<User> users, ArrayList<MessageHistory> messageHistories) {
         insideConversation = false;
+        insideConversationList = false;
 
         if (messageHistories == null) {
             boolean isFriendsList = title.contains("FRIEND");
@@ -596,6 +609,7 @@ public class ClientGUI extends JComponent implements Runnable {
             content.add(actionsPanel, BorderLayout.CENTER);
             return content;
         } else {
+            insideConversationList = true;
             Container content = new Container();
             content.setLayout(new BorderLayout());
 
@@ -727,6 +741,7 @@ public class ClientGUI extends JComponent implements Runnable {
 
     Container registrationPage() {
         insideConversation = false;
+        insideConversationList = false;
 
         Container content = new Container();
         content.setLayout(new BorderLayout());
@@ -811,6 +826,7 @@ public class ClientGUI extends JComponent implements Runnable {
 
     Container mainPage() {
         insideConversation = false;
+        insideConversationList = false;
 
         Container content = new Container();
         content.setLayout(new BorderLayout());
@@ -937,6 +953,7 @@ public class ClientGUI extends JComponent implements Runnable {
 
     Container messagingPage(MessageHistory history, String otherUsername) {
         insideConversation = true;
+        insideConversationList = false;
 
         Container content = new Container();
         content.setLayout(new BorderLayout());
@@ -964,9 +981,19 @@ public class ClientGUI extends JComponent implements Runnable {
         JPanel messageListPanel = new JPanel(new BorderLayout());
         DefaultListModel<String> listModel = new DefaultListModel<>();
         if (history != null) {
-            for (String message : history.getMessages()) {
+            for (int i = 0; i < history.getMessages().length; i++) {
+                String message = history.getMessages()[i];
                 String[] splitMessage = message.split(": ");
-                String formattedMessage = String.format("%s:\n%s", splitMessage[0], splitMessage[1]);
+                String actualMessage = splitMessage[1];
+
+                // In-case the message include the character ':'
+                if (splitMessage.length > 2) {
+                    for (int j = 2; j < splitMessage.length; j++) {
+                        actualMessage += (":" + splitMessage[j]);
+                    }
+                }
+
+                String formattedMessage = String.format("(%d) %s:\n%s\n", i, splitMessage[0], actualMessage);
                 listModel.addElement(formattedMessage);
             }
         }
@@ -1018,6 +1045,52 @@ public class ClientGUI extends JComponent implements Runnable {
         constraint.gridwidth = 2;
         constraint.fill = GridBagConstraints.BOTH;
         actionsPanel.add(sendMessageButton, constraint);
+
+        JLabel ageLabel = new JLabel("Message ID:");
+        ageLabel.setFont(smallFont);
+        constraint.anchor = GridBagConstraints.WEST;
+        constraint.gridx = 0;
+        constraint.gridy = 4;
+        constraint.gridwidth = 1;
+        constraint.fill = GridBagConstraints.NONE;
+        actionsPanel.add(ageLabel, constraint);
+
+        messageIndexField = new JTextField(4);
+        constraint.anchor = GridBagConstraints.CENTER;
+        constraint.gridx = 0;
+        constraint.gridy = 4;
+        constraint.gridwidth = 1;
+        actionsPanel.add(messageIndexField, constraint);
+
+        JButton removeMessageButton = new JButton("Remove Message");
+        removeMessageButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    int selectedMessage = Integer.parseInt(messageIndexField.getText());
+                    if (selectedMessage >= 0 && selectedMessage < history.getMessages().length) {
+                        if (client.removeMessage(otherUsername, selectedMessage)) {
+                            history.removeMessage(clientUser.getUsername(), selectedMessage);
+
+                            frame.setContentPane(messagingPage(history, otherUsername));
+                            frame.getContentPane().revalidate();
+
+                            showPopup("Message has been removed.",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    } else {
+                        showPopup("Not a valid message index!", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (NumberFormatException v) {
+                    showPopup("Message Index must be a number!", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        constraint.anchor = GridBagConstraints.CENTER;
+        constraint.gridx = 0;
+        constraint.gridy = 5;
+        constraint.gridwidth = 2;
+        constraint.fill = GridBagConstraints.BOTH;
+        actionsPanel.add(removeMessageButton, constraint);
 
         content.add(actionsPanel, BorderLayout.CENTER);
         return content;
