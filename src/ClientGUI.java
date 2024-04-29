@@ -474,9 +474,9 @@ public class ClientGUI extends JComponent implements Runnable {
             DefaultListModel<String> listModel = new DefaultListModel<>();
             for (User user : users) {
                 if (user.getAge() == 1) {
-                    listModel.addElement(String.format("%s (%d year old)", user.getUsername(), user.getAge()));
+                    listModel.addElement(String.format("%s", user.getUsername()));
                 } else {
-                    listModel.addElement(String.format("%s (%d years old)", user.getUsername(), user.getAge()));
+                    listModel.addElement(String.format("%s", user.getUsername()));
                 }
             }
             JList<String> usersList = new JList<>(listModel);
@@ -490,21 +490,40 @@ public class ClientGUI extends JComponent implements Runnable {
             JPanel actionsPanel = new JPanel();
             actionsPanel.setLayout(new BoxLayout(actionsPanel, BoxLayout.Y_AXIS));
 
+            JButton viewProfileButton = new JButton("View Profile");
+            viewProfileButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String selectedUser = usersList.getSelectedValue();
+                    if (selectedUser != null) {
+                        try {
+                            User user = client.findUser(selectedUser);
+                            if (user != null) {
+                                frame.setContentPane(profilePage(user, title, users, null));
+                                frame.getContentPane().revalidate();
+                            } else {
+                                showPopup("Could not retrieve user information!", JOptionPane.ERROR_MESSAGE);
+                            }
+                        } catch (Exception v) {
+                            showPopup("Failed to view profile for user!", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }
+            });
+            actionsPanel.add(viewProfileButton);
+
             if (isBlockList) {
                 JButton blockButton = new JButton("Unblock");
                 blockButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         String selectedUser = usersList.getSelectedValue();
                         if (selectedUser != null) {
-                            String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
-
                             //Unblock
-                            if (client.unblockUser(selectedUsername)) {
-                                clientUser.removeBlockedUsers(selectedUsername);
+                            if (client.unblockUser(selectedUser)) {
+                                clientUser.removeBlockedUsers(selectedUser);
                             }
 
                             for (int i = 0; i < users.size(); i++) {
-                                if (users.get(i).getUsername().equals(selectedUsername)) {
+                                if (users.get(i).getUsername().equals(selectedUser)) {
                                     users.remove(i);
                                     break;
                                 }
@@ -522,11 +541,10 @@ public class ClientGUI extends JComponent implements Runnable {
                     public void actionPerformed(ActionEvent e) {
                         String selectedUser = usersList.getSelectedValue();
                         if (selectedUser != null) {
-                            String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
-                            MessageHistory history = client.getMessageHistory(selectedUsername);
-                            currentMessageReceiver = selectedUsername;
+                            MessageHistory history = client.getMessageHistory(selectedUser);
+                            currentMessageReceiver = selectedUser;
 
-                            frame.setContentPane(messagingPage(history, selectedUsername));
+                            frame.setContentPane(messagingPage(history, selectedUser));
                             frame.getContentPane().revalidate();
                         }
                     }
@@ -539,11 +557,10 @@ public class ClientGUI extends JComponent implements Runnable {
                         public void actionPerformed(ActionEvent e) {
                             String selectedUser = usersList.getSelectedValue();
                             if (selectedUser != null) {
-                                String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
-                                if (client.addFriend(selectedUsername)) {
-                                    clientUser.addFriends(selectedUsername);
+                                if (client.addFriend(selectedUser)) {
+                                    clientUser.addFriends(selectedUser);
 
-                                    showPopup(selectedUsername + " is now your friend.",
+                                    showPopup(selectedUser + " is now your friend.",
                                             JOptionPane.INFORMATION_MESSAGE);
                                 }
                             }
@@ -557,13 +574,12 @@ public class ClientGUI extends JComponent implements Runnable {
                     public void actionPerformed(ActionEvent e) {
                         String selectedUser = usersList.getSelectedValue();
                         if (selectedUser != null) {
-                            String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
-                            if (client.removeFriend(selectedUsername)) {
-                                clientUser.removeFriends(selectedUsername);
+                            if (client.removeFriend(selectedUser)) {
+                                clientUser.removeFriends(selectedUser);
 
                                 if (isFriendsList) {
                                     for (int i = 0; i < users.size(); i++) {
-                                        if (users.get(i).getUsername().equals(selectedUsername)) {
+                                        if (users.get(i).getUsername().equals(selectedUser)) {
                                             users.remove(i);
                                             break;
                                         }
@@ -573,7 +589,7 @@ public class ClientGUI extends JComponent implements Runnable {
                                     frame.getContentPane().revalidate();
                                 }
 
-                                showPopup(selectedUsername + " has been unfriended.",
+                                showPopup(selectedUser + " has been unfriended.",
                                         JOptionPane.INFORMATION_MESSAGE);
                             }
                         }
@@ -586,11 +602,10 @@ public class ClientGUI extends JComponent implements Runnable {
                     public void actionPerformed(ActionEvent e) {
                         String selectedUser = usersList.getSelectedValue();
                         if (selectedUser != null) {
-                            String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
-                            if (client.blockUser(selectedUsername)) {
-                                clientUser.addBlockedUsers(selectedUsername);
+                            if (client.blockUser(selectedUser)) {
+                                clientUser.addBlockedUsers(selectedUser);
                                 for (int i = 0; i < users.size(); i++) {
-                                    if (users.get(i).getUsername().equals(selectedUsername)) {
+                                    if (users.get(i).getUsername().equals(selectedUser)) {
                                         users.remove(i);
                                         break;
                                     }
@@ -599,7 +614,7 @@ public class ClientGUI extends JComponent implements Runnable {
                                 frame.setContentPane(listPage(title, users, null));
                                 frame.getContentPane().revalidate();
 
-                                showPopup(selectedUsername + " has been blocked.",
+                                showPopup(selectedUser + " has been blocked.",
                                         JOptionPane.INFORMATION_MESSAGE);
                             }
                         }
@@ -663,11 +678,10 @@ public class ClientGUI extends JComponent implements Runnable {
                 public void actionPerformed(ActionEvent e) {
                     String selectedUser = messageHistoryList.getSelectedValue();
                     if (selectedUser != null) {
-                        String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
-                        MessageHistory history = client.getMessageHistory(selectedUsername);
-                        currentMessageReceiver = selectedUsername;
+                        MessageHistory history = client.getMessageHistory(selectedUser);
+                        currentMessageReceiver = selectedUser;
 
-                        frame.setContentPane(messagingPage(history, selectedUsername));
+                        frame.setContentPane(messagingPage(history, selectedUser));
                         frame.getContentPane().revalidate();
                     }
                 }
@@ -679,11 +693,10 @@ public class ClientGUI extends JComponent implements Runnable {
                 public void actionPerformed(ActionEvent e) {
                     String selectedUser = messageHistoryList.getSelectedValue();
                     if (selectedUser != null) {
-                        String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
-                        if (client.addFriend(selectedUsername)) {
-                            clientUser.addFriends(selectedUsername);
+                        if (client.addFriend(selectedUser)) {
+                            clientUser.addFriends(selectedUser);
 
-                            showPopup(selectedUsername + " is now your friend!",
+                            showPopup(selectedUser + " is now your friend!",
                                     JOptionPane.INFORMATION_MESSAGE);
                         }
                     }
@@ -696,11 +709,10 @@ public class ClientGUI extends JComponent implements Runnable {
                 public void actionPerformed(ActionEvent e) {
                     String selectedUser = messageHistoryList.getSelectedValue();
                     if (selectedUser != null) {
-                        String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
-                        if (client.removeFriend(selectedUsername)) {
-                            clientUser.removeFriends(selectedUsername);
+                        if (client.removeFriend(selectedUser)) {
+                            clientUser.removeFriends(selectedUser);
 
-                            showPopup(selectedUsername + " has been unfriended.",
+                            showPopup(selectedUser + " has been unfriended.",
                                     JOptionPane.INFORMATION_MESSAGE);
                         }
                     }
@@ -713,13 +725,12 @@ public class ClientGUI extends JComponent implements Runnable {
                 public void actionPerformed(ActionEvent e) {
                     String selectedUser = messageHistoryList.getSelectedValue();
                     if (selectedUser != null) {
-                        String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
-                        if (client.blockUser(selectedUsername)) {
-                            clientUser.addBlockedUsers(selectedUsername);
+                        if (client.blockUser(selectedUser)) {
+                            clientUser.addBlockedUsers(selectedUser);
                             for (int i = 0; i < messageHistories.size(); i++) {
                                 MessageHistory currentHistory = messageHistories.get(i);
-                                if (currentHistory.getUser1().equals(selectedUsername)
-                                        || currentHistory.getUser2().equals(selectedUsername)) {
+                                if (currentHistory.getUser1().equals(selectedUser)
+                                        || currentHistory.getUser2().equals(selectedUser)) {
                                     messageHistories.remove(i);
                                     break;
                                 }
@@ -728,7 +739,7 @@ public class ClientGUI extends JComponent implements Runnable {
                             frame.setContentPane(listPage(title, null, messageHistories));
                             frame.getContentPane().revalidate();
 
-                            showPopup(selectedUsername + " has been blocked!",
+                            showPopup(selectedUser + " has been blocked!",
                                     JOptionPane.INFORMATION_MESSAGE);
                         }
                     }
@@ -1097,6 +1108,88 @@ public class ClientGUI extends JComponent implements Runnable {
         actionsPanel.add(removeMessageButton, constraint);
 
         content.add(actionsPanel, BorderLayout.CENTER);
+        return content;
+    }
+
+    Container profilePage(User user, String oldTitle, ArrayList<User> oldUsers,
+                          ArrayList<MessageHistory> oldMessageHistories) {
+        insideConversation = false;
+        insideConversationList = false;
+
+        Container content = new Container();
+        content.setLayout(new BorderLayout());
+
+        JLabel titleLabel = new JLabel(user.getUsername() + "'s PROFILE");
+        titleLabel.setFont(largeFont);
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        content.add(titleLabel, BorderLayout.NORTH);
+
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridBagLayout());
+        GridBagConstraints constraint = new GridBagConstraints();
+
+        if (user.getUserPFPImage() != null) {
+            JLabel profilePicture = new JLabel(new ImageIcon(user.getUserPFPImage()
+                    .getScaledInstance(300, 300, Image.SCALE_FAST)));
+            profilePicture.setHorizontalAlignment(JLabel.CENTER);
+            profilePicture.setSize(300, 300);
+            constraint.anchor = GridBagConstraints.CENTER;
+            constraint.gridx = 0;
+            constraint.gridy = 0;
+            mainPanel.add(profilePicture, constraint);
+        }
+
+        JLabel ageLabel = null;
+        if (user.getAge() == 1) {
+            ageLabel = new JLabel("" + user.getAge() + " year old");
+        } else {
+            ageLabel = new JLabel("" + user.getAge() + " years old");
+        }
+
+        ageLabel.setFont(mediumFont);
+        constraint.anchor = GridBagConstraints.CENTER;
+        constraint.gridx = 0;
+        constraint.gridy = 1;
+        mainPanel.add(ageLabel, constraint);
+
+        boolean isFriend = false;
+        for (String friend :clientUser.getFriends()) {
+            if (friend.equals(user.getUsername())) {
+                isFriend = true;
+                break;
+            }
+        }
+
+        JLabel friendLabel = null;
+        if (isFriend) {
+            friendLabel = new JLabel("Your friend");
+        } else {
+            friendLabel = new JLabel("Not your friend");
+        }
+
+        friendLabel.setFont(mediumFont);
+        constraint.anchor = GridBagConstraints.CENTER;
+        constraint.gridx = 0;
+        constraint.gridy = 2;
+        mainPanel.add(friendLabel, constraint);
+
+        JButton returnButton = new JButton("Return");
+        returnButton.setFont(mediumFont);
+        returnButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.setContentPane(listPage(oldTitle, oldUsers, oldMessageHistories));
+                frame.getContentPane().revalidate();
+            }
+        });
+        constraint.anchor = GridBagConstraints.CENTER;
+        constraint.gridx = 0;
+        constraint.gridy = 3;
+        constraint.gridwidth = 2;
+        constraint.fill = GridBagConstraints.BOTH;
+        mainPanel.add(returnButton, constraint);
+
+        content.add(mainPanel, BorderLayout.CENTER);
+
         return content;
     }
 
