@@ -109,11 +109,13 @@ public class ClientGUI extends JComponent implements Runnable {
                 frame.setContentPane(mainPage());
             } else if (e.getSource() == logoutButton) {
 
-                if (JOptionPane.showConfirmDialog(frame, "Are you sure you want to log out?", "Confirm", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {  // Confirms logout choice
+                if (JOptionPane.showConfirmDialog(frame, "Are you sure you want to log out?", "Confirm",
+                                                  JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {  // Confirms logout choice
                     clientUser = null; // Logs user out
                     frame.setContentPane(loginPage());
                     frame.getContentPane().revalidate();
-                    JOptionPane.showMessageDialog(frame, "Logout successful", "Goodbye", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, "Logout successful", "Goodbye",
+                                                  JOptionPane.INFORMATION_MESSAGE);
                 }
             } else if (e.getSource() == friendsOnlyButton) {
                 if (setFriendsOnly(!clientUser.isFriendsOnly())) {
@@ -841,7 +843,8 @@ public class ClientGUI extends JComponent implements Runnable {
 
         //adding PPF
         if (clientUser.getUserPFPImage() != null) {
-            JLabel profilePicture = new JLabel(new ImageIcon(clientUser.getUserPFPImage().getScaledInstance(100, 100, Image.SCALE_FAST)));
+            JLabel profilePicture = new JLabel(new ImageIcon(clientUser.getUserPFPImage()
+                                                             .getScaledInstance(100, 100, Image.SCALE_FAST)));
             profilePicture.setHorizontalAlignment(JLabel.CENTER);
             profilePicture.setSize(20, 20);
 
@@ -855,7 +858,8 @@ public class ClientGUI extends JComponent implements Runnable {
         topPanel.add(usernameTop, BorderLayout.CENTER);
 
         //adding friendsButton
-        friendsOnlyButton = new JButton(clientUser.isFriendsOnly() ? "Messaging Mode: Friends" : "Messaging Mode: All       ");
+        friendsOnlyButton = new JButton(clientUser.isFriendsOnly() ? "Messaging Mode: Friends" 
+                                        : "Messaging Mode: All       ");
         friendsOnlyButton.setFont(smallFont);
         friendsOnlyButton.addActionListener(buttonActionListener);
         topPanel.add(friendsOnlyButton, BorderLayout.EAST);

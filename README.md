@@ -12,8 +12,10 @@ Scroll down and click Libraries <br>
 Add a project library from Maven <br>
 Search for JUnit 4.10.jar and extended jar <br>
 Install both <br>
-Once Installed, go to RunLocalTest.java <br> for localtests
-REST NEEDS TO GO HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Once Installed, go to RunLocalTest.java <br> for localtests <br>
+
+Run Server.java <br>
+Run ClientGUI.java (note: multiple can be run at the same time) <br>
 
 <hr>
 ClientGUI.java class
@@ -34,6 +36,8 @@ register - A boolean to verify if the new user being created is valid, and displ
 
 setFriendsOnly - A boolean to change the users ability to recieve messages from anyone, or just friends. It will also change the button to the current condition <br>
 
+conversationUpdater - manages the updates for each conversation (initial load, sending messages, recieving messages) <br>
+
 searchUser - A boolean to search for any users that contain the characters inputted by the user. If any are present, it will set the pane to the search menu. If not, it will display an error, and stay on the page. <br>
 
 searchMessageHistories - A boolean to see if two users have any previous message history <br>
@@ -46,7 +50,7 @@ Container registrationPage - A GUI that will allow users to create a new account
 
 Container MainPage - A GUI bearing all the main menu options. It the username and profile picture of the user logged in, and buttons for friendsOnly, See Conversations, See Friends, See Blocks, Logout, and a search field for searching other users. <br>
 
-Containter MessagingPanel - <br>
+Containter MessagingPanel - displays all information regarding the messaging between two users. Contains a field for all messages, a text box to send more, remove messages, and return to the main menu. <br>
 
 Run - Starts the GUI's once connected to the server, and displays the login page. <br>
 
