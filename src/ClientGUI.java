@@ -330,25 +330,27 @@ public class ClientGUI extends JComponent implements Runnable {
         while (true) {
             try {
                 // Get updated conversations
-                currentConversations = client.searchMessageHistories(clientUser.getUsername());
-                if (insideConversation && sendMessageText != null && sendMessageText.getText().equals("")
-                && messageIndexField != null && messageIndexField.getText().equals("")) {
-                    MessageHistory currentMessageHistory = null;
-                    for (MessageHistory history : currentConversations) {
-                        if (history.getUser1().equals(currentMessageReceiver)
-                                || history.getUser2().equals(currentMessageReceiver)) {
-                            currentMessageHistory = history;
-                            break;
+                if (clientUser != null) {
+                    currentConversations = client.searchMessageHistories(clientUser.getUsername());
+                    if (insideConversation && sendMessageText != null && sendMessageText.getText().equals("")
+                            && messageIndexField != null && messageIndexField.getText().equals("")) {
+                        MessageHistory currentMessageHistory = null;
+                        for (MessageHistory history : currentConversations) {
+                            if (history.getUser1().equals(currentMessageReceiver)
+                                    || history.getUser2().equals(currentMessageReceiver)) {
+                                currentMessageHistory = history;
+                                break;
+                            }
                         }
-                    }
 
-                    frame.setContentPane(messagingPage(currentMessageHistory, currentMessageReceiver));
-                    frame.getContentPane().validate();
-                } else if (insideConversationList) {
+                        frame.setContentPane(messagingPage(currentMessageHistory, currentMessageReceiver));
+                        frame.getContentPane().validate();
+                    } else if (insideConversationList) {
 /*                    if (currentConversations.size() > 0) {
                         frame.setContentPane(listPage("CONVERSATIONS", null, currentConversations));
                         frame.getContentPane().validate();
                     }*/
+                    }
                 }
 
                 wait(REFRESH_TIME_MS);
@@ -692,11 +694,12 @@ public class ClientGUI extends JComponent implements Runnable {
             openConvoButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String selectedUser = messageHistoryList.getSelectedValue();
-                    if (selectedUser != null) {
-                        MessageHistory history = client.getMessageHistory(selectedUser);
-                        currentMessageReceiver = selectedUser;
+                    String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
+                    if (selectedUsername != null) {
+                        MessageHistory history = client.getMessageHistory(selectedUsername);
+                        currentMessageReceiver = selectedUsername;
 
-                        frame.setContentPane(messagingPage(history, selectedUser));
+                        frame.setContentPane(messagingPage(history, selectedUsername));
                         frame.getContentPane().revalidate();
                     }
                 }
