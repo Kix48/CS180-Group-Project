@@ -1,3 +1,12 @@
+Phase 3 ReadMe
+<hr>
+
+Student Submitted Video: Justin Lin <br>
+Student Submitted Report: Steven Krauter <br>
+Student Submitted Vocareum Workspace: Chase Gamble <br>
+
+
+<hr>
 Phase 2 ReadMe
 <hr>
 Student Submitted Report:  Chase Gamble <br>
