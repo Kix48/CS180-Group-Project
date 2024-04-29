@@ -156,6 +156,16 @@ public class Server implements ServerInterface, Runnable {
                 return;
             }
 
+            for (String friend : userPerson1.getFriends()) {
+                if (friend.equals(friendUsername)) {
+                    // Send back an error
+                    this.writer.println("ERROR");
+                    this.writer.println("Friend is already added");
+                    this.writer.flush();
+                    return;
+                }
+            }
+
             //add friend if successful (all works within method within User.java)
             if (userPerson1.addFriends(userFriend.getUsername())) {
                 this.databaseHelper.writeUser(userPerson1);
@@ -249,6 +259,16 @@ public class Server implements ServerInterface, Runnable {
                 this.writer.println("Invalid username user being blocked");
                 this.writer.flush();
                 return;
+            }
+
+            for (String blockUsername : userPerson1.getBlockedUsers()) {
+                if (blockUsername.equals(userToBlock)) {
+                    // Send back an error
+                    this.writer.println("ERROR");
+                    this.writer.println("User is already blocked");
+                    this.writer.flush();
+                    return;
+                }
             }
 
             //block user if successful (all works within method within User.java)

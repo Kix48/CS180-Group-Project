@@ -424,6 +424,51 @@ public class ClientGUI extends JComponent implements Runnable {
             });
             actionsPanel.add(openConvoButton);
 
+            if (!isFriendsList) {
+                JButton friendButton = new JButton("Friend");
+                friendButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        String selectedUser = usersList.getSelectedValue();
+                        if (selectedUser != null) {
+                            String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
+                            if (client.addFriend(selectedUsername)) {
+                                clientUser.addFriends(selectedUsername);
+
+                                showPopup(selectedUsername + " is now your friend!",
+                                        JOptionPane.INFORMATION_MESSAGE);
+                            }
+                        }
+                    }
+                });
+                actionsPanel.add(friendButton);
+            }
+
+            JButton unfriendButton = new JButton("Unfriend");
+            unfriendButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String selectedUser = usersList.getSelectedValue();
+                    if (selectedUser != null) {
+                        String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
+                        if (client.removeFriend(selectedUsername)) {
+                            clientUser.removeFriends(selectedUsername);
+
+                            if (isFriendsList) {
+                                for (int i = 0; i < users.size(); i++) {
+                                    if (users.get(i).getUsername().equals(selectedUsername)) {
+                                        users.remove(i);
+                                        break;
+                                    }
+                                }
+
+                                frame.setContentPane(usersPage(title, users));
+                                frame.getContentPane().revalidate();
+                            }
+                        }
+                    }
+                }
+            });
+            actionsPanel.add(unfriendButton);
+
             JButton blockButton = new JButton("Block");
             blockButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
