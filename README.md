@@ -52,6 +52,8 @@ Container MainPage - A GUI bearing all the main menu options. It the username an
 
 Containter MessagingPanel - displays all information regarding the messaging between two users. Contains a field for all messages, a text box to send more, remove messages, and return to the main menu. <br>
 
+Container ProfilePage - Displays info for a user, such as their name, age, profile picture, and the option to change your friendship with them. <br>
+
 Run - Starts the GUI's once connected to the server, and displays the login page. <br>
 
 
