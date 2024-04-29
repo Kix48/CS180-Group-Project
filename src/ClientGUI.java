@@ -5,7 +5,18 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
-
+/**
+ * ClientGUI.java Class
+ *
+ * Purdue University CS18000 Spring 2024
+ *
+ * @author Giancarlo Guccione
+ * @author Steven Krauter
+ * @author Justin Lin
+ * @author Wael Harith
+ * @author Chase Gamble
+ * @version 1.0 April 2024
+ */
 public class ClientGUI extends JComponent implements Runnable {
     private final String APP_NAME = "Chirp";
     private final int INITIAL_WIDTH = 600;
@@ -319,22 +330,6 @@ public class ClientGUI extends JComponent implements Runnable {
         constraint.gridwidth = 2;
         constraint.fill = GridBagConstraints.BOTH;
         mainPanel.add(registerPageButton, constraint);
-
-
-        //TEMP CODE TO ADD MAIN MENU FUNCTIONALITY (from login page)
-        mainMenuButton = new JButton("Main menu");
-        mainMenuButton.setFont(mediumFont);
-        mainMenuButton.addActionListener(buttonActionListener);
-        constraint.anchor = GridBagConstraints.CENTER;
-        constraint.gridx = 0;
-        constraint.gridy = 4;
-        constraint.gridwidth = 2;
-        constraint.fill = GridBagConstraints.BOTH;
-        mainPanel.add(mainMenuButton, constraint);
-
-
-        //END TEMP CODE
-
 
         content.add(mainPanel, BorderLayout.CENTER);
 
