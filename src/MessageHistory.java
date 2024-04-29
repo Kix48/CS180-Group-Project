@@ -95,7 +95,8 @@ public class MessageHistory implements MessageHistoryInterface {
 
     //returns a formatted string representing the message history
     public String toString() { 
-        String output = String.format("User1: %s\nUser2: %s\n", this.user1, this.user2);
+        String output = String.format("User1: %s\nUser2: %s\nCount: %d\n",
+                this.user1, this.user2, this.allMessages.size());
 
         for (Message message : this.allMessages) {
             output += message.toString() + "\n";

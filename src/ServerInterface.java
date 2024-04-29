@@ -19,10 +19,14 @@ public interface ServerInterface {
     public void registerUser();
     public void authenticate();
     public void getMessageHistory();
+    public void searchMessageHistories();
     public void sendMessage();
     public void removeMessage();
     public void findUser();
+    public void searchUser();
     public void addFriend();
+    public void removeFriend();
     public void blockUser();
+    public void unblockUser();
     public void changeVisibility();
 }

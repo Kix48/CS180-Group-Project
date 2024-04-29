@@ -116,7 +116,7 @@ public class User implements UserInterface {
         if (age > 0) {
             this.age = age;
         } else {
-            System.out.println("Error: Age Must be at least 1");
+            //System.out.println("Error: Age Must be at least 1");
         }
     } //sets age
 
@@ -127,7 +127,7 @@ public class User implements UserInterface {
     public boolean addFriends(String name) { //adds a friend, checks if already added, removes from blocks if there
 
         if (friends.contains(name)) {
-            System.out.println("Friend already added!");
+            //System.out.println("Friend already added!");
             return false;
         } else if (blockedUsers.contains(name)) {
             removeBlockedUsers(name);
@@ -156,7 +156,7 @@ public class User implements UserInterface {
 
     public boolean addBlockedUsers(String name) { //adds blocked user, removes from friends if needed
         if (blockedUsers.contains(name)) {
-            System.out.println("Already added to blocked users!");
+            //System.out.println("Already added to blocked users!");
             return false;
         } else {
             if (friends.contains(name)) {
@@ -167,14 +167,14 @@ public class User implements UserInterface {
             }
         }
 
-        return false;
+        return true;
     }
 
     public boolean removeBlockedUsers(String name) { //removes user from blocked
         if (blockedUsers.contains(name)) {
             blockedUsers.remove(name);
         } else {
-            System.out.println("User not in blocked list!");
+            //System.out.println("User not in blocked list!");
             return false;
         }
 

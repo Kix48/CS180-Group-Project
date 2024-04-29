@@ -63,17 +63,24 @@ public class DatabaseHelper implements DatabaseHelperInterface {
 
                 String readUserPFPFile = bfr.readLine();
 
+                ArrayList<String> readFriends = new ArrayList<String>();
                 String readFriendsData = bfr.readLine();
-                readFriendsData = readFriendsData.replace("[", "");
-                readFriendsData = readFriendsData.replace("]", "");
-                String[] readFriendsArray = readFriendsData.split(", ");
-                ArrayList<String> readFriends = new ArrayList<String>(Arrays.asList(readFriendsArray));
+                if (!readFriendsData.equals("[]")) {
+                    readFriendsData = readFriendsData.replace("[", "");
+                    readFriendsData = readFriendsData.replace("]", "");
+                    String[] readFriendsArray = readFriendsData.split(", ");
+                    readFriends = new ArrayList<String>(Arrays.asList(readFriendsArray));
+                }
 
+                ArrayList<String> readBlockedUsers = new ArrayList<String>();
                 String readBlockedUsersData = bfr.readLine();
-                readBlockedUsersData = readBlockedUsersData.replace("[", "");
-                readBlockedUsersData = readBlockedUsersData.replace("]", "");
-                String[] readBlockedUsersArray = readBlockedUsersData.split(",");
-                ArrayList<String> readBlockedUsers = new ArrayList<String>(Arrays.asList(readBlockedUsersArray));
+                if (!readBlockedUsersData.equals("[]")) {
+                    readBlockedUsersData = readBlockedUsersData.replace("[", "");
+                    readBlockedUsersData = readBlockedUsersData.replace("]", "");
+                    String[] readBlockedUsersArray = readBlockedUsersData.split(",");
+                    readBlockedUsers = new ArrayList<String>(Arrays.asList(readBlockedUsersArray));
+                }
+
                 boolean friendsOnly = Boolean.parseBoolean(bfr.readLine());
 
                 bfr.close();
@@ -117,6 +124,33 @@ public class DatabaseHelper implements DatabaseHelperInterface {
         }
 
         return false;
+    }
+
+    public ArrayList<String> searchUser(String token) {
+        ArrayList<String> foundUsers = new ArrayList<String>();
+
+        File userDirectory = new File(USERS_DIRECTORY);
+        File[] allFiles = userDirectory.listFiles();
+
+        try {
+            boolean exactMatchExists = false;
+            for (File file : allFiles) {
+                String canonicalName = file.getCanonicalFile().getName();
+                canonicalName = canonicalName.substring(0, canonicalName.length() - 4);
+                if (!exactMatchExists && canonicalName.equals(token)) {
+                    exactMatchExists = true;
+                    foundUsers.add(0, token);
+                } else {
+                    if (canonicalName.contains(token)) {
+                        foundUsers.add(canonicalName);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            return null;
+        }
+
+        return foundUsers;
     }
 
     public BufferedImage readImage(String filename) {
@@ -174,17 +208,20 @@ public class DatabaseHelper implements DatabaseHelperInterface {
                 ArrayList<Message> messages = new ArrayList<Message>();
                 String readMessage = bfr.readLine();
                 while (readMessage != null) {
-                    // [DATE] SENDER-RECEIVER: MESSAGE
+                    // [DATE] SENDER: MESSAGE
                     int rightBracketPos = readMessage.indexOf("]");
                     SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yy hh:mm:ss a z");
                     Date readDate = dateFormatter.parse(readMessage.substring(1, rightBracketPos));
-                    int dashPos = readMessage.indexOf("-", rightBracketPos);
                     int colonPos = readMessage.indexOf(":", rightBracketPos);
-                    String readSender = readMessage.substring(rightBracketPos + 2, dashPos);
-                    String readReceiver = readMessage.substring(dashPos + 1, colonPos);
+                    String readSender = readMessage.substring(rightBracketPos + 2, colonPos);
                     String readMessageStr = readMessage.substring(colonPos + 2);
 
-                    messages.add(new Message(readSender, readReceiver, readMessageStr, readDate));
+                    String reciever = readUser1;
+                    if (readSender.equals(readUser1)) {
+                        reciever = readUser2;
+                    }
+
+                    messages.add(new Message(readSender, reciever, readMessageStr, readDate));
 
                     readMessage = bfr.readLine();
                 }
@@ -235,5 +272,29 @@ public class DatabaseHelper implements DatabaseHelperInterface {
         }
 
         return false;
+    }
+
+    public ArrayList<MessageHistory> searchMessageHistories(String token) {
+        ArrayList<MessageHistory> foundMessageHistories = new ArrayList<MessageHistory>();
+
+        File messageDirectory = new File(MESSAGES_DIRECTORY);
+        File[] allFiles = messageDirectory.listFiles();
+
+        try {
+            for (File file : allFiles) {
+                String canonicalName = file.getCanonicalFile().getName();
+                canonicalName = canonicalName.substring(0, canonicalName.length() - 4);
+                if (canonicalName.contains(token)) {
+                    int delimeter = canonicalName.indexOf('-');
+                    String username1 = canonicalName.substring(0, delimeter);
+                    String username2 = canonicalName.substring(delimeter + 1);
+                    foundMessageHistories.add(readMessageHistory(username1, username2));
+                }
+            }
+        } catch (Exception e) {
+            return null;
+        }
+
+        return foundMessageHistories;
     }
 }

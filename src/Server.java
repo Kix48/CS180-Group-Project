@@ -156,6 +156,16 @@ public class Server implements ServerInterface, Runnable {
                 return;
             }
 
+            for (String friend : userPerson1.getFriends()) {
+                if (friend.equals(friendUsername)) {
+                    // Send back an error
+                    this.writer.println("ERROR");
+                    this.writer.println("Friend is already added");
+                    this.writer.flush();
+                    return;
+                }
+            }
+
             //add friend if successful (all works within method within User.java)
             if (userPerson1.addFriends(userFriend.getUsername())) {
                 this.databaseHelper.writeUser(userPerson1);
@@ -178,10 +188,56 @@ public class Server implements ServerInterface, Runnable {
 
     }
 
-    public void blockUser() {
-
+    public void removeFriend() {
         try {
 
+            String username = this.reader.readLine();
+            String friendUsername = this.reader.readLine();
+
+            User userPerson1 = this.databaseHelper.readUser(username);
+            User userFriend = this.databaseHelper.readUser(friendUsername);
+
+            //checks for each User (existence/validity)
+            if (userPerson1 == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Invalid username for User removing another");
+                this.writer.flush();
+                return;
+            }
+
+            if (userFriend == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Invalid username friend being removed");
+                this.writer.flush();
+                return;
+            }
+
+            //remove friend if successful (all works within method within User.java)
+            if (userPerson1.removeFriends(userFriend.getUsername())) {
+                this.databaseHelper.writeUser(userPerson1);
+            }
+
+            //send completion if so
+            writer.println("SUCCESS");
+            writer.flush();
+
+        } catch (Exception e) {
+            // REMINDER: Remove console output
+            e.printStackTrace();
+
+            // Send back an error
+            this.writer.println("ERROR");
+            this.writer.println(e.getMessage());
+            this.writer.flush();
+            return;
+        }
+
+    }
+
+    public void blockUser() {
+        try {
             String username = this.reader.readLine();
             String userToBlock = this.reader.readLine();
 
@@ -205,8 +261,65 @@ public class Server implements ServerInterface, Runnable {
                 return;
             }
 
+            for (String blockUsername : userPerson1.getBlockedUsers()) {
+                if (blockUsername.equals(userToBlock)) {
+                    // Send back an error
+                    this.writer.println("ERROR");
+                    this.writer.println("User is already blocked");
+                    this.writer.flush();
+                    return;
+                }
+            }
+
             //block user if successful (all works within method within User.java)
             if (userPerson1.addBlockedUsers(userBlock.getUsername())) {
+                this.databaseHelper.writeUser(userPerson1);
+            }
+
+            //send completion if so
+            writer.println("SUCCESS");
+            writer.flush();
+
+        } catch (Exception e) {
+            // REMINDER: Remove console output
+            e.printStackTrace();
+
+            // Send back an error
+            this.writer.println("ERROR");
+            this.writer.println(e.getMessage());
+            this.writer.flush();
+            return;
+        }
+
+    }
+
+    public void unblockUser() {
+        try {
+            String username = this.reader.readLine();
+            String userToUnblock = this.reader.readLine();
+
+            User userPerson1 = this.databaseHelper.readUser(username);
+            User userUnblock = this.databaseHelper.readUser(userToUnblock);
+
+            //checks for each User (existence/validity)
+            if (userPerson1 == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Invalid username for User unblocking another");
+                this.writer.flush();
+                return;
+            }
+
+            if (userUnblock == null) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("Invalid username user being unblocked");
+                this.writer.flush();
+                return;
+            }
+
+            //unblock user if successful (all works within method within User.java)
+            if (userPerson1.removeBlockedUsers(userUnblock.getUsername())) {
                 this.databaseHelper.writeUser(userPerson1);
             }
 
@@ -279,6 +392,41 @@ public class Server implements ServerInterface, Runnable {
         }
     }
 
+    public void searchMessageHistories() {
+        try {
+            String usernameToken = reader.readLine();
+
+            ArrayList<MessageHistory> foundMessageHistories = databaseHelper.searchMessageHistories(usernameToken);
+
+            if (foundMessageHistories == null || foundMessageHistories.size() == 0) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("No message histories found");
+                this.writer.flush();
+                return;
+            }
+
+            writer.println("SUCCESS");
+            writer.println(foundMessageHistories.size());
+            for (MessageHistory messageHistory : foundMessageHistories) {
+                this.writer.println(messageHistory.getUser1());
+                this.writer.println(messageHistory.getUser2());
+                this.writer.println(messageHistory.getMessages().length);
+                for (String message : messageHistory.getMessages()) {
+                    this.writer.println(message);
+                }
+                this.writer.flush();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            // Send back an error
+            this.writer.println("ERROR");
+            this.writer.println(e.getMessage());
+            this.writer.flush();
+        }
+    }
+
     public void sendMessage() {
         try {
             String senderUsername = this.reader.readLine();
@@ -327,7 +475,7 @@ public class Server implements ServerInterface, Runnable {
                 if (!isFriend) {
                     // Send back an error
                     this.writer.println("ERROR");
-                    this.writer.println("Sender is not a friend");
+                    this.writer.println("User is only receiving messages from friends");
                     this.writer.flush();
                     return;
                 }
@@ -512,6 +660,45 @@ public class Server implements ServerInterface, Runnable {
         }
     }
 
+    public void searchUser() {
+        try {
+            String usernameToken = reader.readLine();
+
+            ArrayList<String> foundUsernames = databaseHelper.searchUser(usernameToken);
+
+            if (foundUsernames == null || foundUsernames.size() == 0) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("No users found");
+                this.writer.flush();
+                return;
+            }
+
+            // Send back user data
+            int maxResults = 10; // Cap results to a certain amount
+            writer.println("SUCCESS");
+            if (foundUsernames.size() > maxResults) {
+                writer.println(maxResults);
+                for (int i = 0; i < maxResults; i++) {
+                    writer.println(foundUsernames.get(i));
+                }
+            } else {
+                writer.println(foundUsernames.size());
+                for (String username : foundUsernames) {
+                    writer.println(username);
+                }
+            }
+            writer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            // Send back an error
+            this.writer.println("ERROR");
+            this.writer.println(e.getMessage());
+            this.writer.flush();
+        }
+    }
+
     public void changeVisibility() {
         try {
             String username = this.reader.readLine();
@@ -573,14 +760,26 @@ public class Server implements ServerInterface, Runnable {
                         case "FIND_USER":
                             this.findUser();
                             break;
+                        case "SEARCH_USER":
+                            this.searchUser();
+                            break;
                         case "ADD_FRIEND":
                             this.addFriend();
+                            break;
+                        case "REMOVE_FRIEND":
+                            this.removeFriend();
                             break;
                         case "BLOCK":
                             this.blockUser();
                             break;
+                        case "UNBLOCK":
+                            this.unblockUser();
+                            break;
                         case "MESSAGE_HISTORY":
                             this.getMessageHistory();
+                            break;
+                        case "SEARCH_MESSAGE_HISTORIES":
+                            this.searchMessageHistories();
                             break;
                         case "SEND_MESSAGE":
                             this.sendMessage();
