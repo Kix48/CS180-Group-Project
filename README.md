@@ -5,6 +5,54 @@ Student Submitted Video: Justin Lin <br>
 Student Submitted Report: Steven Krauter <br>
 Student Submitted Vocareum Workspace: Chase Gamble <br>
 
+How to run & compile project: <br>
+Open the file tab <br>
+Click Project Structure <br>
+Scroll down and click Libraries <br>
+Add a project library from Maven <br>
+Search for JUnit 4.10.jar and extended jar <br>
+Install both <br>
+Once Installed, go to RunLocalTest.java <br> for localtests
+REST NEEDS TO GO HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+<hr>
+ClientGUI.java class
+
+The ClientGui class handles everything related to the GUI, communicating with the Client and Server class. <br>
+
+The class contains... <br>
+
+ActionListener - Handles the majority of the buttons present in the GUI, and display whatever information or page that is needed. <br>
+
+ClientGUI - Verifies connection to the server, and sets each font (small, medium, large) <br>
+
+showPopup - Helps with any JOptionPanes <br>
+
+login - A boolean to verify that the login info presented is valid <br>
+
+register - A boolean to verify if the new user being created is valid, and displays any errors if presented <br>
+
+setFriendsOnly - A boolean to change the users ability to recieve messages from anyone, or just friends. It will also change the button to the current condition <br>
+
+searchUser - A boolean to search for any users that contain the characters inputted by the user. If any are present, it will set the pane to the search menu. If not, it will display an error, and stay on the page. <br>
+
+searchMessageHistories - A boolean to see if two users have any previous message history <br>
+
+Container ListPage - A GUI to display messages of users that satisfy the users condition of message recieves, and blocked users. <br>
+
+Container LoginPage - A GUI that displays the option to login or register, with to fields present to allow the input of a username and password. <br>
+
+Container registrationPage - A GUI that will allow users to create a new account, through the input of a username, password, age, and profile picture. If any errors are presented within creation, the user will learn what they are, and be allowed to fix them. <br>
+
+Container MainPage - A GUI bearing all the main menu options. It the username and profile picture of the user logged in, and buttons for friendsOnly, See Conversations, See Friends, See Blocks, Logout, and a search field for searching other users. <br>
+
+Containter MessagingPanel - <br>
+
+Run - Starts the GUI's once connected to the server, and displays the login page. <br>
+
+
+
+
 
 <hr>
 Phase 2 ReadMe
