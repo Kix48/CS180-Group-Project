@@ -30,7 +30,7 @@ public class ClientGUI extends JComponent implements Runnable {
     private Font mediumFont;
     private Font smallFont;
     private JTextField usernameField;
-    private JTextField passwordField;
+    private JPasswordField passwordField;
     private JTextField ageField;
     private JTextField searchTextField;
     private JTextField messageIndexField;
@@ -397,11 +397,26 @@ public class ClientGUI extends JComponent implements Runnable {
         constraint.gridy = 1;
         mainPanel.add(passwordLabel, constraint);
 
-        passwordField = new JTextField(12);
+        passwordField = new JPasswordField(12);
         constraint.anchor = GridBagConstraints.WEST;
         constraint.gridx = 1;
         constraint.gridy = 1;
         mainPanel.add(passwordField, constraint);
+
+        JCheckBox showPasswordCheckbox = new JCheckBox("Show Password");
+        showPasswordCheckbox.setFont(new Font("Arial", Font.PLAIN, 14));
+        showPasswordCheckbox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JCheckBox cb = (JCheckBox) e.getSource();
+                passwordField.setEchoChar(cb.isSelected() ? '\u0000' : '•');
+            }
+        });
+        constraint.anchor = GridBagConstraints.WEST;
+        constraint.gridx = 2;
+        constraint.gridy = 1;
+        constraint.gridwidth = 1;
+        mainPanel.add(showPasswordCheckbox, constraint);
 
         loginButton = new JButton("Login");
         loginButton.setFont(mediumFont);
@@ -788,11 +803,25 @@ public class ClientGUI extends JComponent implements Runnable {
         constraint.gridy = 1;
         mainPanel.add(passwordLabel, constraint);
 
-        passwordField = new JTextField(12);
+        passwordField = new JPasswordField(12);
         constraint.anchor = GridBagConstraints.WEST;
         constraint.gridx = 1;
         constraint.gridy = 1;
         mainPanel.add(passwordField, constraint);
+
+        JCheckBox showPasswordCheckbox = new JCheckBox("Show Password");
+        showPasswordCheckbox.setFont(new Font("Arial", Font.PLAIN, 14));
+        showPasswordCheckbox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JCheckBox cb = (JCheckBox) e.getSource();
+                passwordField.setEchoChar(cb.isSelected() ? '\u0000' : '•');
+            }
+        });
+        constraint.anchor = GridBagConstraints.WEST;
+        constraint.gridx = 2;
+        constraint.gridy = 1;
+        mainPanel.add(showPasswordCheckbox, constraint);
 
         JLabel fileLabel = new JLabel("Profile Picture:");
         fileLabel.setFont(mediumFont);
