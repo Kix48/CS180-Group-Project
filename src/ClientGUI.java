@@ -80,7 +80,8 @@ public class ClientGUI extends JComponent implements Runnable {
             } else if (e.getSource() == fileSelectButton) {
                 selectedFile = null;
                 JFileChooser fileChooser = new JFileChooser();
-                FileNameExtensionFilter filter = new FileNameExtensionFilter("PNG Images", "png");
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                        "PNG Images", "png");
 
                 fileChooser.setFileFilter(filter);
 
@@ -108,9 +109,9 @@ public class ClientGUI extends JComponent implements Runnable {
             } else if (e.getSource() == returnButton) {
                 frame.setContentPane(mainPage());
             } else if (e.getSource() == logoutButton) {
-
+                // Confirms logout choice
                 if (JOptionPane.showConfirmDialog(frame, "Are you sure you want to log out?", "Confirm",
-                                                  JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {  // Confirms logout choice
+                                                  JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     clientUser = null; // Logs user out
                     frame.setContentPane(loginPage());
                     frame.getContentPane().revalidate();
