@@ -525,19 +525,21 @@ public class Client implements ClientInterface {
 
                 ArrayList<Message> readMessages = new ArrayList<Message>();
                 for (int i = 0; i < readMessagesLength; i++) {
-                    // [DATE] SENDER-RECEIVER: MESSAGE
-
+                    // [DATE] SENDER: MESSAGE
                     String readMessage = reader.readLine();
                     int rightBracketPos = readMessage.indexOf("]");
                     SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yy hh:mm:ss a z");
                     Date readDate = dateFormatter.parse(readMessage.substring(1, rightBracketPos));
-                    int dashPos = readMessage.indexOf("-", rightBracketPos);
                     int colonPos = readMessage.indexOf(":", rightBracketPos);
-                    String readSender = readMessage.substring(rightBracketPos + 2, dashPos);
-                    String readReceiver = readMessage.substring(dashPos + 1, colonPos);
+                    String readSender = readMessage.substring(rightBracketPos + 2, colonPos);
                     String readMessageStr = readMessage.substring(colonPos + 2);
 
-                    readMessages.add(new Message(readSender, readReceiver, readMessageStr, readDate));
+                    String reciever = readUser1;
+                    if (readSender.equals(readUser1)) {
+                        reciever = readUser2;
+                    }
+
+                    readMessages.add(new Message(readSender, reciever, readMessageStr, readDate));
                 }
 
                 return new MessageHistory(readUser1, readUser2, readMessages);
@@ -590,19 +592,21 @@ public class Client implements ClientInterface {
 
                     ArrayList<Message> readMessages = new ArrayList<Message>();
                     for (int j = 0; j < readMessagesLength; j++) {
-                        // [DATE] SENDER-RECEIVER: MESSAGE
-
+                        // [DATE] SENDER: MESSAGE
                         String readMessage = reader.readLine();
                         int rightBracketPos = readMessage.indexOf("]");
                         SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yy hh:mm:ss a z");
                         Date readDate = dateFormatter.parse(readMessage.substring(1, rightBracketPos));
-                        int dashPos = readMessage.indexOf("-", rightBracketPos);
                         int colonPos = readMessage.indexOf(":", rightBracketPos);
-                        String readSender = readMessage.substring(rightBracketPos + 2, dashPos);
-                        String readReceiver = readMessage.substring(dashPos + 1, colonPos);
+                        String readSender = readMessage.substring(rightBracketPos + 2, colonPos);
                         String readMessageStr = readMessage.substring(colonPos + 2);
 
-                        readMessages.add(new Message(readSender, readReceiver, readMessageStr, readDate));
+                        String reciever = readUser1;
+                        if (readSender.equals(readUser1)) {
+                            reciever = readUser2;
+                        }
+
+                        readMessages.add(new Message(readSender, reciever, readMessageStr, readDate));
                     }
 
                     messageHistoryList.add(new MessageHistory(readUser1, readUser2, readMessages));
@@ -623,7 +627,7 @@ public class Client implements ClientInterface {
         //return null;
     }
 
-    public boolean sendMessage(String receiver, String message) {
+    public boolean sendMessage(String receiver, String message) throws Exception {
         //
         // String sanitization
         // REMINDER: Add specific error messages (Phase 3)
@@ -632,7 +636,8 @@ public class Client implements ClientInterface {
         // Check receiver username (Not empty, size check, no newline or tab)
         if (receiver == null || receiver.equals("") || (receiver.length() > 16)
                 || receiver.contains("\n") || receiver.contains("\t")) {
-            return false;
+            throw new Exception("Invalid receiver.");
+            //return false;
         }
 
         // Remove extra whitespaces
@@ -640,7 +645,8 @@ public class Client implements ClientInterface {
 
         // Message can only be 256 characters
         if (message.length() > 256) {
-            return false;
+            throw new Exception("Message must be less than 256 characters.");
+            //return false;
         }
 
         try {
@@ -653,18 +659,25 @@ public class Client implements ClientInterface {
             writer.flush();
 
             String requestResult = reader.readLine();
-            if (!(requestResult.equals("SUCCESS"))) {
+            if (!requestResult.equals("SUCCESS")) {
                 String resultMessage = reader.readLine();
                 //System.out.printf("%s: %s\n", requestResult, resultMessage);
-                return false;
+                throw new Exception(String.format("%s: %s.", requestResult, resultMessage));
             } else {
+                //System.out.println("Message sent successfully changed!");
                 return true;
             }
-        } catch (IOException e) {
-            // REMINDER: Remove console output
-            e.printStackTrace();
-            return false;
+
+        } catch (Exception e) {
+            if (e.getMessage().contains("ERROR:")) {
+                throw new Exception(e.getMessage().substring(e.getMessage().indexOf(':') + 2));
+            } else {
+                throw new Exception("Exception while sending messaging.");
+            }
+            //return false;
         }
+
+        //return false;
     }
 
     public boolean removeMessage(String receiver, int messageIdx) {

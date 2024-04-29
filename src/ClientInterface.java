@@ -26,7 +26,7 @@ public interface ClientInterface {
     public boolean unblockUser(String usernameToUnblock);
     public MessageHistory getMessageHistory(String username);
     public ArrayList<MessageHistory> searchMessageHistories(String token) throws Exception;
-    public boolean sendMessage(String receiver, String message);
+    public boolean sendMessage(String receiver, String message) throws Exception;
     public boolean removeMessage(String receiver, int messageIdx);
     public boolean setFriendsOnly(boolean friendsOnly) throws Exception;
 }

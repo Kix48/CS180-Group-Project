@@ -475,7 +475,7 @@ public class Server implements ServerInterface, Runnable {
                 if (!isFriend) {
                     // Send back an error
                     this.writer.println("ERROR");
-                    this.writer.println("Sender is not a friend");
+                    this.writer.println("User is only receiving messages from friends");
                     this.writer.flush();
                     return;
                 }

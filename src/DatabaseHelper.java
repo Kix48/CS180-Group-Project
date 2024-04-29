@@ -208,17 +208,20 @@ public class DatabaseHelper implements DatabaseHelperInterface {
                 ArrayList<Message> messages = new ArrayList<Message>();
                 String readMessage = bfr.readLine();
                 while (readMessage != null) {
-                    // [DATE] SENDER-RECEIVER: MESSAGE
+                    // [DATE] SENDER: MESSAGE
                     int rightBracketPos = readMessage.indexOf("]");
                     SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yy hh:mm:ss a z");
                     Date readDate = dateFormatter.parse(readMessage.substring(1, rightBracketPos));
-                    int dashPos = readMessage.indexOf("-", rightBracketPos);
                     int colonPos = readMessage.indexOf(":", rightBracketPos);
-                    String readSender = readMessage.substring(rightBracketPos + 2, dashPos);
-                    String readReceiver = readMessage.substring(dashPos + 1, colonPos);
+                    String readSender = readMessage.substring(rightBracketPos + 2, colonPos);
                     String readMessageStr = readMessage.substring(colonPos + 2);
 
-                    messages.add(new Message(readSender, readReceiver, readMessageStr, readDate));
+                    String reciever = readUser1;
+                    if (readSender.equals(readUser1)) {
+                        reciever = readUser2;
+                    }
+
+                    messages.add(new Message(readSender, reciever, readMessageStr, readDate));
 
                     readMessage = bfr.readLine();
                 }

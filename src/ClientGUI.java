@@ -19,8 +19,9 @@ import java.util.ArrayList;
  */
 public class ClientGUI extends JComponent implements Runnable {
     private final String APP_NAME = "Chirp";
-    private final int INITIAL_WIDTH = 600;
-    private final int INITIAL_HEIGHT = 400;
+    private final int INITIAL_WIDTH = 800;
+    private final int INITIAL_HEIGHT = 600;
+    private final long REFRESH_TIME_MS = 3000;
     private Client client;
     private boolean isConnected;
     private User clientUser;
@@ -32,30 +33,39 @@ public class ClientGUI extends JComponent implements Runnable {
     private JTextField passwordField;
     private JTextField ageField;
     private JTextField searchTextField;
+    private JTextArea sendMessageText;
     private JButton loginButton;
     private JButton registerPageButton;
     private JButton registerButton;
     private JButton friendsButton;
     private JButton returnButton;
-    private JButton removeButton;
-    private JButton blockButton;
     private JButton fileSelectButton;
     private File selectedFile;
-    private JButton mainMenuButton;
     private JButton friendsOnlyButton;
     private JButton searchGo;
     private JButton seeConvoButton;
     private JButton blockListButton;
     private JButton logoutButton;
-    private JButton sendButton;
     private JButton sendMessageButton;
+    private String currentMessageReceiver;
+    private Thread updaterThread;
+    private ArrayList<MessageHistory> currentConversations;
+    private boolean insideConversation = false;
 
     ActionListener buttonActionListener = new ActionListener() {
         @Override
-
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == loginButton) {
                 if (login()) {
+                    // Create and start thread which keeps our client up-to-date
+                    updaterThread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            conversationUpdater();
+                        }
+                    });
+
+                    updaterThread.start();
                     frame.setContentPane(mainPage());
                 }
             } else if (e.getSource() == registerPageButton) {
@@ -93,10 +103,6 @@ public class ClientGUI extends JComponent implements Runnable {
                 }
 
                 frame.setContentPane(listPage("FRIENDS LIST", friendsList, null));
-            } else if (e.getSource() == mainMenuButton) {
-                //temp user for getting name
-                clientUser = new User("Test User", "Password123!", 21, null);
-                frame.setContentPane(mainPage());
             } else if (e.getSource() == returnButton) {
                 frame.setContentPane(mainPage());
             } else if (e.getSource() == logoutButton) {
@@ -130,12 +136,55 @@ public class ClientGUI extends JComponent implements Runnable {
                 }
 
                 frame.setContentPane(listPage("BLOCK LIST", blockList, null));
+            } else if (e.getSource() == sendMessageButton) {
+                try {
+                    if (client.sendMessage(currentMessageReceiver, sendMessageText.getText())) {
+                        MessageHistory history = client.getMessageHistory(currentMessageReceiver);
+
+                        frame.setContentPane(messagingPage(history, currentMessageReceiver));
+                        frame.getContentPane().revalidate();
+                    }
+                } catch (Exception v) {
+                    showPopup(v.getMessage(), JOptionPane.ERROR_MESSAGE);
+                }
             }
 
             // Needs to be called to change container content at runtime
             frame.getContentPane().revalidate();
         }
     };
+
+    // Needed for text wrapping of messages
+    // https://stackoverflow.com/questions/7306295/swing-jlist-with-multiline-text-and-dynamic-height?rq=1/
+    public class CustomCellRenderer implements ListCellRenderer {
+
+        private JPanel panel;
+        private JTextArea textArea;
+
+        public CustomCellRenderer() {
+            panel = new JPanel();
+            panel.setLayout(new BorderLayout());
+
+            // text
+            textArea = new JTextArea();
+            textArea.setLineWrap(true);
+            textArea.setWrapStyleWord(true);
+            panel.add(textArea, BorderLayout.CENTER);
+        }
+
+        @Override
+        public Component getListCellRendererComponent(final JList list,
+                                                      final Object value, final int index, final boolean isSelected,
+                                                      final boolean hasFocus) {
+
+            textArea.setText((String) value);
+            int width = list.getWidth();
+            if (width > 0)
+                textArea.setSize(width, Short.MAX_VALUE);
+            return panel;
+
+        }
+    }
 
     public ClientGUI() {
         client = new Client();
@@ -272,7 +321,36 @@ public class ClientGUI extends JComponent implements Runnable {
         return false;
     }
 
+    private synchronized void conversationUpdater() {
+        while (true) {
+            try {
+                // Get updated conversations
+                currentConversations = client.searchMessageHistories(clientUser.getUsername());
+                if (insideConversation && sendMessageText != null && sendMessageText.getText().equals("")) {
+                    MessageHistory currentMessageHistory = null;
+                    for (MessageHistory history : currentConversations) {
+                        if (history.getUser1().equals(currentMessageReceiver)
+                                || history.getUser2().equals(currentMessageReceiver)) {
+                            currentMessageHistory = history;
+                            break;
+                        }
+                    }
+
+                    frame.setContentPane(messagingPage(currentMessageHistory, currentMessageReceiver));
+                    frame.getContentPane().validate();
+                }
+
+                wait(REFRESH_TIME_MS);
+            } catch (Exception e) {
+                // Most likely going to be an interrupt exception
+                e.printStackTrace();
+            }
+        }
+    }
+
     Container loginPage() {
+        insideConversation = false;
+
         Container content = new Container();
         content.setLayout(new BorderLayout());
 
@@ -337,6 +415,8 @@ public class ClientGUI extends JComponent implements Runnable {
     }
 
     Container listPage(String title, ArrayList<User> users, ArrayList<MessageHistory> messageHistories) {
+        insideConversation = false;
+
         if (messageHistories == null) {
             boolean isFriendsList = title.contains("FRIEND");
             boolean isBlockList = title.contains("BLOCK");
@@ -387,7 +467,7 @@ public class ClientGUI extends JComponent implements Runnable {
             JList<String> usersList = new JList<>(listModel);
             JScrollPane scroll = new JScrollPane(usersList);
 
-            scroll.setPreferredSize(new Dimension(300, scroll.getPreferredSize().height));
+            scroll.setPreferredSize(new Dimension(400, scroll.getPreferredSize().height));
             userListPanel.add(scroll, BorderLayout.CENTER);
             content.add(userListPanel, BorderLayout.WEST);
 
@@ -428,7 +508,11 @@ public class ClientGUI extends JComponent implements Runnable {
                         String selectedUser = usersList.getSelectedValue();
                         if (selectedUser != null) {
                             String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
-                            // TODO
+                            MessageHistory history = client.getMessageHistory(selectedUsername);
+                            currentMessageReceiver = selectedUsername;
+
+                            frame.setContentPane(messagingPage(history, selectedUsername));
+                            frame.getContentPane().revalidate();
                         }
                     }
                 });
@@ -550,7 +634,7 @@ public class ClientGUI extends JComponent implements Runnable {
             JList<String> messageHistoryList = new JList<>(listModel);
             JScrollPane scroll = new JScrollPane(messageHistoryList);
 
-            scroll.setPreferredSize(new Dimension(300, scroll.getPreferredSize().height));
+            scroll.setPreferredSize(new Dimension(400, scroll.getPreferredSize().height));
             messageHistoryListPanel.add(scroll, BorderLayout.CENTER);
             content.add(messageHistoryListPanel, BorderLayout.WEST);
 
@@ -564,7 +648,11 @@ public class ClientGUI extends JComponent implements Runnable {
                     String selectedUser = messageHistoryList.getSelectedValue();
                     if (selectedUser != null) {
                         String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
-                        // TODO
+                        MessageHistory history = client.getMessageHistory(selectedUsername);
+                        currentMessageReceiver = selectedUsername;
+
+                        frame.setContentPane(messagingPage(history, selectedUsername));
+                        frame.getContentPane().revalidate();
                     }
                 }
             });
@@ -638,6 +726,8 @@ public class ClientGUI extends JComponent implements Runnable {
     }
 
     Container registrationPage() {
+        insideConversation = false;
+
         Container content = new Container();
         content.setLayout(new BorderLayout());
 
@@ -720,6 +810,8 @@ public class ClientGUI extends JComponent implements Runnable {
     }
 
     Container mainPage() {
+        insideConversation = false;
+
         Container content = new Container();
         content.setLayout(new BorderLayout());
 
@@ -843,171 +935,93 @@ public class ClientGUI extends JComponent implements Runnable {
         return content;
     }
 
-    Container MessagingPage() {
+    Container messagingPage(MessageHistory history, String otherUsername) {
+        insideConversation = true;
 
         Container content = new Container();
         content.setLayout(new BorderLayout());
 
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridBagLayout());
-        GridBagConstraints constraint = new GridBagConstraints();
-
-        //title panel top
-        JLabel titleLabel = new JLabel("Messaging");
+        // Title Panel
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        JLabel titleLabel = new JLabel("MESSAGING: " + otherUsername);
         titleLabel.setFont(largeFont);
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
-
-        //titlePanel
-        JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.add(titleLabel, BorderLayout.CENTER);
 
-        //back button
+        // Back Button
         returnButton = new JButton("Back");
-        returnButton.setFont(smallFont);
+        returnButton.setFont(mediumFont);
         returnButton.addActionListener(buttonActionListener);
         titlePanel.add(returnButton, BorderLayout.EAST);
 
-        //horizontal line + Adding
-        JSeparator sepHorizontal = new JSeparator();
-        sepHorizontal.setOrientation(SwingConstants.HORIZONTAL);
-        titlePanel.add(sepHorizontal, BorderLayout.SOUTH);
+        // Horizontal Separator
+        JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+        titlePanel.add(separator, BorderLayout.SOUTH);
 
-        //adding topPanel
         content.add(titlePanel, BorderLayout.NORTH);
 
+        // Message List Panel
+        JPanel messageListPanel = new JPanel(new BorderLayout());
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        if (history != null) {
+            for (String message : history.getMessages()) {
+                String[] splitMessage = message.split(": ");
+                String formattedMessage = String.format("%s:\n%s", splitMessage[0], splitMessage[1]);
+                listModel.addElement(formattedMessage);
+            }
+        }
 
+        final JList<String> messagesList = new JList<>(listModel) {
+            @Override
+            public boolean getScrollableTracksViewportWidth() {
+                return true;
+            }
+        };
+        messagesList.setCellRenderer(new CustomCellRenderer());
+        ComponentListener messageListListener = new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                messagesList.setFixedCellHeight(10);
+                messagesList.setFixedCellHeight(-1);
+            }
 
+        };
 
-        //BLOCK OF TESTS ------------ MESSAGING  START
+        messagesList.addComponentListener(messageListListener);
+        JScrollPane scroll = new JScrollPane(messagesList);
 
+        scroll.setPreferredSize(new Dimension(400, scroll.getPreferredSize().height));
+        messageListPanel.add(scroll, BorderLayout.CENTER);
+        content.add(messageListPanel, BorderLayout.WEST);
 
-        JPanel scrollPanelTest = new JPanel();
-        scrollPanelTest.setLayout(new BoxLayout(scrollPanelTest, BoxLayout.Y_AXIS));
-
-
-        //individual jpanel test
-        JPanel layoutPanel = new JPanel();
-        layoutPanel.setLayout(new BoxLayout(layoutPanel, BoxLayout.X_AXIS));
-
-        //name test
-        JLabel nameTest = new JLabel("Name Here!");
-        nameTest.setFont(mediumFont);
-        layoutPanel.add(nameTest, BorderLayout.WEST);
-
-
-        //message test
-        JTextArea messageTEST = new JTextArea("This is where the message would go, im making this as long as possible hoping that the message would do something that dosent make the entire thing cut off");
-        messageTEST.setFont(mediumFont);
-        messageTEST.setLineWrap(true);
-        messageTEST.setWrapStyleWord(true);
-        layoutPanel.add(messageTEST, BorderLayout.EAST);
-
-        scrollPanelTest.add(layoutPanel);
-
-        //////////////
-
-
-        JSeparator lineTest = new JSeparator();
-        lineTest.setOrientation(SwingConstants.HORIZONTAL);
-        scrollPanelTest.add(lineTest, BorderLayout.SOUTH);
-
-        ///////////////
-
-
-        ////////////////////////////
-
-        //individual jpanel test
-        JPanel layoutPanel2 = new JPanel();
-        layoutPanel2.setLayout(new BoxLayout(layoutPanel2, BoxLayout.X_AXIS));
-
-        //name test
-        JLabel nameTest2 = new JLabel("Gavin");
-        nameTest2.setFont(mediumFont);
-        layoutPanel2.add(nameTest2, BorderLayout.WEST);
-
-
-        //message test
-        JTextArea messageTEST2 = new JTextArea("GAVIN TEST that dosent make the entire thing cut off");
-        messageTEST2.setFont(mediumFont);
-        messageTEST2.setLineWrap(true);
-        messageTEST2.setWrapStyleWord(true);
-        layoutPanel2.add(messageTEST2, BorderLayout.EAST);
-
-        scrollPanelTest.add(layoutPanel2);
-
-
-        //////////////////////
-
-
-        JSeparator lineTest2 = new JSeparator();
-        lineTest2.setOrientation(SwingConstants.HORIZONTAL);
-        scrollPanelTest.add(lineTest2, BorderLayout.SOUTH);
-
-        //////////////////////
-
-
-        //individual jpanel test
-        JPanel layoutPanel3 = new JPanel();
-        layoutPanel3.setLayout(new BoxLayout(layoutPanel3, BoxLayout.X_AXIS));
-
-        //name test
-        JLabel nameTest3 = new JLabel("Colten");
-        nameTest3.setFont(mediumFont);
-        layoutPanel3.add(nameTest3, BorderLayout.WEST);
-
-
-        //message test
-        JTextArea messageTEST3 = new JTextArea("I hate CS!");
-        messageTEST3.setFont(mediumFont);
-        messageTEST3.setLineWrap(true);
-        messageTEST3.setWrapStyleWord(true);
-        layoutPanel3.add(messageTEST3, BorderLayout.EAST);
-
-        scrollPanelTest.add(layoutPanel3);
-
-
-        content.add(new JScrollPane(scrollPanelTest), BorderLayout.CENTER);
-
-
-        //BLOCK OF TESTS ------------ END
-
-
-
-        //sendMessagePanel
-        JPanel sendMessagePanel = new JPanel();
-        sendMessagePanel.setLayout(new GridBagLayout());
-
-
-        //adding sendMessageLabel
-        JLabel sendMessageLabel = new JLabel("Send Message:");
-        sendMessageLabel.setFont(mediumFont);
-        constraint.anchor = GridBagConstraints.WEST;
-        constraint.gridx = 0;
-        constraint.gridy = 0;
-        sendMessagePanel.add(sendMessageLabel, constraint);
+        // Actions Panel
+        JPanel actionsPanel = new JPanel();
+        actionsPanel.setLayout(new GridBagLayout());
+        GridBagConstraints constraint = new GridBagConstraints();
 
         //adding sendMessage text Field
-        JTextField sendMessageTextField = new JTextField(12);
+        sendMessageText = new JTextArea(14, 20);
+        sendMessageText.setLineWrap(true);
+        sendMessageText.setWrapStyleWord(true);
         constraint.anchor = GridBagConstraints.CENTER;
-        constraint.gridx = 1;
+        constraint.gridx = 0;
         constraint.gridy = 0;
-        sendMessagePanel.add(sendMessageTextField, constraint);
+        actionsPanel.add(sendMessageText, constraint);
 
         //adding send Message Button
         sendMessageButton = new JButton("Send");
         sendMessageButton.setFont(smallFont);
         sendMessageButton.addActionListener(buttonActionListener);
-        constraint.anchor = GridBagConstraints.EAST;
-        constraint.gridx = 2;
-        constraint.gridy = 0;
-        sendMessagePanel.add(sendMessageButton, constraint);
+        constraint.anchor = GridBagConstraints.CENTER;
+        constraint.gridx = 0;
+        constraint.gridy = 1;
+        constraint.gridwidth = 2;
+        constraint.fill = GridBagConstraints.BOTH;
+        actionsPanel.add(sendMessageButton, constraint);
 
-        content.add(sendMessagePanel, BorderLayout.SOUTH);
-
-
+        content.add(actionsPanel, BorderLayout.CENTER);
         return content;
     }
-
 
     public void run() {
         if (isConnected) {
