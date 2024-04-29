@@ -270,4 +270,28 @@ public class DatabaseHelper implements DatabaseHelperInterface {
 
         return false;
     }
+
+    public ArrayList<MessageHistory> searchMessageHistories(String token) {
+        ArrayList<MessageHistory> foundMessageHistories = new ArrayList<MessageHistory>();
+
+        File messageDirectory = new File(MESSAGES_DIRECTORY);
+        File[] allFiles = messageDirectory.listFiles();
+
+        try {
+            for (File file : allFiles) {
+                String canonicalName = file.getCanonicalFile().getName();
+                canonicalName = canonicalName.substring(0, canonicalName.length() - 4);
+                if (canonicalName.contains(token)) {
+                    int delimeter = canonicalName.indexOf('-');
+                    String username1 = canonicalName.substring(0, delimeter);
+                    String username2 = canonicalName.substring(delimeter + 1);
+                    foundMessageHistories.add(readMessageHistory(username1, username2));
+                }
+            }
+        } catch (Exception e) {
+            return null;
+        }
+
+        return foundMessageHistories;
+    }
 }

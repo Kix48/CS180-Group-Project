@@ -81,7 +81,7 @@ public class ClientGUI extends JComponent implements Runnable {
                     showPopup("Failed to retrieve all friends", JOptionPane.ERROR_MESSAGE);
                 }
 
-                frame.setContentPane(usersPage("FRIENDS LIST", friendsList));
+                frame.setContentPane(listPage("FRIENDS LIST", friendsList, null));
             } else if (e.getSource() == mainMenuButton) {
                 //temp user for getting name
                 clientUser = new User("Test User", "Password123!", 21, null);
@@ -101,8 +101,7 @@ public class ClientGUI extends JComponent implements Runnable {
                     clientUser.setFriendsOnly(!clientUser.isFriendsOnly());
                 }
             } else if (e.getSource() == seeConvoButton) {
-                //TEMP CONVO AREA
-                frame.setContentPane(MessagingPage());
+                searchMessageHistories();
             } else if (e.getSource() == searchGo) {
                 searchUser();
             } else if (e.getSource() == blockListButton) {
@@ -119,7 +118,7 @@ public class ClientGUI extends JComponent implements Runnable {
                     showPopup("Failed to retrieve all blocks", JOptionPane.ERROR_MESSAGE);
                 }
 
-                frame.setContentPane(usersPage("BLOCK LIST", blockList));
+                frame.setContentPane(listPage("BLOCK LIST", blockList, null));
             }
 
             // Needs to be called to change container content at runtime
@@ -234,7 +233,7 @@ public class ClientGUI extends JComponent implements Runnable {
                         foundUsers.add(foundUser);
                     }
                 }
-                frame.setContentPane(usersPage("SEARCH RESULTS", foundUsers));
+                frame.setContentPane(listPage("SEARCH RESULTS", foundUsers, null));
                 return true;
             }
         } catch (Exception e) {
@@ -243,6 +242,22 @@ public class ClientGUI extends JComponent implements Runnable {
         }
 
         showPopup("No users found with search.", JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
+
+    private boolean searchMessageHistories() {
+        try {
+            ArrayList<MessageHistory> foundMessageHistories = client.searchMessageHistories(clientUser.getUsername());
+            if (foundMessageHistories.size() > 0) {
+                frame.setContentPane(listPage("CONVERSATIONS", null, foundMessageHistories));
+                return true;
+            }
+        } catch (Exception e) {
+            showPopup(e.getMessage(), JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        showPopup("No conversations exist.", JOptionPane.ERROR_MESSAGE);
         return false;
     }
 
@@ -326,133 +341,160 @@ public class ClientGUI extends JComponent implements Runnable {
         return content;
     }
 
-    Container usersPage(String title, ArrayList<User> users) {
-        boolean isFriendsList = title.contains("FRIEND");
-        boolean isBlockList = title.contains("BLOCK");
+    Container listPage(String title, ArrayList<User> users, ArrayList<MessageHistory> messageHistories) {
+        if (messageHistories == null) {
+            boolean isFriendsList = title.contains("FRIEND");
+            boolean isBlockList = title.contains("BLOCK");
 
-        if (!isBlockList) {
-            for (int i = 0; i < users.size(); i++) {
-                for (int j = 0; j < clientUser.getBlockedUsers().size(); j++) {
-                    if (users.get(i).getUsername().equals(clientUser.getBlockedUsers().get(j))) {
-                        users.remove(i);
-                        break;
+            if (!isBlockList) {
+                for (int i = 0; i < users.size(); i++) {
+                    for (int j = 0; j < clientUser.getBlockedUsers().size(); j++) {
+                        if (users.get(i).getUsername().equals(clientUser.getBlockedUsers().get(j))) {
+                            users.remove(i);
+                            break;
+                        }
                     }
                 }
             }
-        }
 
-        Container content = new Container();
-        content.setLayout(new BorderLayout());
+            Container content = new Container();
+            content.setLayout(new BorderLayout());
 
-        // Title Panel
-        JPanel titlePanel = new JPanel(new BorderLayout());
-        JLabel titleLabel = new JLabel(title);
-        titleLabel.setFont(largeFont);
-        titleLabel.setHorizontalAlignment(JLabel.CENTER);
-        titlePanel.add(titleLabel, BorderLayout.CENTER);
+            // Title Panel
+            JPanel titlePanel = new JPanel(new BorderLayout());
+            JLabel titleLabel = new JLabel(title);
+            titleLabel.setFont(largeFont);
+            titleLabel.setHorizontalAlignment(JLabel.CENTER);
+            titlePanel.add(titleLabel, BorderLayout.CENTER);
 
-        // Back Button
-        returnButton = new JButton("Back");
-        returnButton.setFont(mediumFont);
-        returnButton.addActionListener(buttonActionListener);
-        titlePanel.add(returnButton, BorderLayout.EAST);
+            // Back Button
+            returnButton = new JButton("Back");
+            returnButton.setFont(mediumFont);
+            returnButton.addActionListener(buttonActionListener);
+            titlePanel.add(returnButton, BorderLayout.EAST);
 
-        // Horizontal Separator
-        JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
-        titlePanel.add(separator, BorderLayout.SOUTH);
+            // Horizontal Separator
+            JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+            titlePanel.add(separator, BorderLayout.SOUTH);
 
-        content.add(titlePanel, BorderLayout.NORTH);
+            content.add(titlePanel, BorderLayout.NORTH);
 
-        // Friends List Panel
-        JPanel userListPanel = new JPanel(new BorderLayout());
-        DefaultListModel<String> listModel = new DefaultListModel<>();
-        for (User user : users) {
-            if (user.getAge() == 1) {
-                listModel.addElement(String.format("%s (%d year old)", user.getUsername(), user.getAge()));
-            } else {
-                listModel.addElement(String.format("%s (%d years old)", user.getUsername(), user.getAge()));
+            // Friends List Panel
+            JPanel userListPanel = new JPanel(new BorderLayout());
+            DefaultListModel<String> listModel = new DefaultListModel<>();
+            for (User user : users) {
+                if (user.getAge() == 1) {
+                    listModel.addElement(String.format("%s (%d year old)", user.getUsername(), user.getAge()));
+                } else {
+                    listModel.addElement(String.format("%s (%d years old)", user.getUsername(), user.getAge()));
+                }
             }
-        }
-        JList<String> usersList = new JList<>(listModel);
-        JScrollPane scroll = new JScrollPane(usersList);
+            JList<String> usersList = new JList<>(listModel);
+            JScrollPane scroll = new JScrollPane(usersList);
 
-        scroll.setPreferredSize(new Dimension(300, scroll.getPreferredSize().height));
-        userListPanel.add(scroll, BorderLayout.CENTER);
-        content.add(userListPanel, BorderLayout.WEST);
+            scroll.setPreferredSize(new Dimension(300, scroll.getPreferredSize().height));
+            userListPanel.add(scroll, BorderLayout.CENTER);
+            content.add(userListPanel, BorderLayout.WEST);
 
-        // Actions Panel
-        JPanel actionsPanel = new JPanel();
-        actionsPanel.setLayout(new BoxLayout(actionsPanel, BoxLayout.Y_AXIS));
+            // Actions Panel
+            JPanel actionsPanel = new JPanel();
+            actionsPanel.setLayout(new BoxLayout(actionsPanel, BoxLayout.Y_AXIS));
 
-        if (isBlockList) {
-            JButton blockButton = new JButton("Unblock");
-            blockButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    String selectedUser = usersList.getSelectedValue();
-                    if (selectedUser != null) {
-                        String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
-
-                        //Unblock
-                        if (client.unblockUser(selectedUsername)) {
-                            clientUser.removeBlockedUsers(selectedUsername);
-                        }
-
-                        for (int i = 0; i < users.size(); i++) {
-                            if (users.get(i).getUsername().equals(selectedUsername)) {
-                                users.remove(i);
-                                break;
-                            }
-                        }
-
-                        frame.setContentPane(usersPage(title, users));
-                        frame.getContentPane().revalidate();
-                    }
-                }
-            });
-            actionsPanel.add(blockButton);
-        } else {
-            JButton openConvoButton = new JButton("Open Conversation");
-            openConvoButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    String selectedUser = usersList.getSelectedValue();
-                    if (selectedUser != null) {
-                        String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
-                        // TODO:
-                        // open a convo with the selected friend
-                    }
-                }
-            });
-            actionsPanel.add(openConvoButton);
-
-            if (!isFriendsList) {
-                JButton friendButton = new JButton("Friend");
-                friendButton.addActionListener(new ActionListener() {
+            if (isBlockList) {
+                JButton blockButton = new JButton("Unblock");
+                blockButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         String selectedUser = usersList.getSelectedValue();
                         if (selectedUser != null) {
                             String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
-                            if (client.addFriend(selectedUsername)) {
-                                clientUser.addFriends(selectedUsername);
 
-                                showPopup(selectedUsername + " is now your friend!",
+                            //Unblock
+                            if (client.unblockUser(selectedUsername)) {
+                                clientUser.removeBlockedUsers(selectedUsername);
+                            }
+
+                            for (int i = 0; i < users.size(); i++) {
+                                if (users.get(i).getUsername().equals(selectedUsername)) {
+                                    users.remove(i);
+                                    break;
+                                }
+                            }
+
+                            frame.setContentPane(listPage(title, users, null));
+                            frame.getContentPane().revalidate();
+                        }
+                    }
+                });
+                actionsPanel.add(blockButton);
+            } else {
+                JButton openConvoButton = new JButton("Open Conversation");
+                openConvoButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        String selectedUser = usersList.getSelectedValue();
+                        if (selectedUser != null) {
+                            String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
+                            // TODO
+                        }
+                    }
+                });
+                actionsPanel.add(openConvoButton);
+
+                if (!isFriendsList) {
+                    JButton friendButton = new JButton("Friend");
+                    friendButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            String selectedUser = usersList.getSelectedValue();
+                            if (selectedUser != null) {
+                                String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
+                                if (client.addFriend(selectedUsername)) {
+                                    clientUser.addFriends(selectedUsername);
+
+                                    showPopup(selectedUsername + " is now your friend.",
+                                            JOptionPane.INFORMATION_MESSAGE);
+                                }
+                            }
+                        }
+                    });
+                    actionsPanel.add(friendButton);
+                }
+
+                JButton unfriendButton = new JButton("Unfriend");
+                unfriendButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        String selectedUser = usersList.getSelectedValue();
+                        if (selectedUser != null) {
+                            String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
+                            if (client.removeFriend(selectedUsername)) {
+                                clientUser.removeFriends(selectedUsername);
+
+                                if (isFriendsList) {
+                                    for (int i = 0; i < users.size(); i++) {
+                                        if (users.get(i).getUsername().equals(selectedUsername)) {
+                                            users.remove(i);
+                                            break;
+                                        }
+                                    }
+
+                                    frame.setContentPane(listPage(title, users, null));
+                                    frame.getContentPane().revalidate();
+                                }
+
+                                showPopup(selectedUsername + " has been unfriended.",
                                         JOptionPane.INFORMATION_MESSAGE);
                             }
                         }
                     }
                 });
-                actionsPanel.add(friendButton);
-            }
+                actionsPanel.add(unfriendButton);
 
-            JButton unfriendButton = new JButton("Unfriend");
-            unfriendButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    String selectedUser = usersList.getSelectedValue();
-                    if (selectedUser != null) {
-                        String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
-                        if (client.removeFriend(selectedUsername)) {
-                            clientUser.removeFriends(selectedUsername);
-
-                            if (isFriendsList) {
+                JButton blockButton = new JButton("Block");
+                blockButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        String selectedUser = usersList.getSelectedValue();
+                        if (selectedUser != null) {
+                            String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
+                            if (client.blockUser(selectedUsername)) {
+                                clientUser.addBlockedUsers(selectedUsername);
                                 for (int i = 0; i < users.size(); i++) {
                                     if (users.get(i).getUsername().equals(selectedUsername)) {
                                         users.remove(i);
@@ -460,9 +502,107 @@ public class ClientGUI extends JComponent implements Runnable {
                                     }
                                 }
 
-                                frame.setContentPane(usersPage(title, users));
+                                frame.setContentPane(listPage(title, users, null));
                                 frame.getContentPane().revalidate();
+
+                                showPopup(selectedUsername + " has been blocked.",
+                                        JOptionPane.INFORMATION_MESSAGE);
                             }
+                        }
+                    }
+                });
+                actionsPanel.add(blockButton);
+            }
+
+            content.add(actionsPanel, BorderLayout.CENTER);
+            return content;
+        } else {
+            Container content = new Container();
+            content.setLayout(new BorderLayout());
+
+            // Title Panel
+            JPanel titlePanel = new JPanel(new BorderLayout());
+            JLabel titleLabel = new JLabel(title);
+            titleLabel.setFont(largeFont);
+            titleLabel.setHorizontalAlignment(JLabel.CENTER);
+            titlePanel.add(titleLabel, BorderLayout.CENTER);
+
+            // Back Button
+            returnButton = new JButton("Back");
+            returnButton.setFont(mediumFont);
+            returnButton.addActionListener(buttonActionListener);
+            titlePanel.add(returnButton, BorderLayout.EAST);
+
+            // Horizontal Separator
+            JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+            titlePanel.add(separator, BorderLayout.SOUTH);
+
+            content.add(titlePanel, BorderLayout.NORTH);
+
+            // Message History List Panel
+            JPanel messageHistoryListPanel = new JPanel(new BorderLayout());
+            DefaultListModel<String> listModel = new DefaultListModel<>();
+            for (MessageHistory history : messageHistories) {
+                String otherUsername = history.getUser1();
+                if (history.getUser1().equals(clientUser.getUsername())) {
+                    otherUsername = history.getUser2();
+                }
+
+                String lastMessage = history.getMessages()[history.getMessages().length - 1];
+                String timestamp = lastMessage.substring(lastMessage.indexOf('[') + 1, lastMessage.indexOf(']'));
+                listModel.addElement(String.format("%s (Last %s)", otherUsername, timestamp));
+            }
+            JList<String> messageHistoryList = new JList<>(listModel);
+            JScrollPane scroll = new JScrollPane(messageHistoryList);
+
+            scroll.setPreferredSize(new Dimension(300, scroll.getPreferredSize().height));
+            messageHistoryListPanel.add(scroll, BorderLayout.CENTER);
+            content.add(messageHistoryListPanel, BorderLayout.WEST);
+
+            // Actions Panel
+            JPanel actionsPanel = new JPanel();
+            actionsPanel.setLayout(new BoxLayout(actionsPanel, BoxLayout.Y_AXIS));
+
+            JButton openConvoButton = new JButton("Open Conversation");
+            openConvoButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String selectedUser = messageHistoryList.getSelectedValue();
+                    if (selectedUser != null) {
+                        String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
+                        // TODO
+                    }
+                }
+            });
+            actionsPanel.add(openConvoButton);
+
+            JButton friendButton = new JButton("Friend");
+            friendButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String selectedUser = messageHistoryList.getSelectedValue();
+                    if (selectedUser != null) {
+                        String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
+                        if (client.addFriend(selectedUsername)) {
+                            clientUser.addFriends(selectedUsername);
+
+                            showPopup(selectedUsername + " is now your friend!",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    }
+                }
+            });
+            actionsPanel.add(friendButton);
+
+            JButton unfriendButton = new JButton("Unfriend");
+            unfriendButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String selectedUser = messageHistoryList.getSelectedValue();
+                    if (selectedUser != null) {
+                        String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
+                        if (client.removeFriend(selectedUsername)) {
+                            clientUser.removeFriends(selectedUsername);
+
+                            showPopup(selectedUsername + " has been unfriended.",
+                                    JOptionPane.INFORMATION_MESSAGE);
                         }
                     }
                 }
@@ -472,132 +612,35 @@ public class ClientGUI extends JComponent implements Runnable {
             JButton blockButton = new JButton("Block");
             blockButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    String selectedUser = usersList.getSelectedValue();
+                    String selectedUser = messageHistoryList.getSelectedValue();
                     if (selectedUser != null) {
                         String selectedUsername = selectedUser.substring(0, selectedUser.indexOf(" ("));
                         if (client.blockUser(selectedUsername)) {
                             clientUser.addBlockedUsers(selectedUsername);
-                            for (int i = 0; i < users.size(); i++) {
-                                if (users.get(i).getUsername().equals(selectedUsername)) {
-                                    users.remove(i);
+                            for (int i = 0; i < messageHistories.size(); i++) {
+                                MessageHistory currentHistory = messageHistories.get(i);
+                                if (currentHistory.getUser1().equals(selectedUsername)
+                                        || currentHistory.getUser2().equals(selectedUsername)) {
+                                    messageHistories.remove(i);
                                     break;
                                 }
                             }
 
-                            frame.setContentPane(usersPage(title, users));
+                            frame.setContentPane(listPage(title, null, messageHistories));
                             frame.getContentPane().revalidate();
+
+                            showPopup(selectedUsername + " has been blocked!",
+                                    JOptionPane.INFORMATION_MESSAGE);
                         }
                     }
                 }
             });
             actionsPanel.add(blockButton);
+
+            content.add(actionsPanel, BorderLayout.CENTER);
+            return content;
         }
-
-        content.add(actionsPanel, BorderLayout.CENTER);
-
-        return content;
     }
-
-/*
-    Container usersPage(String title, ArrayList<User> users) {
-        Container content = new Container();
-        content.setLayout(new BorderLayout());
-
-        JLabel titleLabel = new JLabel(title);
-        titleLabel.setFont(largeFont);
-        titleLabel.setHorizontalAlignment(JLabel.CENTER);
-
-        JPanel titlePanel = new JPanel(new BorderLayout());
-        titlePanel.add(titleLabel, BorderLayout.CENTER);
-
-        returnButton = new JButton("Back");
-        returnButton.setFont(smallFont);
-        returnButton.addActionListener(buttonActionListener);
-        titlePanel.add(returnButton, BorderLayout.EAST);
-
-        content.add(titlePanel, BorderLayout.NORTH);
-
-        JPanel userListPanel = new JPanel();
-        userListPanel.setLayout(new BoxLayout(userListPanel, BoxLayout.Y_AXIS));
-
-        for (int x = 0; x < users.size(); x++) {
-            User user = users.get(x);
-            JPanel userPanel = new JPanel(new BorderLayout());
-
-            // User profile name
-            JLabel username = new JLabel(String.format("%s (%dyr)", user.getUsername(), user.getAge()));
-            username.setFont(mediumFont);
-            userPanel.add(username, BorderLayout.NORTH);
-
-            //add pfp
-            if (user.getUserPFPImage() != null) {
-                JLabel profilePicture = new JLabel(new ImageIcon(user.getUserPFPImage().getScaledInstance(100, 100, Image.SCALE_FAST)));
-                profilePicture.setHorizontalAlignment(JLabel.CENTER);
-                profilePicture.setSize(20, 20);
-
-                userPanel.add(profilePicture, BorderLayout.WEST);
-            }
-
-            // Create a panel for user functionality with GridLayout
-            JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
-
-            //send message functionality
-
-            seeConvoButton = new JButton("See Conversation");
-            seeConvoButton.setFont(smallFont);
-            seeConvoButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-
-                    //ADDS MESSAGE TO MESSAGE HISTORY
-                }
-            });
-            seeConvoButton.setPreferredSize(new Dimension(80, 15));
-
-            JPanel panel = new JPanel();
-            panel.setLayout(new BorderLayout());
-
-            panel.add(seeConvoButton, BorderLayout.WEST);
-            buttonPanel.add(panel);
-
-            //block
-            JPanel panel1 = new JPanel();
-            panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
-            blockButton = new JButton("Block");
-            blockButton.setFont(smallFont);
-            int finalX = x;
-            blockButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-
-                    //blocks user friend.getUsername() from friends list
-                    System.out.println("block " + users.get(finalX).getUsername()); //test can remove later
-                }
-            });
-            blockButton.setPreferredSize(new Dimension(125, 25));
-            panel1.add(Box.createVerticalStrut(20));
-            panel1.add(blockButton, BorderLayout.NORTH);
-            panel1.add(Box.createVerticalStrut(10));
-
-            //remove
-            removeButton = new JButton("Remove");
-            removeButton.setFont(smallFont);
-            removeButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    //remove USER friend.getUsername() from friends list
-                    System.out.println("remove " + users.get(finalX).getUsername()); //test. can remove later
-                }
-            });
-            removeButton.setPreferredSize(new Dimension(100, 25));
-            panel1.add(removeButton, BorderLayout.NORTH);
-            buttonPanel.add(panel1);
-
-            userPanel.add(buttonPanel, BorderLayout.EAST);
-
-            userListPanel.add(userPanel);
-        }
-        content.add(new JScrollPane(userListPanel), BorderLayout.CENTER);
-        return content;
-    }
-*/
 
     Container registrationPage() {
         Container content = new Container();

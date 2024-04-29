@@ -392,6 +392,41 @@ public class Server implements ServerInterface, Runnable {
         }
     }
 
+    public void searchMessageHistories() {
+        try {
+            String usernameToken = reader.readLine();
+
+            ArrayList<MessageHistory> foundMessageHistories = databaseHelper.searchMessageHistories(usernameToken);
+
+            if (foundMessageHistories == null || foundMessageHistories.size() == 0) {
+                // Send back an error
+                this.writer.println("ERROR");
+                this.writer.println("No message histories found");
+                this.writer.flush();
+                return;
+            }
+
+            writer.println("SUCCESS");
+            writer.println(foundMessageHistories.size());
+            for (MessageHistory messageHistory : foundMessageHistories) {
+                this.writer.println(messageHistory.getUser1());
+                this.writer.println(messageHistory.getUser2());
+                this.writer.println(messageHistory.getMessages().length);
+                for (String message : messageHistory.getMessages()) {
+                    this.writer.println(message);
+                }
+                this.writer.flush();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            // Send back an error
+            this.writer.println("ERROR");
+            this.writer.println(e.getMessage());
+            this.writer.flush();
+        }
+    }
+
     public void sendMessage() {
         try {
             String senderUsername = this.reader.readLine();
@@ -742,6 +777,9 @@ public class Server implements ServerInterface, Runnable {
                             break;
                         case "MESSAGE_HISTORY":
                             this.getMessageHistory();
+                            break;
+                        case "SEARCH_MESSAGE_HISTORIES":
+                            this.searchMessageHistories();
                             break;
                         case "SEND_MESSAGE":
                             this.sendMessage();

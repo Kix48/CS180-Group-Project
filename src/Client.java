@@ -352,7 +352,7 @@ public class Client implements ClientInterface {
 
             if (!resultOutput.equals("SUCCESS")) {
                 String resultMessage = reader.readLine();
-                System.out.printf("%s: %s\n", resultOutput, resultMessage);
+                //System.out.printf("%s: %s\n", resultOutput, resultMessage);
             } else {
                 //System.out.println("Friend successfully added!");
                 return true;
@@ -394,7 +394,7 @@ public class Client implements ClientInterface {
 
             if (!resultOutput.equals("SUCCESS")) {
                 String resultMessage = reader.readLine();
-                System.out.printf("%s: %s\n", resultOutput, resultMessage);
+                //System.out.printf("%s: %s\n", resultOutput, resultMessage);
             } else {
                 //System.out.println("Friend successfully removed!");
                 return true;
@@ -436,7 +436,7 @@ public class Client implements ClientInterface {
 
             if (!resultOutput.equals("SUCCESS")) {
                 String resultMessage = reader.readLine();
-                System.out.printf("%s: %s\n", resultOutput, resultMessage);
+                //System.out.printf("%s: %s\n", resultOutput, resultMessage);
             } else {
                 //System.out.println("User successfully blocked!");
                 return true;
@@ -478,7 +478,7 @@ public class Client implements ClientInterface {
 
             if (!resultOutput.equals("SUCCESS")) {
                 String resultMessage = reader.readLine();
-                System.out.printf("%s: %s\n", resultOutput, resultMessage);
+                //System.out.printf("%s: %s\n", resultOutput, resultMessage);
             } else {
                 //System.out.println("User successfully unblocked!");
                 return true;
@@ -517,7 +517,7 @@ public class Client implements ClientInterface {
             String requestResult = reader.readLine();
             if (!requestResult.equals("SUCCESS")) {
                 String resultMessage = reader.readLine();
-                System.out.printf("%s: %s\n", requestResult, resultMessage);
+                //System.out.printf("%s: %s\n", requestResult, resultMessage);
             } else {
                 String readUser1 = reader.readLine();
                 String readUser2 = reader.readLine();
@@ -540,7 +540,6 @@ public class Client implements ClientInterface {
                     readMessages.add(new Message(readSender, readReceiver, readMessageStr, readDate));
                 }
 
-                System.out.println("Received message history successfully!");
                 return new MessageHistory(readUser1, readUser2, readMessages);
             }
         } catch (Exception e) {
@@ -550,6 +549,78 @@ public class Client implements ClientInterface {
         }
 
         return null;
+    }
+
+    public ArrayList<MessageHistory> searchMessageHistories(String token) throws Exception {
+        //
+        // String sanitization
+        //
+
+        // Check username (Not empty, size check, no newline or tab)
+        if (token == null || token.equals("") || (token.length() > 16)
+                || token.contains("\n") || token.contains("\t")) {
+            throw new Exception("Invalid search term (Must be 16 characters or less).");
+            //return null;
+        }
+
+        //remove any whitespace
+        token = token.trim();
+
+        try {
+            //send information
+            writer.println();
+            writer.println("SEARCH_MESSAGE_HISTORIES");
+            writer.println(token);
+            writer.flush();
+
+            //Read Result
+            String resultOutput = reader.readLine();
+
+            if (!resultOutput.equals("SUCCESS")) {
+                String resultMessage = reader.readLine();
+                //System.out.printf("%s: %s\n", requestResult, resultMessage);
+                throw new Exception(String.format("%s: %s.", resultOutput, resultMessage));
+            } else {
+                ArrayList<MessageHistory> messageHistoryList = new ArrayList<MessageHistory>();
+                int readMessageHistoryCount = Integer.parseInt(reader.readLine());
+                for (int i = 0; i < readMessageHistoryCount; i++) {
+                    String readUser1 = reader.readLine();
+                    String readUser2 = reader.readLine();
+                    int readMessagesLength = Integer.parseInt(reader.readLine());
+
+                    ArrayList<Message> readMessages = new ArrayList<Message>();
+                    for (int j = 0; j < readMessagesLength; j++) {
+                        // [DATE] SENDER-RECEIVER: MESSAGE
+
+                        String readMessage = reader.readLine();
+                        int rightBracketPos = readMessage.indexOf("]");
+                        SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yy hh:mm:ss a z");
+                        Date readDate = dateFormatter.parse(readMessage.substring(1, rightBracketPos));
+                        int dashPos = readMessage.indexOf("-", rightBracketPos);
+                        int colonPos = readMessage.indexOf(":", rightBracketPos);
+                        String readSender = readMessage.substring(rightBracketPos + 2, dashPos);
+                        String readReceiver = readMessage.substring(dashPos + 1, colonPos);
+                        String readMessageStr = readMessage.substring(colonPos + 2);
+
+                        readMessages.add(new Message(readSender, readReceiver, readMessageStr, readDate));
+                    }
+
+                    messageHistoryList.add(new MessageHistory(readUser1, readUser2, readMessages));
+                }
+
+                return messageHistoryList;
+            }
+
+        } catch (Exception e) {
+            if (e.getMessage().contains("ERROR:")) {
+                throw new Exception(e.getMessage().substring(e.getMessage().indexOf(':') + 2));
+            } else {
+                throw new Exception("Exception while searching for message histories.");
+            }
+            //return false;
+        }
+
+        //return null;
     }
 
     public boolean sendMessage(String receiver, String message) {
@@ -584,10 +655,9 @@ public class Client implements ClientInterface {
             String requestResult = reader.readLine();
             if (!(requestResult.equals("SUCCESS"))) {
                 String resultMessage = reader.readLine();
-                System.out.printf("%s: %s\n", requestResult, resultMessage);
+                //System.out.printf("%s: %s\n", requestResult, resultMessage);
                 return false;
             } else {
-                System.out.println("Message sent successfully!");
                 return true;
             }
         } catch (IOException e) {
@@ -626,10 +696,9 @@ public class Client implements ClientInterface {
             String requestResult = reader.readLine();
             if (!(requestResult.equals("SUCCESS"))) {
                 String resultMessage = reader.readLine();
-                System.out.printf("%s: %s\n", requestResult, resultMessage);
+                //System.out.printf("%s: %s\n", requestResult, resultMessage);
                 return false;
             } else {
-                System.out.println("Message removed successfully!");
                 return true;
             }
         } catch (IOException e) {

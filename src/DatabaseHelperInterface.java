@@ -21,4 +21,5 @@ public interface DatabaseHelperInterface {
     public boolean writeImage(BufferedImage image, String filename);
     public MessageHistory readMessageHistory(String username1, String username2);
     public boolean writeMessageHistory(MessageHistory history);
+    public ArrayList<MessageHistory> searchMessageHistories(String token);
 }
